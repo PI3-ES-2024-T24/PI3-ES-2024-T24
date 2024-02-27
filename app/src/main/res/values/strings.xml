@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PI3-ES-2024-T24</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
 </resources>
