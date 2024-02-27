@@ -2,6 +2,7 @@ package com.puc.pi3_es_2024_t24
 
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,21 +27,39 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         auth = Firebase.auth
 
         binding.btnSignUp.setOnClickListener{
             var email = binding.etEmail.text.toString()
             var password = binding.etPassword.text.toString()
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
-                if(it.isSuccessful){
-                    auth.signOut()
-                    Toast.makeText(this, "conta criada", Toast.LENGTH_SHORT).show()
-                }
-                else{
-                    Log.e("error: ", it.exception.toString())
+            if(validate()) {
+                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        auth.signOut()
+                        Toast.makeText(this, "conta criada", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Log.e("error: ", it.exception.toString())
+                    }
                 }
             }
-
         }
     }
+    private fun validate(): Boolean{
+        val email = binding.etEmail.text.toString()
+        if(binding.etEmail.text.toString() == ""){
+            binding.textInputLayoutEmail.error = "é necessario preencher esse campo"
+            return false
+        }
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            binding.textInputLayoutEmail.error = "porfavor digite um email valido"
+            return false
+        }
+        if(binding.etPassword.text.toString() == ""){
+            binding.textInputLayoutPassword.error = "é necessario preencher esse campo"
+            return false
+        }
+        return true
+    }
 }
+
