@@ -75,4 +75,5 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.28")
 }
