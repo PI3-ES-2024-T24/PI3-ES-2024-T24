@@ -1,5 +1,6 @@
 package com.puc.pi3_es_2024_t24
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -43,6 +44,11 @@ class SignInActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+        binding.btnCreate.setOnClickListener{
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
     private fun validate(): Boolean{
