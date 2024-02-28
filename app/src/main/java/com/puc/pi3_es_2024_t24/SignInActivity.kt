@@ -18,35 +18,35 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.puc.pi3_es_2024_t24.databinding.ActivitySignUpBinding
+import com.puc.pi3_es_2024_t24.databinding.ActivitySignInBinding
 import com.puc.pi3_es_2024_t24.ui.theme.PI3ES2024T24Theme
 
-class SignUpActivity : AppCompatActivity() {
+class SignInActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-    private lateinit var binding: ActivitySignUpBinding
+    private lateinit var binding: ActivitySignInBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignUpBinding.inflate(layoutInflater)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         auth = Firebase.auth
 
-        binding.btnSignUp.setOnClickListener{
+        binding.btnSignIn.setOnClickListener{
             var email = binding.etEmail.text.toString()
             var password = binding.etPassword.text.toString()
             if(validate()) {
-                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
                         auth.signOut()
-                        Toast.makeText(this, "conta criada", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Sign in sucesses", Toast.LENGTH_SHORT).show()
                     } else {
                         Log.e("error: ", it.exception.toString())
                     }
                 }
             }
         }
-        binding.btnLogin.setOnClickListener{
-            val intent = Intent(this, SignInActivity::class.java)
+        binding.btnRegister.setOnClickListener{
+            val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
             finish()
         }
