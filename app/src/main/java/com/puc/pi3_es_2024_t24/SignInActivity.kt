@@ -45,7 +45,7 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.btnCreate.setOnClickListener{
+        binding.btnRegister.setOnClickListener{
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
             finish()
