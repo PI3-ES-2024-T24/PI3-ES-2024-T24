@@ -1,5 +1,6 @@
 package com.puc.pi3_es_2024_t24
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -33,9 +34,33 @@ class SignUpActivity : AppCompatActivity() {
         val db = Firebase.firestore
 
         binding.btnSignUp.setOnClickListener{
-            var email = binding.etEmail.text.toString()
-            var password = binding.etPassword.text.toString()
+            val email = binding.etEmail.text.toString().trim()
+            val password = binding.etPassword.text.toString().trim()
+            val name = binding.etName.text.toString().trim()
+            val cpf = binding.etCpf.text.toString().trim()
+            val birth = binding.etBirth.text.toString().trim()
+            val celular = binding.etCel.text.toString().trim()
+            
+            val pessoas = hashMapOf(
+                "nome_completo" to name,
+                "cpf" to cpf,
+                "data_de_nascimento" to birth,
+                "celular" to celular
+            )
             if(validate()) {
+                db.collection("pessoas")
+                    .add(pessoas)
+                    .addOnSuccessListener { documentReference ->
+                        Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error adding document", e)
+                    }
+                //caso precise associar um documento especifico
+//                db.collection("pessoas").document(email)
+//                    .set(pessoas)
+//                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+//                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
                         auth.signOut()
