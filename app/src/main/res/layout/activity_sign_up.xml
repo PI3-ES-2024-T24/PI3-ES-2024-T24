@@ -47,10 +47,9 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutCpf"
-        android:layout_width="409dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail">
 
@@ -60,6 +59,21 @@
             android:layout_height="wrap_content"
             android:hint="cpf" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutBirth"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etBirth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="nascimento" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutCelular"
