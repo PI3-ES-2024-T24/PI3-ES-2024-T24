@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.databinding.ActivitySignUpBinding
 import com.puc.pi3_es_2024_t24.ui.theme.PI3ES2024T24Theme
 
@@ -28,8 +29,8 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         auth = Firebase.auth
+        val db = Firebase.firestore
 
         binding.btnSignUp.setOnClickListener{
             var email = binding.etEmail.text.toString()
@@ -39,6 +40,9 @@ class SignUpActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         auth.signOut()
                         Toast.makeText(this, "conta criada", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, SignInActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     } else {
                         Log.e("error: ", it.exception.toString())
                     }
