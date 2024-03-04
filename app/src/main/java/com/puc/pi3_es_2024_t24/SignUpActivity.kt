@@ -26,6 +26,7 @@ import com.puc.pi3_es_2024_t24.ui.theme.PI3ES2024T24Theme
 class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivitySignUpBinding
+    private var emailConfirmed: Boolean? = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
@@ -64,7 +65,14 @@ class SignUpActivity : AppCompatActivity() {
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
                         auth.signOut()
-                        Toast.makeText(this, "conta criada", Toast.LENGTH_SHORT).show()
+                        auth.currentUser?.sendEmailVerification()
+                            ?.addOnSuccessListener {
+                                Toast.makeText(this, "Para completar seu cadastro, verifique seu email!", Toast.LENGTH_SHORT).show()
+                                // IMPLEMENTAR FUNÇÃO PARA SALVAR USUÁRIO NO FIREBASE
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+                            }
                         val intent = Intent(this, SignInActivity::class.java)
                         startActivity(intent)
                         finish()
