@@ -1,60 +1,90 @@
 package com.puc.pi3_es_2024_t24
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
-import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.puc.pi3_es_2024_t24.databinding.ActivityHomeBinding
-import com.puc.pi3_es_2024_t24.databinding.ActivitySignInBinding
-import com.puc.pi3_es_2024_t24.databinding.ActivitySignUpBinding
 
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-class HomeActivity : AppCompatActivity() {
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var binding: ActivityHomeBinding
+    private var currentFragment: Fragment? = null
 
-    lateinit var binding : ActivityHomeBinding
-    lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Inflate the layout using data binding
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.apply {
-            toggle = ActionBarDrawerToggle(this@HomeActivity, drawerLayout, R.string.open, R.string.close)
-            drawerLayout.addDrawerListener(toggle)
-            toggle.syncState()
 
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setSupportActionBar(binding.toolbar)
 
-            navView.setNavigationItemSelectedListener {
-                when (it.itemId) {
-                    R.id.firstItem -> {
-                        Toast.makeText(this@HomeActivity, "First Item Clicked", Toast.LENGTH_SHORT).show()
-                    }
-                    R.id.secondtItem -> {
-                        Toast.makeText(this@HomeActivity, "Second Item Clicked", Toast.LENGTH_SHORT).show()
-                    }
-                    R.id.thirdItem -> {
-                        Toast.makeText(this@HomeActivity, "third Item Clicked", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                true
-            }
+        drawerLayout = binding.drawerLayout
+
+        val toggle = ActionBarDrawerToggle(this, drawerLayout, binding.toolbar, R.string.open_nav, R.string.close_nav)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        binding.navView.setNavigationItemSelectedListener(this)
+
+        if (savedInstanceState == null) {
+            currentFragment = HomeFragment()
+            replaceFragment(currentFragment!!)
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)){
-            true
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_home -> {
+                currentFragment = HomeFragment()
+            }
+            R.id.nav_settings -> {
+                currentFragment = SettingsFragment()
+            }
+            R.id.nav_share -> {
+                currentFragment = ShareFragment()
+            }
+            R.id.nav_about -> {
+                currentFragment = AboutFragment()
+            }
+            R.id.nav_logout -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
         }
-        return super.onOptionsItemSelected(item)
+
+        if (currentFragment != null) {
+            replaceFragment(currentFragment!!)
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragment_container, fragment)
+        fragmentTransaction.commit()
+    }
+
+    // Custom back press handling
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            // If there's a back stack entry, pop it
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                supportFragmentManager.popBackStack()
+            } else {
+                // No back stack entry, exit normally
+                super.onBackPressed()
+            }
+        }
     }
 }

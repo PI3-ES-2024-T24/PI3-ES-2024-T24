@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/homeplaceholder"
+            android:title="Home"/>
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/settingsplaceholder"
+            android:title="Settings"/>
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/lockerplaceholder"
+            android:title="locker"/>
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/questionplaceholder"
+            android:title="About Us"/>
+    </group>
     <item
-        android:id="@+id/firstItem"
-        android:title="First Item" />
-    <item
-        android:id="@+id/secondtItem"
-        android:title="Second Item" />
-    <item
-        android:id="@+id/thirdItem"
-        android:title="Third Item" />
+        android:title="">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/logoutplaceholder"
+                android:title="Logout"/>
+        </menu>
+    </item>
 </menu>
