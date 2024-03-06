@@ -3,4 +3,6 @@
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="confirmar_senha">confirmar senha</string>
     <string name="celular">celular</string>
+    <string name="open" />
+    <string name="close" />
 </resources>
