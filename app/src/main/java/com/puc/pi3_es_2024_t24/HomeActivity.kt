@@ -1,5 +1,6 @@
 package com.puc.pi3_es_2024_t24
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -9,11 +10,15 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.puc.pi3_es_2024_t24.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityHomeBinding
     private var currentFragment: Fragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +26,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        auth = Firebase.auth
 
         setSupportActionBar(binding.toolbar)
 
@@ -46,12 +53,18 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 currentFragment = SettingsFragment()
             }
             R.id.nav_share -> {
-                currentFragment = ShareFragment()
+                currentFragment = LockerFragment()
             }
             R.id.nav_about -> {
                 currentFragment = AboutFragment()
             }
-            R.id.nav_logout -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
+            R.id.nav_logout ->{
+                auth.signOut()
+                Toast.makeText(this, "saiu da conta", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, SignInActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
 
         if (currentFragment != null) {

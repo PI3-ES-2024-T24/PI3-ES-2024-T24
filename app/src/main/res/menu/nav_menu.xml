@@ -8,19 +8,20 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/homeplaceholder"
-            android:title="Home"/>
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/settingsplaceholder"
-            android:title="Settings"/>
+            android:title="@string/home"/>
         <item
             android:id="@+id/nav_share"
             android:icon="@drawable/lockerplaceholder"
-            android:title="locker"/>
+            android:title="@string/locker"/>
+        <item
+
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/settingsplaceholder"
+            android:title="@string/settings"/>
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/questionplaceholder"
-            android:title="About Us"/>
+            android:title="@string/about_us"/>
     </group>
     <item
         android:title="">
@@ -28,7 +29,7 @@
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/logoutplaceholder"
-                android:title="Logout"/>
+                android:title="@string/logout"/>
         </menu>
     </item>
 </menu>
