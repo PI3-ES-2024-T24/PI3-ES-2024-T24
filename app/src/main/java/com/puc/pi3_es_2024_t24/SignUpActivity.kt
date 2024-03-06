@@ -64,13 +64,12 @@ class SignUpActivity : AppCompatActivity() {
 //                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        auth.signOut()
                         auth.currentUser?.sendEmailVerification()
                             ?.addOnSuccessListener {
                                 Toast.makeText(this, "Para completar seu cadastro, verifique seu email!", Toast.LENGTH_SHORT).show()
                                 // IMPLEMENTAR FUNÇÃO PARA SALVAR USUÁRIO NO FIREBASE
                             }
-                            .addOnFailureListener {
+                            ?.addOnFailureListener {
                                 Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
                             }
                         val intent = Intent(this, SignInActivity::class.java)
