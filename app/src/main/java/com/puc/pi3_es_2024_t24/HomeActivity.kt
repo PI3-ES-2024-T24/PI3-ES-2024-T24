@@ -1,31 +1,37 @@
 package com.puc.pi3_es_2024_t24
 
-import android.content.Intent
+import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.puc.pi3_es_2024_t24.databinding.ActivityHomeBinding
-import org.checkerframework.checker.units.qual.A
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-
+    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim)  }
+    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim)  }
+    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim)  }
+    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim)  }
+    private var clicked = false
+    private var currentFragment: Fragment? = null
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityHomeBinding
     private lateinit var fragmentManager: FragmentManager
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
@@ -33,6 +39,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+
 
         val toggle = ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.nav_open, R.string.nav_close)
         binding.drawerLayout.addDrawerListener(toggle)
@@ -52,6 +59,66 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         fragmentManager = supportFragmentManager
         openFragment(HomeFragment())
+
+        binding.locBtn.setOnClickListener{
+            currentFragment = supportFragmentManager.fragments.last()
+            if(currentFragment is HomeFragment) {
+                binding.newLocBtn.setImageResource(R.drawable.plusplaceholder)
+                binding.newLocText.text = "Nova Locação"
+                binding.verifyLocBtn.setImageResource(R.drawable.magplaceholder)
+                binding.verifyLocText.text = "Verificar Locações"
+            }else
+            {
+                binding.newLocBtn.setImageResource(R.drawable.questionplaceholder)
+                binding.newLocText.text = "placeholder"
+                binding.verifyLocBtn.setImageResource(R.drawable.questionplaceholder)
+                binding.verifyLocText.text = "placeholder"
+            }
+            onAddButtonClicked()
+        }
+        binding.newLocBtn.setOnClickListener{
+                Toast.makeText(this, "Registrar novo locker", Toast.LENGTH_SHORT).show()
+        }
+        binding.verifyLocBtn.setOnClickListener{
+            Toast.makeText(this, "Verificar lockers", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    private fun onAddButtonClicked() {
+        setVisibility(clicked)
+        setAnimation(clicked)
+        clicked = !clicked
+    }
+
+    private fun setVisibility(clicked: Boolean) {
+        if(!this.clicked){
+            binding.newLocBtn.visibility = View.VISIBLE
+            binding.newLocText.visibility = View.VISIBLE
+            binding.verifyLocBtn.visibility = View.VISIBLE
+            binding.verifyLocText.visibility = View.VISIBLE
+        }else{
+            binding.newLocBtn.visibility = View.INVISIBLE
+            binding.newLocText.visibility = View.INVISIBLE
+            binding.verifyLocBtn.visibility = View.INVISIBLE
+            binding.verifyLocText.visibility = View.INVISIBLE
+        }
+    }
+    private fun setAnimation(clicked: Boolean) {
+        if(!clicked){
+            binding.newLocBtn.startAnimation(fromBottom)
+            binding.newLocText.startAnimation(fromBottom)
+            binding.verifyLocBtn.startAnimation(fromBottom)
+            binding.verifyLocText.startAnimation(fromBottom)
+            binding.locBtn.startAnimation(rotateOpen)
+        }else{
+            binding.newLocBtn.startAnimation(toBottom)
+            binding.newLocText.startAnimation(toBottom)
+            binding.verifyLocBtn.startAnimation(toBottom)
+            binding.verifyLocText.startAnimation(toBottom)
+            binding.locBtn.startAnimation(rotateClose)
+        }
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
