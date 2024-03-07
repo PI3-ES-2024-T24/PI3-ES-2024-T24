@@ -44,7 +44,6 @@
                     android:clickable="true"
                     android:contentDescription="@string/todo"
                     android:focusable="true"
-                    android:src="@drawable/ic_baseline_add_24"
                     android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +59,6 @@
                     android:layout_width="125dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="13dp"
-                    android:text="Nova Locação"
                     android:textStyle="bold"
                     android:visibility="invisible"
                     android:fontFamily="sans-serif-medium"
@@ -78,7 +76,6 @@
                     android:clickable="true"
                     android:contentDescription="@string/todo"
                     android:focusable="true"
-                    android:src="@drawable/magplaceholder"
                     android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -89,20 +86,19 @@
                     app:maxImageSize="40dp"
                     app:tint="@color/dark_blue" />
 
-                <TextView
-                    android:id="@+id/verify_loc_text"
-                    android:layout_width="125dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="13dp"
-                    android:text="Verficar Locações"
-                    android:textStyle="bold"
-                    android:visibility="invisible"
-                    android:fontFamily="sans-serif-medium"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/verify_loc_btn"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.785" />
+                    <TextView
+                        android:id="@+id/verify_loc_text"
+                        android:layout_width="125dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="13dp"
+                        android:textStyle="bold"
+                        android:visibility="invisible"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/verify_loc_btn"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.785" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -135,13 +131,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
-                android:src="@drawable/lockerplaceholder"
+                android:src="@drawable/lock"
                 app:layout_anchor="@id/bottomAppBar"
                 app:maxImageSize="40dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:id="@+id/loc_btn"
-                app:tint="@color/dark_blue"
                 android:contentDescription="@string/todo" />
 
 
@@ -155,7 +150,6 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
-        android:visibility="gone"
         app:itemIconTint="@color/dark_blue"
         app:itemTextColor="@color/dark_blue"/>
 

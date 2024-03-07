@@ -1,6 +1,9 @@
 package com.puc.pi3_es_2024_t24
 
+import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
@@ -24,9 +27,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim)  }
     private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim)  }
     private var clicked = false
+    private var currentFragment: Fragment? = null
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityHomeBinding
     private lateinit var fragmentManager: FragmentManager
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
@@ -56,10 +61,23 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         openFragment(HomeFragment())
 
         binding.locBtn.setOnClickListener{
+            currentFragment = supportFragmentManager.fragments.last()
+            if(currentFragment is HomeFragment) {
+                binding.newLocBtn.setImageResource(R.drawable.plusplaceholder)
+                binding.newLocText.text = "Nova Locação"
+                binding.verifyLocBtn.setImageResource(R.drawable.magplaceholder)
+                binding.verifyLocText.text = "Verificar Locações"
+            }else
+            {
+                binding.newLocBtn.setImageResource(R.drawable.questionplaceholder)
+                binding.newLocText.text = "placeholder"
+                binding.verifyLocBtn.setImageResource(R.drawable.questionplaceholder)
+                binding.verifyLocText.text = "placeholder"
+            }
             onAddButtonClicked()
         }
         binding.newLocBtn.setOnClickListener{
-            Toast.makeText(this, "Registrar novo locker", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Registrar novo locker", Toast.LENGTH_SHORT).show()
         }
         binding.verifyLocBtn.setOnClickListener{
             Toast.makeText(this, "Verificar lockers", Toast.LENGTH_SHORT).show()

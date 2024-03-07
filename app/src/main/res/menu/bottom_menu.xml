@@ -14,7 +14,6 @@
 
     <item
         android:title=""/>
-
     <item
         android:id="@+id/bottom_settings"
         android:title="settings"
