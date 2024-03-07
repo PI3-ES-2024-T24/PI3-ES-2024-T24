@@ -11,7 +11,7 @@
             android:title="@string/home"/>
         <item
             android:id="@+id/nav_locker"
-            android:icon="@drawable/lockerplaceholder"
+            android:icon="@drawable/locplaceholder"
             android:title="@string/locker"/>
         <item
 

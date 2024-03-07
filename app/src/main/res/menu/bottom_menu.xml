@@ -9,7 +9,7 @@
     <item
         android:id="@+id/bottom_locker"
         android:title="locker"
-        android:icon="@drawable/lockerplaceholder"
+        android:icon="@drawable/locplaceholder"
         />
 
     <item
