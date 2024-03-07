@@ -45,9 +45,6 @@ class SignInActivity : AppCompatActivity() {
                             finish()
                         } else {
                             Toast.makeText(this, "Por favor, verifique seu email!", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, HomeActivity::class.java)
-                            startActivity(intent)
-                            finish()
                         }
                     } else {
                         Log.e("error: ", it.exception.toString())
