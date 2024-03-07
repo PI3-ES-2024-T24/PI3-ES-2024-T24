@@ -61,6 +61,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.newLocBtn.setOnClickListener{
             Toast.makeText(this, "Registrar novo locker", Toast.LENGTH_SHORT).show()
         }
+        binding.verifyLocBtn.setOnClickListener{
+            Toast.makeText(this, "Verificar lockers", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
@@ -74,19 +77,27 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if(!this.clicked){
             binding.newLocBtn.visibility = View.VISIBLE
             binding.newLocText.visibility = View.VISIBLE
+            binding.verifyLocBtn.visibility = View.VISIBLE
+            binding.verifyLocText.visibility = View.VISIBLE
         }else{
             binding.newLocBtn.visibility = View.INVISIBLE
             binding.newLocText.visibility = View.INVISIBLE
+            binding.verifyLocBtn.visibility = View.INVISIBLE
+            binding.verifyLocText.visibility = View.INVISIBLE
         }
     }
     private fun setAnimation(clicked: Boolean) {
         if(!clicked){
             binding.newLocBtn.startAnimation(fromBottom)
             binding.newLocText.startAnimation(fromBottom)
+            binding.verifyLocBtn.startAnimation(fromBottom)
+            binding.verifyLocText.startAnimation(fromBottom)
             binding.locBtn.startAnimation(rotateOpen)
         }else{
             binding.newLocBtn.startAnimation(toBottom)
             binding.newLocText.startAnimation(toBottom)
+            binding.verifyLocBtn.startAnimation(toBottom)
+            binding.verifyLocText.startAnimation(toBottom)
             binding.locBtn.startAnimation(rotateClose)
         }
 
