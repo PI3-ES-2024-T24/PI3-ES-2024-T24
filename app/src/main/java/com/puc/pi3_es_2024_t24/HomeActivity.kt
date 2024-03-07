@@ -2,6 +2,7 @@ package com.puc.pi3_es_2024_t24
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -130,6 +131,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_settings -> openFragment(SettingsFragment())
             R.id.nav_about -> openFragment(AboutFragment())
             R.id.nav_logout ->{
+                auth.signOut()
+                Toast.makeText(this, "Saiu da conta", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, SignInActivity::class.java)
+                startActivity(intent)
+                finish()
             }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
