@@ -6,12 +6,13 @@
     <string name="open" />
     <string name="close" />
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="nav_open">Open Navigation Drawer</string>
+    <string name="nav_close">Close Navigation Drawer</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="open_nav" />
-    <string name="close_nav" />
     <string name="locker">locker</string>
     <string name="home">Home</string>
     <string name="about_us">About Us</string>
     <string name="settings">settings</string>
     <string name="logout">Logout</string>
+    <string name="todo">TODO</string>
 </resources>

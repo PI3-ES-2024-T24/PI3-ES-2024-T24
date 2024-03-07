@@ -2,6 +2,7 @@ package com.puc.pi3_es_2024_t24
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -10,101 +11,79 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.puc.pi3_es_2024_t24.databinding.ActivityHomeBinding
 import org.checkerframework.checker.units.qual.A
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var auth: FirebaseAuth
-    private var currentFragment: Fragment? = null
+    private lateinit var binding: ActivityHomeBinding
+    private lateinit var fragmentManager: FragmentManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-
-        drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         auth = Firebase.auth
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
-        val navigationView =findViewById<NavigationView>(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener(this)
-
-        val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
-
-
-        drawerLayout.addDrawerListener(toggle)
+        val toggle = ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.nav_open, R.string.nav_close)
+        binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        if(savedInstanceState == null){
-            replaceFragment(HomeFragment())
-            navigationView.setCheckedItem(R.id.nav_home)
+        binding.navigationDrawer.setNavigationItemSelectedListener(this)
+
+        binding.bottomNavigation.background = null
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when(item.itemId){
+                R.id.bottom_home -> openFragment(HomeFragment())
+                R.id.bottom_locker -> openFragment(LockerFragment())
+                R.id.bottom_settings -> openFragment(SettingsFragment())
+                R.id.bottom_about -> openFragment(AboutFragment())
+            }
+            true
         }
-    }
-    private fun replaceFragment(fragment: Fragment) {
-        val transation: FragmentTransaction = supportFragmentManager.beginTransaction()
-        transation.replace(R.id.fragment_container, fragment)
-        transation.commit()
+        fragmentManager = supportFragmentManager
+        openFragment(HomeFragment())
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        when(item.itemId){
             R.id.nav_home -> {
-                replaceFragment(HomeFragment())
+                Toast.makeText(this, "abrir home", Toast.LENGTH_SHORT).show()
+                openFragment(HomeFragment())
             }
-            R.id.bottom_home -> {
-                replaceFragment(HomeFragment())
-            }
-            R.id.nav_locker -> {
-                replaceFragment(LockerFragment())
-            }
-            R.id.bottom_locker -> {
-                replaceFragment(LockerFragment())
-            }
-            R.id.nav_settings -> {
-                replaceFragment(SettingsFragment())
-            }
-            R.id.bottom_settings -> {
-                replaceFragment(SettingsFragment())
-            }
-            R.id.nav_about -> {
-                replaceFragment(AboutFragment())
-            }
-            R.id.bottom_about -> {
-                replaceFragment(AboutFragment())
-            }
+            R.id.nav_locker -> openFragment(LockerFragment())
+            R.id.nav_settings -> openFragment(SettingsFragment())
+            R.id.nav_about -> openFragment(AboutFragment())
             R.id.nav_logout ->{
-                auth.signOut()
-                Toast.makeText(this, "saiu da conta", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, SignInActivity::class.java)
-                startActivity(intent)
-                finish()
             }
         }
-
-        if (currentFragment != null) {
-            replaceFragment(currentFragment!!)
-        }
-
-        drawerLayout.closeDrawer(GravityCompat.START)
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
 
-
-    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-
+        if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
         }else{
-            onBackPressedDispatcher.onBackPressed()
+            super.onBackPressedDispatcher
         }
+
+    }
+    private  fun openFragment(fragment: Fragment){
+        Toast.makeText(this, "abrindo fragmento", Toast.LENGTH_SHORT).show()
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragment_container, fragment)
+        fragmentTransaction.commit()
     }
 }
