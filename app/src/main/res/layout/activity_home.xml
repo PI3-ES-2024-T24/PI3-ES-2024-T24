@@ -63,7 +63,9 @@
                 android:src="@drawable/ic_baseline_add_24"
                 app:layout_anchor="@id/bottomAppBar"
                 app:maxImageSize="40dp"
-                android:id="@+id/fab"
+                android:clickable="true"
+                android:focusable="true"
+                android:id="@+id/loc_btn"
                 app:tint="@color/dark_blue"
                 android:contentDescription="@string/todo" />
 
@@ -73,11 +75,14 @@
                 tools:context=".HomeActivity">
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab2"
+                    android:id="@+id/new_loc_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/white"
                     android:contentDescription="@string/todo"
+                    android:visibility="invisible"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:src="@drawable/ic_baseline_add_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
