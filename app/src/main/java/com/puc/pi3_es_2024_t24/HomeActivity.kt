@@ -57,7 +57,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.nav_home -> {
-                Toast.makeText(this, "abrir home", Toast.LENGTH_SHORT).show()
                 openFragment(HomeFragment())
             }
             R.id.nav_locker -> openFragment(LockerFragment())
@@ -81,7 +80,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
     private  fun openFragment(fragment: Fragment){
-        Toast.makeText(this, "abrindo fragmento", Toast.LENGTH_SHORT).show()
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, fragment)
         fragmentTransaction.commit()
