@@ -57,6 +57,12 @@ class SignInActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        binding.btnMap.setOnClickListener{
+            val intent = Intent(this, MapActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
     private fun validate(): Boolean{
         val email = binding.etEmail.text.toString()
