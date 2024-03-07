@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +19,7 @@ import com.puc.pi3_es_2024_t24.databinding.ActivityHomeBinding
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var bottomNavigateView: BottomNavigationView
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityHomeBinding
     private var currentFragment: Fragment? = null
@@ -32,8 +34,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(binding.toolbar)
 
         drawerLayout = binding.drawerLayout
+        bottomNavigateView = binding.bottomNavigation
 
         val toggle = ActionBarDrawerToggle(this, drawerLayout, binding.toolbar, R.string.open_nav, R.string.close_nav)
+
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -43,19 +47,33 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             currentFragment = HomeFragment()
             replaceFragment(currentFragment!!)
         }
+
     }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
                 currentFragment = HomeFragment()
             }
+            R.id.bottom_home -> {
+                currentFragment = HomeFragment()
+            }
+            R.id.nav_locker -> {
+                currentFragment = LockerFragment()
+            }
+            R.id.bottom_locker -> {
+                currentFragment = LockerFragment()
+            }
             R.id.nav_settings -> {
                 currentFragment = SettingsFragment()
             }
-            R.id.nav_share -> {
-                currentFragment = LockerFragment()
+            R.id.bottom_settings -> {
+                currentFragment = SettingsFragment()
             }
             R.id.nav_about -> {
+                currentFragment = AboutFragment()
+            }
+            R.id.bottom_about -> {
                 currentFragment = AboutFragment()
             }
             R.id.nav_logout ->{

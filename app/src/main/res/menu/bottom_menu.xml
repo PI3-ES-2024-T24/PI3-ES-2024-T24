@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/home"
+        android:id="@+id/bottom_home"
         android:title="Home"
         android:icon="@drawable/homeplaceholder"/>
 
     <item
-        android:id="@+id/shorts"
+        android:id="@+id/bottom_locker"
         android:title="locker"
         android:icon="@drawable/lockerplaceholder"
         />
@@ -17,11 +17,11 @@
         android:title=""/>
 
     <item
-        android:id="@+id/subscriptions"
+        android:id="@+id/bottom_settings"
         android:title="settings"
         android:icon="@drawable/settingsplaceholder" />
     <item
-        android:id="@+id/library"
+        android:id="@+id/bottom_about"
         android:title="@string/about_us"
         android:icon="@drawable/questionplaceholder" />
 

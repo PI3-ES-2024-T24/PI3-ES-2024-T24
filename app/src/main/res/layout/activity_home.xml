@@ -50,11 +50,11 @@
             app:fabCradleRoundedCornerRadius="50dp">
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bottomNavigationView"
+                android:id="@+id/bottom_navigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:background="@android:color/transparent"
+                android:background="@android:color/holo_blue_bright"
                 app:labelVisibilityMode="labeled"
                 app:menu="@menu/bottom_menu" />
 
