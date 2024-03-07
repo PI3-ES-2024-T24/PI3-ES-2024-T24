@@ -67,6 +67,29 @@
                 app:tint="@color/dark_blue"
                 android:contentDescription="@string/todo" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".HomeActivity">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_baseline_add_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.500"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.848"
+                    app:maxImageSize="40dp"
+                    app:tint="@color/dark_blue" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </RelativeLayout>
@@ -78,6 +101,7 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
+        android:visibility="gone"
         app:itemIconTint="@color/dark_blue"
         app:itemTextColor="@color/dark_blue"/>
 
