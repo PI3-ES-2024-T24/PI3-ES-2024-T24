@@ -2,6 +2,7 @@ package com.puc.pi3_es_2024_t24
 
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -35,16 +36,22 @@ class SignInFragment : Fragment() {
         binding.btnSignIn.setOnClickListener {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
-            //função do firebase auth para logar com email e senha
-            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    auth.signOut()
-                    Toast.makeText(requireContext(), "Sucesso ao entrar na conta!", Toast.LENGTH_SHORT).show()
-                    navController.navigate(R.id.action_signInFragment_to_signUpFragment)
+            if (validate()) {
+                //função do firebase auth para logar com email e senha
+                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        auth.signOut()
+                        Toast.makeText(
+                            requireContext(),
+                            "Sucesso ao entrar na conta!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navController.navigate(R.id.action_signInFragment_to_signUpFragment)
 
-                } else {
-                    //cria um log do nivel E (error) no LogCat
-                    Log.e("error: ", it.exception.toString())
+                    } else {
+                        //cria um log do nivel E (error) no LogCat
+                        Log.e("error: ", it.exception.toString())
+                    }
                 }
             }
         }
@@ -54,6 +61,21 @@ class SignInFragment : Fragment() {
         }
         return binding.root
     }
-
+    private fun validate(): Boolean{
+        val email = binding.etEmail.text.toString()
+        if(binding.etEmail.text.toString() == ""){
+            binding.textInputLayoutEmail.error = "é necessario preencher esse campo"
+            return false
+        }
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            binding.textInputLayoutEmail.error = "porfavor digite um email valido"
+            return false
+        }
+        if(binding.etPassword.text.toString() == ""){
+            binding.textInputLayoutPassword.error = "é necessario preencher esse campo"
+            return false
+        }
+        return true
+    }
 
 }
