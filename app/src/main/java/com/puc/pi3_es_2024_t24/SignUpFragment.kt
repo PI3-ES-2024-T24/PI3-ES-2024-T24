@@ -42,6 +42,7 @@ class SignUpFragment : Fragment() {
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
             val name = binding.etName.text.toString().trim()
+            val cpf = binding.etCpf.text.toString().trim()
             val birth = binding.etBirth.text.toString().trim()
             val celular = binding.etPhone.text.toString().trim()
 
