@@ -54,4 +54,5 @@ dependencies {
     val navVersion = "2.7.7"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.28")
 }
