@@ -29,11 +29,6 @@ class HomeFragment : Fragment() {
         val navController = findNavController()
         auth = Firebase.auth
 
-        binding.btnSignOut.setOnClickListener{
-            Toast.makeText(requireContext(), "Saiu da conta", Toast.LENGTH_SHORT).show()
-            auth.signOut()
-            it.findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
-        }
 
         return binding.root
     }
