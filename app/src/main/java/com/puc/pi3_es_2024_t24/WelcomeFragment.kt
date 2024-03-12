@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.puc.pi3_es_2024_t24.databinding.FragmentWelcomeBinding
 
 class WelcomeFragment : Fragment() {
@@ -16,6 +17,8 @@ class WelcomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentWelcomeBinding.inflate(inflater, container, false)
+
+        (activity as? AppCompatActivity)?.supportActionBar?.hide()
 
         return binding.root
 
