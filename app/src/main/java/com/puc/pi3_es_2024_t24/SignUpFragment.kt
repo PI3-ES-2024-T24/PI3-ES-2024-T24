@@ -1,5 +1,6 @@
 package com.puc.pi3_es_2024_t24
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignUpBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentWelcomeBinding
 
@@ -33,14 +35,41 @@ class SignUpFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
+        val db = Firebase.firestore
         //caso o botao de id btnSignUp é clicado
         binding.btnSignUp.setOnClickListener{
             //formata os dados
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
+            val name = binding.etName.text.toString().trim()
+            val cpf = binding.etCpf.text.toString().trim()
+            val birth = binding.etBirth.text.toString().trim()
+            val celular = binding.etPhone.text.toString().trim()
+
+            val pessoas = hashMapOf(
+                "nome_completo" to name,
+                "cpf" to cpf,
+                "data_de_nascimento" to birth,
+                "celular" to celular
+            )
             if (validate()) {
+                db.collection("pessoas")
+                    .add(pessoas)
+                    .addOnSuccessListener { documentReference ->
+                        Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error adding document", e)
+                    }
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
+                        auth.currentUser?.sendEmailVerification()
+                            ?.addOnSuccessListener {
+                                Toast.makeText(requireContext(), "Para completar seu cadastro, verifique seu email!", Toast.LENGTH_SHORT).show()
+                            }
+                            ?.addOnFailureListener {
+                                Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
+                            }
                         Toast.makeText(
                             requireContext(),
                             "Conta criada com sucesso!",
