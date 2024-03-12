@@ -29,6 +29,18 @@ class HomeFragment : Fragment() {
         val navController = findNavController()
         auth = Firebase.auth
 
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when(item.itemId){
+                R.id.bottom_credit_card ->Toast.makeText(requireContext(), "Fragmento pagamento!!!", Toast.LENGTH_SHORT).show()
+
+                R.id.bottom_logout ->{
+                    auth.signOut()
+                    Toast.makeText(requireContext(), "Saiu da Conta!", Toast.LENGTH_SHORT).show()
+                    navController.navigate(R.id.action_homeFragment_to_signInFragment)
+                }
+            }
+            true
+        }
 
         return binding.root
     }
