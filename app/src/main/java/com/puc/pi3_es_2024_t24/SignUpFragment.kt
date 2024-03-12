@@ -52,7 +52,6 @@ class SignUpFragment : Fragment() {
                 "data_de_nascimento" to birth,
                 "celular" to celular
             )
-
             if (validate()) {
                 db.collection("pessoas")
                     .add(pessoas)
@@ -64,6 +63,13 @@ class SignUpFragment : Fragment() {
                     }
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
+                        auth.currentUser?.sendEmailVerification()
+                            ?.addOnSuccessListener {
+                                Toast.makeText(requireContext(), "Para completar seu cadastro, verifique seu email!", Toast.LENGTH_SHORT).show()
+                            }
+                            ?.addOnFailureListener {
+                                Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
+                            }
                         Toast.makeText(
                             requireContext(),
                             "Conta criada com sucesso!",
