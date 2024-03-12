@@ -1,7 +1,16 @@
 <resources>
     <string name="app_name">PI3-ES-2024-T24</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome">Bem-vindo ao</string>
     <string name="appName">LockN\'Live</string>
+    <string name="name">Nome Completo</string>
+    <string name="email">E-mail</string>
+    <string name="cpf">CPF</string>
+    <string name="birth">00/00/0000</string>
+    <string name="phone">celular</string>
+    <string name="password">senha</string>
+    <string name="confpassword">confirmar senha</string>
+    <string name="criar_conta">Criar Conta</string>
+    <string name="j_tem_conta_clique_aqui">Já tem conta? Clique aqui</string>
+    <string name="sign_up">Sign up</string>
 </resources>
