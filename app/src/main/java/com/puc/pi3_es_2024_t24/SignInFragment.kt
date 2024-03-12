@@ -40,13 +40,12 @@ class SignInFragment : Fragment() {
                 //função do firebase auth para logar com email e senha
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        auth.signOut()
                         Toast.makeText(
                             requireContext(),
                             "Sucesso ao entrar na conta!",
                             Toast.LENGTH_SHORT
                         ).show()
-                        navController.navigate(R.id.action_signInFragment_to_signUpFragment)
+                        navController.navigate(R.id.action_signInFragment_to_homeFragment)
 
                     } else {
                         //cria um log do nivel E (error) no LogCat
