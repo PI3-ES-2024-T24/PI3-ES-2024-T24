@@ -37,9 +37,11 @@ class SignUpFragment : Fragment() {
             //formata os dados
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
+
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        navController.navigate(R.id.action_signUpFragment_to_signInFragment2)
+                        Toast.makeText(requireContext(), "Conta criada com sucesso!", Toast.LENGTH_SHORT).show()
+                        navController.navigate(R.id.action_signUpFragment_to_signInFragment)
 
                     } else {
                         Log.e("error: ", it.exception.toString())
@@ -47,7 +49,7 @@ class SignUpFragment : Fragment() {
                 }
         }
         binding.btnLogin.setOnClickListener{
-            it.findNavController().navigate(R.id.action_signUpFragment_to_signInFragment2)
+            it.findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
         }
 
         return binding.root
