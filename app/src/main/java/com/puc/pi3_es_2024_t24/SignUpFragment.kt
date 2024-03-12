@@ -39,7 +39,7 @@ class SignUpFragment : Fragment() {
             val password = binding.etPassword.text.toString().trim()
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        navController.navigate(R.id.action_signUpFragment_to_signInFragment)
+                        navController.navigate(R.id.action_signUpFragment_to_signInFragment2)
 
                     } else {
                         Log.e("error: ", it.exception.toString())
@@ -47,7 +47,7 @@ class SignUpFragment : Fragment() {
                 }
         }
         binding.btnLogin.setOnClickListener{
-            it.findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+            it.findNavController().navigate(R.id.action_signUpFragment_to_signInFragment2)
         }
 
         return binding.root

@@ -27,7 +27,7 @@ class WelcomeFragment : Fragment() {
 
         navController.let {  // Safe navigation using let
             Handler(Looper.getMainLooper()).postDelayed({
-                it.navigate(R.id.action_welcomeFragment_to_signUpFragment)
+                it.navigate(R.id.action_welcomeFragment_to_signInFragment)
             }, 2000)
         }
         return binding.root

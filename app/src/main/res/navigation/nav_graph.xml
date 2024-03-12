@@ -11,10 +11,8 @@
         android:label="fragment_welcome"
         tools:layout="@layout/fragment_welcome" >
         <action
-            android:id="@+id/action_welcomeFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_welcomeFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -22,7 +20,7 @@
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
-            android:id="@+id/action_signUpFragment_to_signInFragment"
+            android:id="@+id/action_signUpFragment_to_signInFragment2"
             app:destination="@id/signInFragment" />
     </fragment>
     <fragment
@@ -31,7 +29,7 @@
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in" >
         <action
-            android:id="@+id/action_signInFragment_to_signUpFragment"
+            android:id="@+id/action_signInFragment_to_signUpFragment2"
             app:destination="@id/signUpFragment" />
     </fragment>
 </navigation>
