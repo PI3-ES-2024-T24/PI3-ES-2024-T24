@@ -2,7 +2,9 @@
 
 ## LockN'Live
 
-*LockN'Live é um app para android destinado para facilitar o aluguel de armários espalhados pela região*
+*LockN'Live is an app intended for renting lockers across the region in an easy and interactive way*
 
 ---
+ ## Configuration
+```  ```
  
