@@ -6,6 +6,13 @@
 
 ---
  ## Configuration
- * 
+ * Inside local.properties
+
 ``` GOOGLE_MAPS_API_KEY = AIzaSyAeLolUYjuwqnGYreSTxsSCPnDTLEzjRHk ```
+## Firebase Firestore
+* Collection "pessoas"
+* Colletion "armários"
+* Collection "locações"
+* Colletion "gerentes"
+
  
