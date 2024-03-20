@@ -54,6 +54,9 @@ class SignInFragment : Fragment() {
                 }
             }
         }
+        binding.btnMaps.setOnClickListener{
+            it.findNavController().navigate(R.id.action_signInFragment_to_mapsFragment)
+        }
 
         binding.btnRegister.setOnClickListener{
             it.findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
