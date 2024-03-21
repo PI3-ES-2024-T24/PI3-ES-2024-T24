@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.GoogleMap
@@ -16,7 +16,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.puc.pi3_es_2024_t24.databinding.FragmentMapsBinding
-import androidx.databinding.DataBindingUtil
 import com.google.android.gms.maps.CameraUpdateFactory
 
 
@@ -60,6 +59,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 .title(marker.name)
                 .snippet(marker.address)
                 .position(marker.latLng)
+                .icon(
+                    BitmapHelper.vectorToBitmap(requireContext(), R.drawable.lock_icon, ContextCompat.getColor(requireContext(), androidx.appcompat.R.color.material_blue_grey_800))
+                )
             map.addMarker(markerOptions)
             marker
         }
