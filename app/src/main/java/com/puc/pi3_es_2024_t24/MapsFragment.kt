@@ -45,11 +45,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         Log.d(TAG, "Mapa pronto")
+        addCustomMarkers(listOf(MarkerData( "LOCAL 1",LatLng(-22.8345916,-47.0540574), "Av. Profa. Ana Maria Silvestre Adade, 255-395 - Parque das Universidades, Campinas - SP", 4.9f,"Em frente a PUCCAMPINAS")))
+        Log.d(TAG, "Marcador posicionado")
         val puc = LatLng(-22.83400, -47.05276)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
         Log.d(TAG, "loc inical")
 
     }
+
 
     private fun addCustomMarkers(markers: List<MarkerData>) {
         _markers.value = markers.map { marker ->
