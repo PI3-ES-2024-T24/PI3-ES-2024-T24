@@ -50,6 +50,9 @@
         <action
             android:id="@+id/action_signInFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -66,4 +69,13 @@
         android:id="@+id/mapsFragment"
         android:name="com.puc.pi3_es_2024_t24.MapsFragment"
         android:label="MapsFragment" />
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.puc.pi3_es_2024_t24.ForgotPasswordFragment"
+        android:label="fragment_forgot_password"
+        tools:layout="@layout/fragment_forgot_password" >
+        <action
+            android:id="@+id/action_forgotPasswordFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
 </navigation>
