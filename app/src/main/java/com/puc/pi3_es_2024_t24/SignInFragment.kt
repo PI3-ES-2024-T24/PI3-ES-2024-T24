@@ -15,7 +15,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignInBinding
-import com.puc.pi3_es_2024_t24.databinding.FragmentSignUpBinding
 
 
 class SignInFragment : Fragment() {
