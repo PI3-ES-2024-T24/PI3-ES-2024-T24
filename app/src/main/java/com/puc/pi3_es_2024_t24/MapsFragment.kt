@@ -1,10 +1,13 @@
 package com.puc.pi3_es_2024_t24
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.GoogleMap
@@ -14,12 +17,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.puc.pi3_es_2024_t24.databinding.FragmentMapsBinding
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.maps.CameraUpdateFactory
 
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
 
-    private lateinit var mapView: SupportMapFragment
-    private lateinit var googleMap: GoogleMap
+    private lateinit var map: GoogleMap
+    private lateinit var binding: FragmentMapsBinding
     private val _markers = MutableLiveData<List<MarkerData>>()
     val markers: LiveData<List<MarkerData>> = _markers
 
@@ -27,21 +31,24 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentMapsBinding>(
-            inflater, R.layout.fragment_maps, container, false
-        )
-        binding.mapFragment = this
+        binding = FragmentMapsBinding.inflate(inflater, container, false)
         return binding.root
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "Criado")
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+        Log.d(TAG, "sincronizado")
 
+    }
     override fun onMapReady(googleMap: GoogleMap) {
-        this.googleMap = googleMap
+        map = googleMap
+        Log.d(TAG, "Mapa pronto")
+        val puc = LatLng(-22.83400, -47.05276)
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
+        Log.d(TAG, "loc inical")
 
-        // Add functionality for adding custom markers
-        addCustomMarkers(listOf(
-            MarkerData( "LOCAL 1",LatLng(-22.8345916,-47.0540574),   "Av. Profa. Ana Maria Silvestre Adade, 255-395 - Parque das Universidades, Campinas - SP", 4.9f,"Em frente a PUCCAMPINAS"),
-            // Add more markers here
-        ))
     }
 
     private fun addCustomMarkers(markers: List<MarkerData>) {
@@ -50,8 +57,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 .title(marker.name)
                 .snippet(marker.address)
                 .position(marker.latLng)
-            googleMap.addMarker(markerOptions)
+            map.addMarker(markerOptions)
             marker
         }
     }
 }
+
