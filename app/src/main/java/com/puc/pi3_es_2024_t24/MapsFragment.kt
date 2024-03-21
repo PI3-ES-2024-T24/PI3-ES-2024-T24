@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
+    //temporario
     private val location1 = MarkerData(
         "LOCAL 1",
         LatLng(-22.8345916,-47.0540574),
