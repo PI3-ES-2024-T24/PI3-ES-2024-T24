@@ -16,4 +16,7 @@
     <string name="entrar">Entrar</string>
     <string name="registrar_conta">Registrar conta</string>
     <string name="login">Login</string>
+    <string name="sair_da_conta">Sair da Conta?</string>
+    <string name="sair">sair</string>
+    <string name="cancelar">cancelar</string>
 </resources>
