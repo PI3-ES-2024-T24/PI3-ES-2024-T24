@@ -16,12 +16,11 @@ import com.puc.pi3_es_2024_t24.databinding.FragmentWelcomeBinding
 
 class WelcomeFragment : Fragment() {
 
-    private lateinit var binding:FragmentWelcomeBinding
+    private lateinit var binding: FragmentWelcomeBinding
     private lateinit var auth: FirebaseAuth
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentWelcomeBinding.inflate(inflater, container, false)
 
@@ -31,12 +30,12 @@ class WelcomeFragment : Fragment() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             val user = auth.currentUser
-                if (user != null) {
-                    navController.navigate(R.id.action_welcomeFragment_to_homeFragment)
-                } else {
-                    navController.navigate(R.id.action_welcomeFragment_to_signInFragment)
-                }
-            }, 2000)
+            if (user != null) {
+                navController.navigate(R.id.action_welcomeFragment_to_homeFragment)
+            } else {
+                navController.navigate(R.id.action_welcomeFragment_to_signInFragment)
+            }
+        }, 2000)
         return binding.root
 
     }
