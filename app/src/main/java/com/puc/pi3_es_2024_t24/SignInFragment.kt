@@ -40,8 +40,9 @@ class SignInFragment : Fragment() {
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
 
-          val verifyemail = auth.currentUser?.isEmailVerified
+        val verifyemail = auth.currentUser?.isEmailVerified
                         if(verifyemail == true){
+
                             Toast.makeText(
                                 requireContext(),
                                 "Sucesso ao entrar na conta!",

@@ -29,8 +29,8 @@ class WelcomeFragment : Fragment() {
         val navController = findNavController()
         auth = Firebase.auth
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                val user = auth.currentUser
+        Handler(Looper.getMainLooper()).postDelayed({
+            val user = auth.currentUser
                 if (user != null) {
                     navController.navigate(R.id.action_welcomeFragment_to_homeFragment)
                 } else {
