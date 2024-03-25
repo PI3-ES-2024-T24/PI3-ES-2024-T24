@@ -24,7 +24,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     //temporario
     private val location1 = MarkerData(
         "LOCAL 1",
-        LatLng(-22.8345916,-47.0540574),
+        LatLng(-22.8345916, -47.0540574),
         "Av. Profa. Ana Maria Silvestre Adade, 255-395 - Parque das Universidades, Campinas - SP",
         4.9f,
         "Em frente a PUCCAMPINAS"
@@ -32,7 +32,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private val location2 = MarkerData(
         "LOCAL 2",
-        LatLng(-22.8440713,-47.0531428),
+        LatLng(-22.8440713, -47.0531428),
         "Rua A Strazzacappa, 470 - Vila Embare, Valinhos - SP",
         4.9f,
         "Em frente ao Campinas Hall"
@@ -43,12 +43,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private val locations = arrayListOf<MarkerData>(location1, location2)
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         binding = FragmentMapsBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "Criado")
@@ -70,6 +70,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         Log.d(TAG, "sincronizado")
 
     }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         Log.d(TAG, "Mapa pronto")
@@ -84,12 +85,16 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private fun addMarkers(googleMap: GoogleMap) {
         locations.forEach { location ->
             val marker = googleMap.addMarker(
-                MarkerOptions()
-                    .title(location.name)
-                    .snippet(location.address)
-                    .position(location.latLng)
-                    .icon(
-                        BitmapHelper.vectorToBitmap(requireContext(), R.drawable.lock_icon, ContextCompat.getColor(requireContext(), androidx.appcompat.R.color.material_blue_grey_800))
+                MarkerOptions().title(location.name).snippet(location.address)
+                    .position(location.latLng).icon(
+                        BitmapHelper.vectorToBitmap(
+                            requireContext(),
+                            R.drawable.lock_icon,
+                            ContextCompat.getColor(
+                                requireContext(),
+                                androidx.appcompat.R.color.material_blue_grey_800
+                            )
+                        )
                     )
             )
             marker?.tag = location

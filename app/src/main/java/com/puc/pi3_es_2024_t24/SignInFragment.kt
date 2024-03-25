@@ -39,8 +39,10 @@ class SignInFragment : Fragment() {
                 //função do firebase auth para logar com email e senha
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
-          val verifyemail = auth.currentUser?.isEmailVerified
+
+        val verifyemail = auth.currentUser?.isEmailVerified
                         if(verifyemail == true){
+
                             Toast.makeText(
                                 requireContext(),
                                 "Sucesso ao entrar na conta!",
