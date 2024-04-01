@@ -58,4 +58,6 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
     implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.28")
+    implementation ("com.github.santalu:maskara:1.0.0")
+
 }

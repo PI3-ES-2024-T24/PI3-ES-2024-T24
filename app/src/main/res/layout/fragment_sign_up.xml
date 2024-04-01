@@ -70,7 +70,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/cpf"
-            android:inputType="number" />
+            android:inputType="number"
+            app:mask="000.000.000.00"
+            app:maskCharacter="0"
+            app:maskStyle="completable"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -87,7 +90,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/birth"
-            android:inputType="date" />
+            android:inputType="date"
+            app:mask="00/00/00"
+            app:maskCharacter="0"
+            app:maskStyle="completable"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -102,12 +108,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutCpf">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.santalu.maskara.widget.MaskEditText
             android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/phone"
-            android:inputType="phone" />
+            android:inputType="phone"
+            app:mask="+55 (__) _____-____"
+            app:maskCharacter="_"
+            app:maskStyle="completable" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
