@@ -39,19 +39,17 @@ class SignInFragment : Fragment() {
                 //função do firebase auth para logar com email e senha
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
-
-        val verifyemail = auth.currentUser?.isEmailVerified
-                     if(verifyemail == true){
-
-                         Toast.makeText(requireContext(), "Sucesso ao entrar na conta!",Toast.LENGTH_SHORT).show()
-                         navController.navigate(R.id.action_signInFragment_to_homeFragment)
-                     }else{
-                         Toast.makeText(requireContext(),"Conta não verificada, verfique no seu email",Toast.LENGTH_SHORT).show()
-                     }
-                     }else {
+                        val verifyemail = auth.currentUser?.isEmailVerified
+                        if(verifyemail == true){
+                            Toast.makeText(requireContext(), "Sucesso ao entrar na conta!",Toast.LENGTH_SHORT).show()
+                            navController.navigate(R.id.action_signInFragment_to_homeFragment)
+                        }else{
+                            Toast.makeText(requireContext(),"Conta não verificada, verfique no seu email",Toast.LENGTH_SHORT).show()
+                        }
+                    }else {
                         //cria um log do nivel E (error) no LogCat
                         Log.e("error: ", it.exception.toString())
-                     }
+                    }
                 }
             }
         }
