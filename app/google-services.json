@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "51552686539",
-    "project_id": "lockerappt24",
-    "storage_bucket": "lockerappt24.appspot.com"
+    "project_number": "1014011372345",
+    "project_id": "projetointegrador3-416713",
+    "storage_bucket": "projetointegrador3-416713.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:51552686539:android:34a24a2aed69c9203f264e",
+        "mobilesdk_app_id": "1:1014011372345:android:a5042120afd993915dbee8",
         "android_client_info": {
           "package_name": "com.puc.pi3_es_2024_t24"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAayJy7xvwr2oNVMz4Rk92nx-N9LW0Vsas"
+          "current_key": "AIzaSyDREyO4GbDfSXIAV0SQXIzCv-NkIqQXPwo"
         }
       ],
       "services": {
