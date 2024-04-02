@@ -22,7 +22,7 @@
 ## CLIENTES 
 
 #### ADICIONAR CLIENTE
-https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/addClient
+`https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/addClient`
 
 > CORPO DO BODY 
 ```
@@ -36,7 +36,7 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/addClien
 ```
 
 #### DELETAR CLIENTE
-https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/delClient
+`https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/delClient`
 
 > CORPO DO BODY 
 ```
@@ -46,7 +46,7 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/delClien
 ```
 
 #### ATUALIZAR CLIENTE
-https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateClient
+`https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateClient`
 
 > CORPO DO BODY 
 ```
@@ -60,7 +60,7 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateCl
 ```
 
 #### PUXAR CLIENTE ESPECÍFICO
-https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getClient
+`https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getClient`
 
 > CORPO DA QUERY
 ```
@@ -68,10 +68,10 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getClien
 ```
 
 #### PUXAR TODOS OS CLIENTES
-https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getAllClients
+`https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getAllClients`
 
 #### ALTERAR CARTÃO
-https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateCard
+`https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateCard`
 
 > CORPO DO BODY
 ```
@@ -86,7 +86,7 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateCa
 ## UNIDADES
 
 #### PUXAR DETERMINADA UNIDADE
-https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnity
+`https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnity`
 
 > CORPO DA QUERY
 ```
@@ -94,12 +94,12 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnity
 ```
 
 #### PUXAR TODAS AS UNIDADES
-https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnities
+`https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnities`
 
 ## LOCAÇÕES
 
 #### PUXAR TODAS AS LOCAÇÕES DE DETERMINADA UNIDADE
-https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnityLocations
+`https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnityLocations`
 
 > CORPO DA QUERY
 ```
@@ -107,7 +107,7 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnity
 ```
 
 #### ATUALIZAR DETERMINADA LOCAÇÃO
-https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateLocation
+`https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateLocation`
 
 > CORPO DO BODY
 ```
