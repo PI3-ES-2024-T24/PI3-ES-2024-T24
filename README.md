@@ -5,8 +5,6 @@
 *LockN'Live is an app intended for renting lockers across the region in an easy and interactive way*
 
 **Contents**
-* [Client Endpoints](#CLIENTES)
-
 
 ## Firebase Database
 * Collection "pessoas"
@@ -15,6 +13,11 @@
 * Colletion "gerentes"
   
 # ENDPOINTS
+
+**Contents**
+* [Clientes Endpoints](#CLIENTES)
+* [Unidade Endpoints](#UNIDADES)
+* [Locação Endpoints](#LOCAÇÕES)
 
 ## CLIENTES 
 
