@@ -116,10 +116,7 @@ class SignUpFragment : Fragment() {
         if (binding.etPhone.text.toString().isEmpty()) {
             binding.textInputLayoutCelular.error = "é necessario preencher esse campo"
             return false
-        } else if (binding.etPhone.length() != 14) {
-            binding.textInputLayoutCelular.error = "porfavor digite um celular valido"
-            return false
-        } else {
+        }else {
             binding.textInputLayoutCelular.error = null
         }
 
