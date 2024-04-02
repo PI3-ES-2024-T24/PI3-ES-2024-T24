@@ -4,9 +4,11 @@
 
 *LockN'Live is an app intended for renting lockers across the region in an easy and interactive way*
 
-## Contents
+**Contents**
+* [Client Endpoints](#CLIENTES)
 
-## Firebase Firestore
+
+## Firebase Database
 * Collection "pessoas"
 * Colletion "armários"
 * Collection "locações"
@@ -16,7 +18,7 @@
 
 ## CLIENTES 
 
-**ADICIONAR CLIENTE**
+### ADICIONAR CLIENTE
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/addClient
 
 > CORPO DO BODY 
@@ -30,7 +32,7 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/addClien
 }
 ```
 
-**DELETAR CLIENTE**
+### DELETAR CLIENTE
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/delClient
 
 > CORPO DO BODY 
@@ -40,7 +42,7 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/delClien
 }
 ```
 
-**ATUALIZAR CLIENTE**
+### ATUALIZAR CLIENTE
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateClient
 
 > CORPO DO BODY 
@@ -54,7 +56,7 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateCl
 }
 ```
 
-**PUXAR CLIENTE ESPECÍFICO**
+### PUXAR CLIENTE ESPECÍFICO
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getClient
 
 > CORPO DA QUERY
@@ -62,10 +64,10 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getClien
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getClient?email={EMAIL DO CLIENTE}
 ```
 
-**PUXAR TODOS OS CLIENTES**
+### PUXAR TODOS OS CLIENTES
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getAllClients
 
-**ALTERAR CARTÃO**
+### ALTERAR CARTÃO
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateCard
 
 > CORPO DO BODY
@@ -80,7 +82,7 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateCa
 
 ## UNIDADES
 
-**PUXAR DETERMINADA UNIDADE**
+### PUXAR DETERMINADA UNIDADE
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnity
 
 > CORPO DA QUERY
@@ -88,12 +90,12 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnity
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnity?unityId={ID DA UNIDADE}
 ```
 
-**PUXAR TODAS AS UNIDADES**
+### PUXAR TODAS AS UNIDADES
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnities
 
 ## LOCAÇÕES
 
-**PUXAR TODAS AS LOCAÇÕES DE DETERMINADA UNIDADE**
+### PUXAR TODAS AS LOCAÇÕES DE DETERMINADA UNIDADE
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnityLocations
 
 > CORPO DA QUERY
@@ -101,7 +103,7 @@ https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnity
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/getUnityLocations?unityId={ID DA UNIDADE}
 ```
 
-**ATUALIZAR DETERMINADA LOCAÇÃO**
+### ATUALIZAR DETERMINADA LOCAÇÃO
 https://southamerica-east1-projetointegrador3-416713.cloudfunctions.net/updateLocation
 
 > CORPO DO BODY
