@@ -18,9 +18,19 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.puc.pi3_es_2024_t24.databinding.FragmentMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLngBounds
-
+import com.google.android.gms.tasks.Task
+import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.HttpsCallableResult
+import com.google.firebase.functions.functions
+import org.json.JSONArray
+import org.json.JSONObject
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
+    private lateinit var functions: FirebaseFunctions
+    private val firebaseApp = FirebaseApp.getInstance()
+
     //temporario
     private val location1 = MarkerData(
         "LOCAL 1",
@@ -40,15 +50,31 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var binding: FragmentMapsBinding
-    private val locations = arrayListOf<MarkerData>(location1, location2)
+    private val locations = arrayListOf<MarkerData>(location1)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+        functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
+        getUnities()
         binding = FragmentMapsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    private fun getUnities(): Task<HttpsCallableResult> {
+        return functions
+            .getHttpsCallable("getAllUnities")
+            .call()
+            .addOnSuccessListener { task ->
+                val result = task.data as JSONArray
+                Log.d(TAG, "Resposta da função Firebase Functions: $result")
+
+                // Aqui você pode continuar com o processamento da resposta
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Falha ao obter as localizações", exception)
+            }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "Criado")
