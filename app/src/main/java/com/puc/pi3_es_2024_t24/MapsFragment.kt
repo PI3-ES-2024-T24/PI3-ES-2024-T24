@@ -24,33 +24,16 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.HttpsCallableResult
 import com.google.firebase.functions.functions
+import kotlinx.coroutines.tasks.await
 import org.json.JSONArray
 import org.json.JSONObject
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
-
-    //temporario
-    private val location1 = MarkerData(
-        "LOCAL 1",
-        LatLng(-22.8345916, -47.0540574),
-        "Av. Profa. Ana Maria Silvestre Adade, 255-395 - Parque das Universidades, Campinas - SP",
-        4.9f,
-        "Em frente a PUCCAMPINAS"
-    )
-
-    private val location2 = MarkerData(
-        "LOCAL 2",
-        LatLng(-22.8440713, -47.0531428),
-        "Rua A Strazzacappa, 470 - Vila Embare, Valinhos - SP",
-        4.9f,
-        "Em frente ao Campinas Hall"
-    )
-
     private lateinit var map: GoogleMap
     private lateinit var binding: FragmentMapsBinding
-    private val locations = arrayListOf<MarkerData>(location1)
+    private val locations = arrayListOf<MarkerData>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -61,38 +44,63 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         return binding.root
     }
 
-    private fun getUnities(): Task<HttpsCallableResult> {
+    private fun getUnities(): Task<Unit> {
         return functions
             .getHttpsCallable("getAllUnities")
             .call()
-            .addOnSuccessListener { task ->
-                val result = task.data as JSONArray
-                Log.d(TAG, "Resposta da função Firebase Functions: $result")
+            .continueWith { task ->
+                locations.clear()
+                val result = task.result?.data as? List<Map<String, Any>>
 
-                // Aqui você pode continuar com o processamento da resposta
+                if (result == null) {
+                    Log.e(TAG, "Resposta inválida da função Firebase Functions")
+                    throw IllegalStateException("Resposta inválida da função Firebase Functions")
+                }
+
+                val unities = result.map { unity ->
+                    val unityId = unity["unityId"] as String
+                    val gerenteCpf = unity["gerenteCpf"] as String
+                    val precos = unity["precos"] as Map<String, Int>
+                    val localizacao = unity["localizacao"] as Map<String, Any>
+
+                    val nome = localizacao["nome"] as String
+                    val latitude = localizacao["latitude"] as Double
+                    val longitude = localizacao["longitude"] as Double
+                    val endereco = localizacao["endereco"] as String
+                    val referencia = localizacao["referencia"] as String
+
+                    locations.add(MarkerData(
+                        nome,
+                        LatLng(latitude, longitude),
+                        endereco,
+                        gerenteCpf.toFloat(),
+                        referencia
+                    ))
+                }
+                val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+                mapFragment.getMapAsync { googleMap ->
+                    googleMap.setInfoWindowAdapter(MarkerInfoAdapter(requireContext()))
+                    addMarkers(googleMap)
+
+                    googleMap.setOnMapLoadedCallback {
+                        val bounds = LatLngBounds.builder()
+
+                        locations.forEach {
+                            bounds.include(it.latLng)
+                        }
+
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
+                    }
+                }
             }
             .addOnFailureListener { exception ->
                 Log.e(TAG, "Falha ao obter as localizações", exception)
             }
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "Criado")
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync { googleMap ->
-            googleMap.setInfoWindowAdapter(MarkerInfoAdapter(requireContext()))
-            addMarkers(googleMap)
-
-            googleMap.setOnMapLoadedCallback {
-                val bounds = LatLngBounds.builder()
-
-                locations.forEach {
-                    bounds.include(it.latLng)
-                }
-
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
-            }
-        }
         Log.d(TAG, "sincronizado")
 
     }
