@@ -19,43 +19,37 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.functions.FirebaseFunctions
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
+import com.puc.pi3_es_2024_t24.databinding.FragmentMapsBinding
 
-class HomeFragment : Fragment() {
-    //temporario
-    private val location1 = MarkerData(
-        "LOCAL 1",
-        LatLng(-22.8345916,-47.0540574),
-        "Av. Profa. Ana Maria Silvestre Adade, 255-395 - Parque das Universidades, Campinas - SP",
-        4.9f,
-        "Em frente a PUCCAMPINAS"
-    )
+class HomeFragment : Fragment(), OnMapReadyCallback {
 
-    private val location2 = MarkerData(
-        "LOCAL 2",
-        LatLng(-22.8440713,-47.0531428),
-        "Rua A Strazzacappa, 470 - Vila Embare, Valinhos - SP",
-        4.9f,
-        "Em frente ao Campinas Hall"
-    )
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentHomeBinding
-    private val locations = arrayListOf<MarkerData>(location1, location2)
+    private val locations = arrayListOf<MarkerData>()
     private lateinit var map: GoogleMap
+    private lateinit var functions: FirebaseFunctions
+    private val firebaseApp = FirebaseApp.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
+        getUnities()
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
@@ -79,23 +73,61 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(ContentValues.TAG, "Criado")
-        val homeFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
-        homeFragment.getMapAsync { googleMap ->
-            googleMap.setInfoWindowAdapter(MarkerInfoAdapter(requireContext()))
-            addMarkers(googleMap)
-
-            googleMap.setOnMapLoadedCallback {
-                val bounds = LatLngBounds.builder()
-
-                locations.forEach {
-                    bounds.include(it.latLng)
-                }
-
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
-            }
-        }
         Log.d(ContentValues.TAG, "sincronizado")
 
+    }
+    private fun getUnities(): Task<Unit> {
+        return functions
+            .getHttpsCallable("getAllUnities")
+            .call()
+            .continueWith { task ->
+                locations.clear()
+                val result = task.result?.data as? List<Map<String, Any>>
+
+                if (result == null) {
+                    Log.e(ContentValues.TAG, "Resposta inválida da função Firebase Functions")
+                    throw IllegalStateException("Resposta inválida da função Firebase Functions")
+                }
+
+                val unities = result.map { unity ->
+                    val unityId = unity["unityId"] as String
+                    val gerenteCpf = unity["gerenteCpf"] as String
+                    val precos = unity["precos"] as Map<String, Int>
+                    val localizacao = unity["localizacao"] as Map<String, Any>
+
+                    val nome = localizacao["nome"] as String
+                    val latitude = localizacao["latitude"] as Double
+                    val longitude = localizacao["longitude"] as Double
+                    val endereco = localizacao["endereco"] as String
+                    val referencia = localizacao["referencia"] as String
+
+                    locations.add(MarkerData(
+                        nome,
+                        LatLng(latitude, longitude),
+                        endereco,
+                        gerenteCpf.toFloat(),
+                        referencia
+                    ))
+                }
+                val homeFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
+                homeFragment.getMapAsync { googleMap ->
+                    googleMap.setInfoWindowAdapter(MarkerInfoAdapter(requireContext()))
+                    addMarkers(googleMap)
+
+                    googleMap.setOnMapLoadedCallback {
+                        val bounds = LatLngBounds.builder()
+
+                        locations.forEach {
+                            bounds.include(it.latLng)
+                        }
+
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e(ContentValues.TAG, "Falha ao obter as localizações", exception)
+            }
     }
     private fun showLogoutDialogBox(){
         val dialog = Dialog(requireContext())
@@ -119,7 +151,7 @@ class HomeFragment : Fragment() {
         }
         dialog.show()
     }
-    fun onMapReady(googleMap: GoogleMap) {
+    override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         Log.d(ContentValues.TAG, "Mapa pronto")
         Log.d(ContentValues.TAG, "Marcador posicionado")
@@ -133,12 +165,16 @@ class HomeFragment : Fragment() {
     private fun addMarkers(googleMap: GoogleMap) {
         locations.forEach { location ->
             val marker = googleMap.addMarker(
-                MarkerOptions()
-                    .title(location.name)
-                    .snippet(location.address)
-                    .position(location.latLng)
-                    .icon(
-                        BitmapHelper.vectorToBitmap(requireContext(), R.drawable.lock_icon, ContextCompat.getColor(requireContext(), androidx.appcompat.R.color.material_blue_grey_800))
+                MarkerOptions().title(location.name).snippet(location.address)
+                    .position(location.latLng).icon(
+                        BitmapHelper.vectorToBitmap(
+                            requireContext(),
+                            R.drawable.lock_icon,
+                            ContextCompat.getColor(
+                                requireContext(),
+                                androidx.appcompat.R.color.material_blue_grey_800
+                            )
+                        )
                     )
             )
             marker?.tag = location
