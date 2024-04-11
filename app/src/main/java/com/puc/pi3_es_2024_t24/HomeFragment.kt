@@ -234,5 +234,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
         }
+
+
     }
 }
