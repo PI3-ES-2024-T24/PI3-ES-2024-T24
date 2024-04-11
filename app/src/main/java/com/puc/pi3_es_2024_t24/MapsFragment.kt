@@ -89,10 +89,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                         mapFragment.getMapAsync(this)
 
                     }
-                }
-                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                    // Only approximate location access granted.
-                } else -> {
+                }else -> {
                 // No location access granted.
             }
             }
@@ -113,8 +110,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         //val puc temporatio apenas pra testes
         val puc = LatLng(-22.83400, -47.05276)
         map = googleMap
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc,15f))
+//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc,15f))
         getUnities()
 
         map.setOnMarkerClickListener { marker ->
