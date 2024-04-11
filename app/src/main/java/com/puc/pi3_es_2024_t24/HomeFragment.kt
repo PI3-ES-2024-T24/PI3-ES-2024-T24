@@ -178,6 +178,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     )
             )
             marker?.tag = location
+
+
         }
     }
 }

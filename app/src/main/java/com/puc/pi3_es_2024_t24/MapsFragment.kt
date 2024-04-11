@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.puc.pi3_es_2024_t24.databinding.FragmentMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
@@ -28,7 +30,7 @@ import kotlinx.coroutines.tasks.await
 import org.json.JSONArray
 import org.json.JSONObject
 
-class MapsFragment : Fragment(), OnMapReadyCallback {
+class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
     private lateinit var map: GoogleMap
@@ -41,6 +43,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
         getUnities()
         binding = FragmentMapsBinding.inflate(inflater, container, false)
+
+        binding.navFab.setOnClickListener{
+            Toast.makeText(requireContext(), "fab work", Toast.LENGTH_SHORT).show()
+        }
         return binding.root
     }
 
@@ -113,6 +119,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
         Log.d(TAG, "loc inical")
 
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        binding.navFab.visibility = View.VISIBLE
+
+
+        return true
     }
 
 
