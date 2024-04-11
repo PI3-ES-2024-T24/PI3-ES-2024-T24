@@ -1,12 +1,15 @@
 package com.puc.pi3_es_2024_t24
 
 import android.content.ContentValues.TAG
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,6 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.puc.pi3_es_2024_t24.databinding.FragmentMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
@@ -39,11 +43,39 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
-        getUnities()
         binding = FragmentMapsBinding.inflate(inflater, container, false)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
         return binding.root
     }
 
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "Criado")
+        Log.d(TAG, "sincronizado")
+
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        val puc = LatLng(-22.83400, -47.05276)
+        map = googleMap
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
+        getUnities()
+
+        map.setOnMarkerClickListener { marker ->
+            binding.navFab.visibility = View.VISIBLE
+            binding.navFab.setOnClickListener {
+                navIntent(marker.position)
+            }
+            marker.showInfoWindow()
+            true
+        }
+        map.setOnMapClickListener {
+            binding.navFab.visibility = View.GONE
+        }
+
+    }
     private fun getUnities(): Task<Unit> {
         return functions
             .getHttpsCallable("getAllUnities")
@@ -81,40 +113,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 mapFragment.getMapAsync { googleMap ->
                     googleMap.setInfoWindowAdapter(MarkerInfoAdapter(requireContext()))
                     addMarkers(googleMap)
-
-                    googleMap.setOnMapLoadedCallback {
-                        val bounds = LatLngBounds.builder()
-
-                        locations.forEach {
-                            bounds.include(it.latLng)
-                        }
-
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
-                    }
                 }
+
             }
             .addOnFailureListener { exception ->
                 Log.e(TAG, "Falha ao obter as localizações", exception)
             }
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "Criado")
-        Log.d(TAG, "sincronizado")
-
+    private fun navIntent(location: LatLng) {
+        val intent =
+            Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
+        val mapIntent = Intent(Intent.ACTION_VIEW, intent)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        startActivity(mapIntent)
     }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-        Log.d(TAG, "Mapa pronto")
-        Log.d(TAG, "Marcador posicionado")
-        val puc = LatLng(-22.83400, -47.05276)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
-        Log.d(TAG, "loc inical")
-
-    }
-
 
     private fun addMarkers(googleMap: GoogleMap) {
         locations.forEach { location ->
