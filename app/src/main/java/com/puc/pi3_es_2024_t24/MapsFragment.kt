@@ -107,7 +107,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         val currentLoc= LatLng(currentLocation.latitude,currentLocation.longitude)
-        //val puc temporatio apenas pra testes
+        //val puc apenas pra testes fora do emulador
         val puc = LatLng(-22.83400, -47.05276)
         map = googleMap
 //        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
