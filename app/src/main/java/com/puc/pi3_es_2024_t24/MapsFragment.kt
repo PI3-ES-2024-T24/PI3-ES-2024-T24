@@ -47,9 +47,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        binding.navFab.setOnClickListener{
-            Toast.makeText(requireContext(), "fab work", Toast.LENGTH_SHORT).show()
-        }
         return binding.root
     }
 
