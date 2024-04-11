@@ -2,8 +2,10 @@ package com.puc.pi3_es_2024_t24
 
 import android.app.Dialog
 import android.content.ContentValues
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -49,9 +51,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     ): View? {
         // Inflate the layout for this fragment
         functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
-        getUnities()
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-
+        val homeMapFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
+        homeMapFragment.getMapAsync(this)
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
@@ -74,6 +76,20 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         Log.d(ContentValues.TAG, "Criado")
         Log.d(ContentValues.TAG, "sincronizado")
+
+    }
+    override fun onMapReady(googleMap: GoogleMap) {
+        val puc = LatLng(-22.83400, -47.05276)
+        map = googleMap
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
+        getUnities()
+
+        map.setOnMarkerClickListener { marker ->
+            marker.showInfoWindow()
+            true
+        }
+        map.setOnMapClickListener {
+        }
 
     }
     private fun getUnities(): Task<Unit> {
@@ -113,16 +129,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 homeFragment.getMapAsync { googleMap ->
                     googleMap.setInfoWindowAdapter(MarkerInfoAdapter(requireContext()))
                     addMarkers(googleMap)
-
-                    googleMap.setOnMapLoadedCallback {
-                        val bounds = LatLngBounds.builder()
-
-                        locations.forEach {
-                            bounds.include(it.latLng)
-                        }
-
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
-                    }
                 }
             }
             .addOnFailureListener { exception ->
@@ -151,14 +157,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         dialog.show()
     }
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-        Log.d(ContentValues.TAG, "Mapa pronto")
-        Log.d(ContentValues.TAG, "Marcador posicionado")
-        val puc = LatLng(-22.83400, -47.05276)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
-        Log.d(ContentValues.TAG, "loc inical")
-
+    private fun navIntent(location: LatLng) {
+        val intent =
+            Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
+        val mapIntent = Intent(Intent.ACTION_VIEW, intent)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        startActivity(mapIntent)
     }
 
 

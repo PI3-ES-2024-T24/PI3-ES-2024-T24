@@ -46,7 +46,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         binding = FragmentMapsBinding.inflate(inflater, container, false)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
         return binding.root
     }
 
@@ -75,8 +74,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         map.setOnMapClickListener {
             binding.navFab.visibility = View.GONE
         }
-        Log.d(TAG, "Mapa pronto")
-        Log.d(TAG, "Marcador posicionado")
+
     }
     private fun getUnities(): Task<Unit> {
         return functions
