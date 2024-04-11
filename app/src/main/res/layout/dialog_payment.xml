@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="20dp"
+    app:cardBackgroundColor="@color/white"
+    android:layout_marginHorizontal="20dp">
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textStyle="bold"
+            android:textSize="40sp"
+            android:text="Pagamento"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp">
+            <EditText
+                android:id="@+id/etCardName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nome"/>
+            <EditText
+                android:id="@+id/etCardNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Número do cartão" />
+            <EditText
+                android:id="@+id/etCardValidation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Validade" />
+            <EditText
+                android:id="@+id/etCardCCV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="CCV" />
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnSave"
+                android:textSize="14sp"
+                android:textAllCaps="true"
+                android:text="Salvar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/btnCancel"
+                android:textSize="14sp"
+                android:textAllCaps="true"
+                android:text="@string/cancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

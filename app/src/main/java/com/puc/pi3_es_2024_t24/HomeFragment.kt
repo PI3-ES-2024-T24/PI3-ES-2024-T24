@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -34,6 +35,15 @@ import com.google.firebase.auth.auth
 import com.google.firebase.functions.FirebaseFunctions
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentMapsBinding
+import java.io.Serializable
+
+data class Card(
+    val cpf: String,
+    val nome: String,
+    val numero: String,
+    val validade: String,
+    val cvv: String
+) : Serializable
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
@@ -60,7 +70,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when(item.itemId){
-                R.id.bottom_credit_card ->Toast.makeText(requireContext(), "Fragmento pagamento!!!", Toast.LENGTH_SHORT).show()
+                R.id.bottom_credit_card ->{
+                    Toast.makeText(requireContext(), "Fragmento pagamento!!!", Toast.LENGTH_SHORT).show()
+                    showPayDialogBox()
+                }
 
                 R.id.bottom_logout ->{
                     Toast.makeText(requireContext(), "dialog logout", Toast.LENGTH_SHORT).show()
@@ -157,6 +170,32 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         dialog.show()
     }
+
+    private fun showPayDialogBox(){
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_payment)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val btnSave : Button = dialog.findViewById(R.id.btnSave)
+        val btnCancel : Button = dialog.findViewById(R.id.btnCancel)
+        val cardName : EditText = dialog.findViewById(R.id.etCardName)
+        val cardNumber : EditText = dialog.findViewById(R.id.etCardNumber)
+        val cardValidation : EditText = dialog.findViewById(R.id.etCardValidation)
+        val cardCVV : EditText = dialog.findViewById(R.id.etCardCCV)
+
+        btnSave.setOnClickListener {
+            saveCard(cardName, cardNumber, cardValidation, cardCVV)
+            dialog.dismiss()
+        }
+        btnCancel.setOnClickListener {
+            Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
     private fun navIntent(location: LatLng) {
         val intent =
             Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
@@ -185,5 +224,27 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
         }
+    }
+
+    private fun saveCard(cardName: EditText, cardNumber: EditText, cardValidation: EditText, cardCVV: EditText) : Task<Unit> {
+        val cpf = "12345678901" // ALTERAR PARA PEGAR DO CLIENTE ATUAL
+        val name = cardName.text.toString()
+        val number = cardNumber.text.toString()
+        val validation = cardValidation.text.toString()
+        val cvv = cardCVV.text.toString()
+
+        val obj = Card(cpf, name, number, validation, cvv)
+
+        return functions
+            .getHttpsCallable("updateCard")
+            .call(obj)
+            .continueWith{task ->
+                if (task.isSuccessful) {
+                    Log.d("UPDATE", "Card successfully updated")
+                } else {
+                    val exception = task.exception
+                    Log.e("UPDATE", "Error updating card", exception)
+                }
+            }
     }
 }
