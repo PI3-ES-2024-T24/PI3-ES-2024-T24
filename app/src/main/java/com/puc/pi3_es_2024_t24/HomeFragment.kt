@@ -147,6 +147,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 }
                 clicked = !clicked
             }
+            binding.fabNavigation.setOnClickListener{
+                navIntent(marker.position)
+            }
             marker.showInfoWindow()
             true
         }
