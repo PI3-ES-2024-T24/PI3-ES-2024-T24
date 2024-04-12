@@ -53,6 +53,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var currentLocation: Location
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
+    private var clicked = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -134,10 +135,29 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         getUnities()
 
         map.setOnMarkerClickListener { marker ->
+            binding.fabExpand.show()
+            binding.fabExpand.setOnClickListener{
+                if (!clicked){
+                    binding.fabNavigation.show()
+                    binding.fabLocation.show()
+                }
+                else{
+                    binding.fabNavigation.hide()
+                    binding.fabLocation.hide()
+                }
+                clicked = !clicked
+            }
+            binding.fabNavigation.setOnClickListener{
+                navIntent(marker.position)
+            }
             marker.showInfoWindow()
             true
         }
         map.setOnMapClickListener {
+            binding.fabExpand.hide()
+            binding.fabNavigation.hide()
+            binding.fabLocation.hide()
+            clicked = false
         }
 
     }
@@ -234,5 +254,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
         }
+
+
     }
 }

@@ -25,5 +25,56 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_menu" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_expand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="250dp"
+        android:clickable="true"
+        android:src="@drawable/lock_icon"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"
+        app:shapeAppearanceOverlay="@style/fab_round"
+        android:contentDescription="TODO"
+
+        android:focusable="true" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="250dp"
+        android:clickable="true"
+        app:icon="@drawable/nav"
+        android:text="Navegar"
+        app:layout_constraintBottom_toTopOf="@+id/fab_expand"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"
+        app:shapeAppearanceOverlay="@style/fab_round"
+        android:contentDescription="TODO"
+        android:focusable="true" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="250dp"
+        android:clickable="true"
+        app:icon="@drawable/lock_icon"
+        android:text="Locar"
+        app:layout_constraintBottom_toTopOf="@+id/fab_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"
+        app:shapeAppearanceOverlay="@style/fab_round"
+        android:contentDescription="TODO"
+        android:focusable="true" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
