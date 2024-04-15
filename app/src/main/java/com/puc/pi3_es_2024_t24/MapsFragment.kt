@@ -113,6 +113,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 //        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc,15f))
         getUnities()
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        map.isMyLocationEnabled = true
+
 
         map.setOnMarkerClickListener { marker ->
             binding.navFab.visibility = View.VISIBLE
