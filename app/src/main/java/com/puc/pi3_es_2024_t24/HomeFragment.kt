@@ -32,18 +32,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.firestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentMapsBinding
 import java.io.Serializable
-
-data class Card(
-    val cpf: String,
-    val nome: String,
-    val numero: String,
-    val validade: String,
-    val cvv: String
-) : Serializable
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
@@ -54,6 +48,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
+    private val db = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -178,6 +173,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         dialog.setContentView(R.layout.dialog_payment)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+        val cpf : String = "12345678901"// PEGAR CPF DO USUÁRIO CONECTADO
         val btnSave : Button = dialog.findViewById(R.id.btnSave)
         val btnCancel : Button = dialog.findViewById(R.id.btnCancel)
         val cardName : EditText = dialog.findViewById(R.id.etCardName)
@@ -186,7 +182,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val cardCVV : EditText = dialog.findViewById(R.id.etCardCCV)
 
         btnSave.setOnClickListener {
-            saveCard(cardName, cardNumber, cardValidation, cardCVV)
+            saveCard(cpf, cardName, cardNumber, cardValidation, cardCVV)
             dialog.dismiss()
         }
         btnCancel.setOnClickListener {
@@ -226,24 +222,38 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun saveCard(cardName: EditText, cardNumber: EditText, cardValidation: EditText, cardCVV: EditText) : Task<Unit> {
-        val cpf = "12345678901" // ALTERAR PARA PEGAR DO CLIENTE ATUAL
+    private fun saveCard(cpf: String, cardName: EditText, cardNumber: EditText, cardValidation: EditText, cardCVV: EditText) : Task<Unit> {
         val name = cardName.text.toString()
         val number = cardNumber.text.toString()
         val validation = cardValidation.text.toString()
         val cvv = cardCVV.text.toString()
 
-        val obj = Card(cpf, name, number, validation, cvv)
+        val body = hashMapOf(
+            "cpf" to cpf,
+            "nome" to name,
+            "numero" to number,
+            "validade" to validation,
+            "cvv" to cvv
+        )
 
         return functions
             .getHttpsCallable("updateCard")
-            .call(obj)
+            .call(body) // Passa diretamente o objClient
             .continueWith{task ->
                 if (task.isSuccessful) {
-                    Log.d("UPDATE", "Card successfully updated")
+                    Toast.makeText(
+                        requireContext(),
+                        "Cartão atualizado com sucesso!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     val exception = task.exception
                     Log.e("UPDATE", "Error updating card", exception)
+                    Toast.makeText(
+                        requireContext(),
+                        "Falha ao atualizar cartão!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
     }

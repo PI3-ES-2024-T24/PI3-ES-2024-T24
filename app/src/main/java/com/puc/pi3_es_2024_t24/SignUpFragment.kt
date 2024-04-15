@@ -17,12 +17,15 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignUpBinding
 
 class SignUpFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding:FragmentSignUpBinding
+    private lateinit var db : FirebaseFirestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,6 +36,7 @@ class SignUpFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
+        db = Firebase.firestore
         //caso o botao de id btnSignUp é clicado
         binding.btnSignUp.setOnClickListener{
             //formata os dados
@@ -40,6 +44,19 @@ class SignUpFragment : Fragment() {
             val password = binding.etPassword.text.toString()
 
             if (validate()) {
+
+                // INSTANCIAR OBJETO PARA ENVIO PARA O FIRESTORE
+                val body = hashMapOf(
+                    "nome" to binding.etName.text.toString(),
+                    "email" to binding.etEmail.text.toString(),
+                    "cpf" to binding.etCpf.text.toString(),
+                    "dataNascimento" to binding.etBirth.text.toString(),
+                    "celular" to binding.etPhone.text.toString()
+                )
+
+                // armazenar cliente no firestore
+                db.collection("pessoas").add(body)
+
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
                         auth.currentUser?.sendEmailVerification()
