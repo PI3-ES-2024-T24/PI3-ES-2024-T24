@@ -9,21 +9,10 @@ import androidx.room.Room
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var roomDb : AppDatabase
-        private set
-
     private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        try {
-            roomDb = Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java, "client"
-            ).build()
-        } catch (error: Exception) {
-            Log.d("ERRO ROOM", error.toString())
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

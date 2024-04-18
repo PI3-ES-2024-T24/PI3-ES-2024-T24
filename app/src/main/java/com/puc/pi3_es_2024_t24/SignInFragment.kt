@@ -25,14 +25,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
+import kotlin.reflect.typeOf
 
 class SignInFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentSignInBinding
     private lateinit var db : FirebaseFirestore
-    private lateinit var roomDb: AppDatabase
+    private val database by lazy { AppDatabase.getDatabase(requireContext()) }
     private lateinit var clientDao : ClientDao
 
     override fun onCreateView(
@@ -106,24 +106,30 @@ class SignInFragment : Fragment() {
     }
 
 
-        private fun armazenarCliente(email: String) {
-            roomDb = Room.databaseBuilder(
-                requireContext(),
-                AppDatabase::class.java, "client"
-            ).build()
-            clientDao = roomDb.clientDao()
+    private fun armazenarCliente(email: String) {
+        Log.d("armazenarCliente", "entrou")
+        Log.d("ROOM", database.toString())
+        clientDao = database.clientDao()
 
-            db.collection("pessoas")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnSuccessListener { documents ->
-                    for (document in documents) {
-                        Log.d("client", "${document.data}")
+        db.collection("pessoas")
+            .whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val client = Client(
+                        document.getString("cpf").toString(), "", "",
+                        "", "", document.getString("nome").toString(), document.getString("celular").toString(),
+                        document.getString("email").toString(), document.getString("dataNascimento").toString()
+                    )
+                    // Usar uma coroutine para inserir o cliente em um thread separado
+                    CoroutineScope(Dispatchers.IO).launch {
+                        clientDao.insert(client)
                     }
                 }
-                .addOnFailureListener{ exception ->
-                    Log.w("Error client", "$exception")
-                }
-        }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Error ABCED", "$exception")
+            }
+    }
 
 }

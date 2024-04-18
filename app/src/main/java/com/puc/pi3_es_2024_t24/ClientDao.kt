@@ -4,8 +4,10 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Insert
 import androidx.room.Delete
+import androidx.room.TypeConverters
 
 @Dao
+@TypeConverters
 interface ClientDao {
     @Query("SELECT * FROM client") // PUXAR TODOS OS CLIENTES
     fun getAll(): List<Client>

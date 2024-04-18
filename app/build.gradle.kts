@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -64,7 +65,11 @@ dependencies {
     implementation ("com.github.santalu:maskara:1.0.0")
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-functions")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
-    implementation("androidx.room:room-runtime:2.4.0")
-    annotationProcessor("androidx.room:room-compiler:2.4.0")
+    val room_version = "2.6.1"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+
 }
