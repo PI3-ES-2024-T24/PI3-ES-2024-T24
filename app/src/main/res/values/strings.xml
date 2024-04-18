@@ -7,11 +7,11 @@
     <string name="email">E-mail</string>
     <string name="cpf">CPF</string>
     <string name="birth">00/00/0000</string>
-    <string name="phone">celular</string>
-    <string name="password">senha</string>
-    <string name="confpassword">confirmar senha</string>
-    <string name="criar_conta">Criar Conta</string>
-    <string name="j_tem_conta_clique_aqui">Já tem conta? Clique aqui</string>
+    <string name="phone">Celular</string>
+    <string name="password">Senha</string>
+    <string name="confpassword">Confirmar senha</string>
+    <string name="criar_conta">Crie uma conta</string>
+    <string name="j_tem_conta_clique_aqui">Já tem cadastro? Clique aqui</string>
     <string name="sign_up">Sign up</string>
     <string name="entrar">Entrar</string>
     <string name="registrar_conta">Registrar conta</string>
