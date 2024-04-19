@@ -10,12 +10,14 @@
         android:id="@+id/welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="60dp"
         android:text="@string/criar_conta"
+        android:textColor="@color/blue_gray"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,16 +33,19 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
+            style="@style/RoundedCornerTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textColor="@color/light_blue" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/cinzinha"
         android:layout_marginTop="20dp"
         android:layout_marginHorizontal="35dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,6 +57,7 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/cinzinha"
             android:hint="@string/email"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -60,6 +66,7 @@
         android:id="@+id/textInputLayoutCpf"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/cinzinha"
         android:layout_marginTop="20dp"
         android:layout_marginHorizontal="35dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,6 +76,7 @@
             android:id="@+id/etCpf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/cinzinha"
             android:hint="@string/cpf"
             android:inputType="number"
             app:mask="000.000.000.00"
@@ -80,6 +88,7 @@
         android:id="@+id/textInputLayoutBirth"
         android:layout_width="150dp"
         android:layout_marginTop="20dp"
+        android:textColor="@color/cinzinha"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="35dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,6 +98,7 @@
             android:id="@+id/etBirth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/cinzinha"
             android:hint="@string/birth"
             android:inputType="date"
             app:mask="00/00/00"
@@ -112,6 +122,7 @@
             android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/cinzinha"
             android:hint="@string/phone"
             android:inputType="phone"
             app:mask="+55 (__) _____-____"
@@ -135,6 +146,7 @@
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/cinzinha"
             android:hint="@string/password"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -154,6 +166,7 @@
             android:id="@+id/etConfPassword"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:textColor="@color/cinzinha"
             android:hint="@string/confpassword"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -163,7 +176,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/j_tem_conta_clique_aqui"
-        android:layout_margin="20dp"
+        android:layout_margin="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -174,7 +187,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sign_up"
-        android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:layout_margin="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
