@@ -48,7 +48,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var lbinding: DialogLocationBinding
     private val locations = arrayListOf<MarkerData>()
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -64,7 +63,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // Inflate the layout for this fragment
         functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        lbinding = DialogLocationBinding.inflate(inflater, container, false)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         getLocation()
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
@@ -167,8 +165,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
             binding.fabLocation.setOnClickListener {
                 Toast.makeText(requireContext(), "Open dialog", Toast.LENGTH_SHORT).show()
-
-                showLocationDialogBox()
             }
             marker.showInfoWindow()
             true
@@ -278,26 +274,5 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
 
 
-    }
-    private fun showLocationDialogBox() {
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(lbinding.root)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        lbinding.btnConfirmLocation.setOnClickListener {
-            when (lbinding.radioOptions.checkedRadioButtonId) {
-                lbinding.radio30min.id -> Toast.makeText(requireContext(), "30 min", Toast.LENGTH_SHORT).show()
-
-                lbinding.radio1hr.id -> Toast.makeText(requireContext(), "1hr", Toast.LENGTH_SHORT).show()
-
-                lbinding.radio2hr.id -> Toast.makeText(requireContext(), "2hr", Toast.LENGTH_SHORT).show()
-
-                lbinding.radio4hr.id -> Toast.makeText(requireContext(), "4hr", Toast.LENGTH_SHORT).show()
-
-                lbinding.radio18hr.id -> Toast.makeText(requireContext(), "18hr", Toast.LENGTH_SHORT).show()
-            }
-        }
-        dialog.show()
     }
 }
