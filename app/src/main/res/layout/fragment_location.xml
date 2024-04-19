@@ -1,14 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LocationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/realizar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Realizar locação"
+        android:textSize="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+
+    <TextView
+        android:id="@+id/select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selectione uma opção de tempo:"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/realizar"
+        app:layout_constraintStart_toStartOf="@+id/realizar"
+        app:layout_constraintTop_toBottomOf="@+id/realizar" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        app:layout_constraintEnd_toEndOf="pareradioGroupnt"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/select">
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,6 +38,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.functions.FirebaseFunctions
+import com.puc.pi3_es_2024_t24.databinding.DialogSignoutBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
@@ -45,6 +46,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var logoutBinding: DialogSignoutBinding
     private val locations = arrayListOf<MarkerData>()
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -60,6 +62,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // Inflate the layout for this fragment
         functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        logoutBinding = DialogSignoutBinding.inflate(inflater, container, false)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         getLocation()
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
@@ -161,7 +164,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 navIntent(marker.position)
             }
             binding.fabLocation.setOnClickListener {
-                Toast.makeText(requireContext(), "Open dialog", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Open frag loc", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_homeFragment_to_locationFragment)
             }
             marker.showInfoWindow()
             true
@@ -221,19 +225,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_signout)
+        dialog.setContentView(logoutBinding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val btnLogout : Button = dialog.findViewById(R.id.btnLogout)
-        val btnCancel : Button = dialog.findViewById(R.id.btnCancel)
-
-        btnLogout.setOnClickListener {
+        logoutBinding.btnLogout.setOnClickListener {
             Toast.makeText(requireContext(), "Saiu da Conta", Toast.LENGTH_SHORT).show()
             auth.signOut()
             dialog.dismiss()
             findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
         }
-        btnCancel.setOnClickListener {
+            logoutBinding.btnCancel.setOnClickListener {
             Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
