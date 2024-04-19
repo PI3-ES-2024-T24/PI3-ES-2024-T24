@@ -18,37 +18,56 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.firestore
 import com.google.firebase.functions.FirebaseFunctions
+import com.puc.pi3_es_2024_t24.databinding.DialogCardBinding
+import com.puc.pi3_es_2024_t24.databinding.DialogPaymentBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
-import com.puc.pi3_es_2024_t24.databinding.FragmentMapsBinding
-import java.io.Serializable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+data class Card(
+    val cvv: String,
+    val nome: String,
+    val numero: String,
+    val validade: String
+)
+
+data class Client(
+    val cpf: String,
+    val email: String,
+    val nome: String,
+    val dataNascimento: String,
+    val celular: String,
+    val card: Card?
+)
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var bindingPayment : DialogPaymentBinding
+    private lateinit var bindingCard : DialogCardBinding
     private val locations = arrayListOf<MarkerData>()
     private lateinit var map: GoogleMap
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
     private val db = Firebase.firestore
+    private lateinit var client: Client
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +76,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // Inflate the layout for this fragment
         functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        bindingPayment = DialogPaymentBinding.inflate(inflater, container, false)
+        bindingCard = DialogCardBinding.inflate(inflater, container, false)
         val homeMapFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
         homeMapFragment.getMapAsync(this)
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
@@ -83,6 +104,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(ContentValues.TAG, "Criado")
+        loadClient()
         Log.d(ContentValues.TAG, "sincronizado")
 
     }
@@ -170,25 +192,35 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_payment)
+        if (client.card?.nome == "null") {
+            dialog.setContentView(bindingPayment.root)
+        } else {
+            dialog.setContentView(bindingCard.root)
+        }
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val cpf : String = "12345678901"// PEGAR CPF DO USUÁRIO CONECTADO
-        val btnSave : Button = dialog.findViewById(R.id.btnSave)
-        val btnCancel : Button = dialog.findViewById(R.id.btnCancel)
-        val cardName : EditText = dialog.findViewById(R.id.etCardName)
-        val cardNumber : EditText = dialog.findViewById(R.id.etCardNumber)
-        val cardValidation : EditText = dialog.findViewById(R.id.etCardValidation)
-        val cardCVV : EditText = dialog.findViewById(R.id.etCardCCV)
+        val cpf : String = client.cpf
 
-        btnSave.setOnClickListener {
-            saveCard(cpf, cardName, cardNumber, cardValidation, cardCVV)
+        bindingPayment.btnSave.setOnClickListener {
+            saveCard(cpf, bindingPayment.etCardName.text.toString(), bindingPayment.etCardNumber.text.toString(), bindingPayment.etCardValidation.text.toString(), bindingPayment.etCardCCV.text.toString())
             dialog.dismiss()
         }
-        btnCancel.setOnClickListener {
+        bindingPayment.btnCancel.setOnClickListener {
             Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
+
+        bindingCard.btnAddCard.setOnClickListener{
+            dialog.setContentView(bindingPayment.root)
+        }
+        bindingCard.btnCancel.setOnClickListener{
+            dialog.dismiss()
+        }
+        bindingCard.btnDeleteCard.setOnClickListener{
+            saveCard(cpf,"null","null", "null", "null")
+            dialog.dismiss()
+        }
+
         dialog.show()
     }
 
@@ -222,18 +254,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun saveCard(cpf: String, cardName: EditText, cardNumber: EditText, cardValidation: EditText, cardCVV: EditText) : Task<Unit> {
-        val name = cardName.text.toString()
-        val number = cardNumber.text.toString()
-        val validation = cardValidation.text.toString()
-        val cvv = cardCVV.text.toString()
-
+    private fun saveCard(cpf: String, cardName: String, cardNumber: String, cardValidation: String, cardCVV: String) : Task<Unit> {
         val body = hashMapOf(
             "cpf" to cpf,
-            "nome" to name,
-            "numero" to number,
-            "validade" to validation,
-            "cvv" to cvv
+            "nome" to cardName,
+            "numero" to cardNumber,
+            "validade" to cardValidation,
+            "cvv" to cardCVV
         )
 
         return functions
@@ -241,6 +268,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             .call(body) // Passa diretamente o objClient
             .continueWith{task ->
                 if (task.isSuccessful) {
+                    loadClient()
                     Toast.makeText(
                         requireContext(),
                         "Cartão atualizado com sucesso!",
@@ -256,5 +284,34 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     ).show()
                 }
             }
+    }
+
+    private fun loadClient() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val email = auth.currentUser?.email
+            var card: Card?
+
+            db.collection("pessoas")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        if (document.get("cartao") == null) {
+                            card = null
+                        } else {
+                            val cardDoc = document.get("cartao") as? Map<String, Any>
+                            card = Card(cardDoc?.get("cvv").toString(), cardDoc?.get("nome").toString(), cardDoc?.get("numero").toString(), cardDoc?.get("validade").toString())
+                        }
+                        client = Client(
+                            document.getString("cpf").toString(),
+                            document.getString("email").toString(),
+                            document.getString("nome").toString(),
+                            document.getString("dataNascimento").toString(),
+                            document.getString("celular").toString(),
+                            card
+                        )
+                    }
+                }
+        }
     }
 }

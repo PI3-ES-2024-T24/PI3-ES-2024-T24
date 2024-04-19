@@ -1,9 +1,6 @@
 package com.puc.pi3_es_2024_t24
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment

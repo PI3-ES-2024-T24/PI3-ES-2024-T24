@@ -2,7 +2,6 @@ package com.puc.pi3_es_2024_t24
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Location
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
