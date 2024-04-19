@@ -31,7 +31,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
@@ -39,8 +38,6 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.functions.FirebaseFunctions
-import com.puc.pi3_es_2024_t24.databinding.DialogLocationBinding
-import com.puc.pi3_es_2024_t24.databinding.DialogSignoutBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
