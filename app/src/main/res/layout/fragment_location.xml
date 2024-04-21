@@ -10,8 +10,8 @@
         android:id="@+id/realizar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Realizar locação"
-        android:textSize="40dp"
+        android:text="@string/realizar_loca_o"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,8 +22,8 @@
         android:id="@+id/select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Selectione uma opção de tempo:"
-        android:textSize="20dp"
+        android:text="@string/selectione_uma_op_o_de_tempo"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/realizar"
         app:layout_constraintStart_toStartOf="@+id/realizar"
         app:layout_constraintTop_toBottomOf="@+id/realizar" />
@@ -33,18 +33,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        app:layout_constraintEnd_toEndOf="pareradioGroupnt"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/select">
 
         <RadioButton
+            android:id="@+id/b30"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <RadioButton
+            android:id="@+id/b1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:ignore="DuplicateIds" />
 
         <RadioButton
             android:layout_width="match_parent"
@@ -64,9 +67,9 @@
         android:id="@+id/btnConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirm"
+        android:layout_marginTop="36dp"
+        android:text="@string/confirm"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
