@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignUpBinding
 
@@ -33,27 +32,33 @@ class SignUpFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
-        db = Firebase.firestore
+        val db = Firebase.firestore
         //caso o botao de id btnSignUp é clicado
         binding.btnSignUp.setOnClickListener{
             //formata os dados
-            val email = binding.etEmail.text.toString()
-            val password = binding.etPassword.text.toString()
+            val name = binding.etName.text.toString().trim()
+            val email = binding.etEmail.text.toString().trim()
+            val cpf = binding.etCpf.text.toString().trim()
+            val birth = binding.etBirth.text.toString().trim()
+            val phone = binding.etPhone.text.toString().trim()
+            val password = binding.etPassword.text.toString().trim()
 
+            val pessoas = hashMapOf(
+                "cpf" to cpf,
+                "data_de_nascimento" to birth,
+                "celular" to phone,
+                "nome_completo" to name,
+                "email" to email
+            )
             if (validate()) {
-
-                // INSTANCIAR OBJETO PARA ENVIO PARA O FIRESTORE
-                val body = hashMapOf(
-                    "nome" to binding.etName.text.toString(),
-                    "email" to binding.etEmail.text.toString(),
-                    "cpf" to binding.etCpf.text.toString(),
-                    "dataNascimento" to binding.etBirth.text.toString(),
-                    "celular" to binding.etPhone.text.toString()
-                )
-
-                // armazenar cliente no firestore
-                db.collection("pessoas").add(body)
-
+                db.collection("pessoas")
+                    .add(pessoas)
+                    .addOnSuccessListener { documentReference ->
+                        Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error adding document", e)
+                    }
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
                         auth.currentUser?.sendEmailVerification()

@@ -1,7 +1,10 @@
 package com.puc.pi3_es_2024_t24
 
+import android.Manifest
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +12,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -25,6 +35,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
     private lateinit var map: GoogleMap
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var currentLocation: Location
     private lateinit var binding: FragmentMapsBinding
     private val locations = arrayListOf<MarkerData>()
 
@@ -33,8 +45,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     ): View {
         functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
         binding = FragmentMapsBinding.inflate(inflater, container, false)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        getLocation()
         return binding.root
     }
 
@@ -45,12 +57,66 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         Log.d(TAG, "sincronizado")
 
     }
+    private fun getLocation() {
+        val locationPermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                    if (ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+
+                        return@registerForActivityResult
+                    }
+                    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                        currentLocation=location
+                        Toast.makeText(requireContext(), "Localizado",Toast.LENGTH_SHORT).show()
+                        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+                        mapFragment.getMapAsync(this)
+
+                    }
+                }else -> {
+                // No location access granted.
+            }
+            }
+        }
+
+        locationPermissionRequest.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
+    }
+
+
 
     override fun onMapReady(googleMap: GoogleMap) {
+        val currentLoc= LatLng(currentLocation.latitude,currentLocation.longitude)
+        //val puc apenas pra testes fora do emulador
         val puc = LatLng(-22.83400, -47.05276)
         map = googleMap
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
+//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc,15f))
         getUnities()
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        map.isMyLocationEnabled = true
+
 
         map.setOnMarkerClickListener { marker ->
             binding.navFab.visibility = View.VISIBLE

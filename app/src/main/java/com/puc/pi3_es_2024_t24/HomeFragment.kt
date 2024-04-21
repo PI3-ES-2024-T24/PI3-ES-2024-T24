@@ -1,10 +1,13 @@
 package com.puc.pi3_es_2024_t24
 
+import android.Manifest
 import android.app.Dialog
 import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -16,9 +19,13 @@ import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -64,10 +71,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var bindingCard : DialogCardBinding
     private val locations = arrayListOf<MarkerData>()
     private lateinit var map: GoogleMap
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var currentLocation: Location
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
     private val db = Firebase.firestore
     private lateinit var client: Client
+    private var clicked = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,8 +88,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         bindingPayment = DialogPaymentBinding.inflate(inflater, container, false)
         bindingCard = DialogCardBinding.inflate(inflater, container, false)
-        val homeMapFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
-        homeMapFragment.getMapAsync(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        getLocation()
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
@@ -108,17 +118,88 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         Log.d(ContentValues.TAG, "sincronizado")
 
     }
+    private fun getLocation() {
+        val locationPermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                    if (ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+
+                        return@registerForActivityResult
+                    }
+                    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                        currentLocation=location
+                        Toast.makeText(requireContext(), "Localizado",Toast.LENGTH_SHORT).show()
+                        val homeMapFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
+                        homeMapFragment.getMapAsync(this)
+
+                    }
+                }else -> {
+                // No location access granted.
+            }
+            }
+        }
+
+        locationPermissionRequest.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
+    }
     override fun onMapReady(googleMap: GoogleMap) {
+        val currentLoc= LatLng(currentLocation.latitude,currentLocation.longitude)
+        //val puc apenas pra testes fora do emulador
         val puc = LatLng(-22.83400, -47.05276)
         map = googleMap
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
+//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc,15f))
         getUnities()
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        map.isMyLocationEnabled = true
+
 
         map.setOnMarkerClickListener { marker ->
+            binding.fabExpand.show()
+            binding.fabExpand.setOnClickListener{
+                if (!clicked){
+                    binding.fabNavigation.show()
+                    binding.fabLocation.show()
+                }
+                else{
+                    binding.fabNavigation.hide()
+                    binding.fabLocation.hide()
+                }
+                clicked = !clicked
+            }
+            binding.fabNavigation.setOnClickListener{
+                navIntent(marker.position)
+            }
             marker.showInfoWindow()
             true
         }
         map.setOnMapClickListener {
+            binding.fabExpand.hide()
+            binding.fabNavigation.hide()
+            binding.fabLocation.hide()
+            clicked = false
         }
 
     }
@@ -252,6 +333,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
         }
+
+
     }
 
     private fun saveCard(cpf: String, cardName: String, cardNumber: String, cardValidation: String, cardCVV: String) : Task<Unit> {
