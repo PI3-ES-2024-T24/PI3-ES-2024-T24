@@ -17,12 +17,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -31,28 +31,52 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import com.google.firebase.functions.FirebaseFunctions
+import com.puc.pi3_es_2024_t24.databinding.DialogCardBinding
+import com.puc.pi3_es_2024_t24.databinding.DialogPaymentBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
-import com.puc.pi3_es_2024_t24.databinding.FragmentMapsBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+data class Card(
+    val cvv: String,
+    val nome: String,
+    val numero: String,
+    val validade: String
+)
+
+data class Client(
+    val cpf: String,
+    val email: String,
+    val nome: String,
+    val dataNascimento: String,
+    val celular: String,
+    val card: Card?
+)
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var bindingPayment : DialogPaymentBinding
+    private lateinit var bindingCard : DialogCardBinding
     private val locations = arrayListOf<MarkerData>()
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var currentLocation: Location
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
+    private val db = Firebase.firestore
+    private lateinit var client: Client
     private var clicked = false
 
     override fun onCreateView(
@@ -62,6 +86,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // Inflate the layout for this fragment
         functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        bindingPayment = DialogPaymentBinding.inflate(inflater, container, false)
+        bindingCard = DialogCardBinding.inflate(inflater, container, false)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         getLocation()
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
@@ -70,7 +96,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when(item.itemId){
-                R.id.bottom_credit_card ->Toast.makeText(requireContext(), "Fragmento pagamento!!!", Toast.LENGTH_SHORT).show()
+                R.id.bottom_credit_card ->{
+                    Toast.makeText(requireContext(), "Fragmento pagamento!!!", Toast.LENGTH_SHORT).show()
+                    showPayDialogBox()
+                }
 
                 R.id.bottom_logout ->{
                     Toast.makeText(requireContext(), "dialog logout", Toast.LENGTH_SHORT).show()
@@ -85,6 +114,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(ContentValues.TAG, "Criado")
+        loadClient()
         Log.d(ContentValues.TAG, "sincronizado")
 
     }
@@ -238,6 +268,43 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         dialog.show()
     }
+
+    private fun showPayDialogBox(){
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        if (client.card?.nome == "null") {
+            dialog.setContentView(bindingPayment.root)
+        } else {
+            dialog.setContentView(bindingCard.root)
+        }
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val cpf : String = client.cpf
+
+        bindingPayment.btnSave.setOnClickListener {
+            saveCard(cpf, bindingPayment.etCardName.text.toString(), bindingPayment.etCardNumber.text.toString(), bindingPayment.etCardValidation.text.toString(), bindingPayment.etCardCCV.text.toString())
+            dialog.dismiss()
+        }
+        bindingPayment.btnCancel.setOnClickListener {
+            Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+
+        bindingCard.btnAddCard.setOnClickListener{
+            dialog.setContentView(bindingPayment.root)
+        }
+        bindingCard.btnCancel.setOnClickListener{
+            dialog.dismiss()
+        }
+        bindingCard.btnDeleteCard.setOnClickListener{
+            saveCard(cpf,"null","null", "null", "null")
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
     private fun navIntent(location: LatLng) {
         val intent =
             Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
@@ -268,5 +335,66 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
 
 
+    }
+
+    private fun saveCard(cpf: String, cardName: String, cardNumber: String, cardValidation: String, cardCVV: String) : Task<Unit> {
+        val body = hashMapOf(
+            "cpf" to cpf,
+            "nome" to cardName,
+            "numero" to cardNumber,
+            "validade" to cardValidation,
+            "cvv" to cardCVV
+        )
+
+        return functions
+            .getHttpsCallable("updateCard")
+            .call(body) // Passa diretamente o objClient
+            .continueWith{task ->
+                if (task.isSuccessful) {
+                    loadClient()
+                    Toast.makeText(
+                        requireContext(),
+                        "Cartão atualizado com sucesso!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    val exception = task.exception
+                    Log.e("UPDATE", "Error updating card", exception)
+                    Toast.makeText(
+                        requireContext(),
+                        "Falha ao atualizar cartão!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+    }
+
+    private fun loadClient() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val email = auth.currentUser?.email
+            var card: Card?
+
+            db.collection("pessoas")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        if (document.get("cartao") == null) {
+                            card = null
+                        } else {
+                            val cardDoc = document.get("cartao") as? Map<String, Any>
+                            card = Card(cardDoc?.get("cvv").toString(), cardDoc?.get("nome").toString(), cardDoc?.get("numero").toString(), cardDoc?.get("validade").toString())
+                        }
+                        client = Client(
+                            document.getString("cpf").toString(),
+                            document.getString("email").toString(),
+                            document.getString("nome").toString(),
+                            document.getString("dataNascimento").toString(),
+                            document.getString("celular").toString(),
+                            card
+                        )
+                    }
+                }
+        }
     }
 }

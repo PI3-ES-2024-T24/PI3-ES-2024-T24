@@ -14,13 +14,16 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignInBinding
-
 
 class SignInFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentSignInBinding
+    private lateinit var db : FirebaseFirestore
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,6 +34,8 @@ class SignInFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
+
+        db = Firebase.firestore
 
         binding.btnSignIn.setOnClickListener {
             val email = binding.etEmail.text.toString()
@@ -65,6 +70,7 @@ class SignInFragment : Fragment() {
         }
         return binding.root
     }
+
     private fun validate(): Boolean{
         val email = binding.etEmail.text.toString()
         if(binding.etEmail.text.toString() == ""){
@@ -81,5 +87,4 @@ class SignInFragment : Fragment() {
         }
         return true
     }
-
 }
