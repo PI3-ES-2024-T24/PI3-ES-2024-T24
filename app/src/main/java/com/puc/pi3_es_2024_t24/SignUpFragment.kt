@@ -1,5 +1,6 @@
 package com.puc.pi3_es_2024_t24
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -14,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignUpBinding
 

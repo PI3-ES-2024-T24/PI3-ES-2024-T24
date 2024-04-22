@@ -59,7 +59,7 @@ data class Client(
     val nome: String,
     val dataNascimento: String,
     val celular: String,
-    val card: Card?
+    var card: Card?
 )
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
@@ -351,7 +351,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             .call(body) // Passa diretamente o objClient
             .continueWith{task ->
                 if (task.isSuccessful) {
-                    loadClient()
+                    client.card = Card(cardCVV, cardName, cardNumber, cardValidation)
                     Toast.makeText(
                         requireContext(),
                         "Cartão atualizado com sucesso!",
