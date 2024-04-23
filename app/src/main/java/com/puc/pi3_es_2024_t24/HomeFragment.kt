@@ -133,10 +133,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         return@registerForActivityResult
                     }
                     fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                        currentLocation=location
-                        Toast.makeText(requireContext(), "Localizado",Toast.LENGTH_SHORT).show()
-                        val homeMapFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
-                        homeMapFragment.getMapAsync(this)
+                        location?.let {
+                            currentLocation = it
+                            Toast.makeText(requireContext(), "Localizado", Toast.LENGTH_SHORT).show()
+                            val homeMapFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
+                            homeMapFragment.getMapAsync(this)
+                        } ?: run {
+                            // Handle case where location is null
+                            Toast.makeText(requireContext(), "Não foi possível obter a localização", Toast.LENGTH_SHORT).show()
+                        }
 
                     }
                 }else -> {
@@ -317,6 +322,27 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         locationDialog.show()
     }
+    private fun showCancelDialog(){
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_cancel)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val btnNotCancel : Button = dialog.findViewById(R.id.btnNotCancel)
+        val btnCancel : Button = dialog.findViewById(R.id.btnCancel)
+
+        btnNotCancel.setOnClickListener {
+            Toast.makeText(requireContext(), "Não Cancelou", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+        btnCancel.setOnClickListener {
+            Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+            qrCodeDialog.dismiss()
+        }
+        dialog.show()
+    }
     private fun showQrCode(content: String) {
         if (!::qrCodeDialog.isInitialized) {
             qrCodeDialog = Dialog(requireContext())
@@ -328,7 +354,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             bindingQrCode.qrCodeImg.setImageBitmap(qrCodeBitmap)
 
             bindingQrCode.btnCancel.setOnClickListener {
-                qrCodeDialog.dismiss()
+                showCancelDialog()
             }
         }
         qrCodeDialog.show()
@@ -339,7 +365,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val gson = Gson()
         return gson.toJson(qrcode)
     }
-
     private fun generateQRCode(content: String, width: Int, height: Int): Bitmap? {
         try {
             val bitMatrix: BitMatrix = QRCodeWriter().encode(
@@ -407,7 +432,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         dialog.show()
     }
-
     private fun navIntent(location: LatLng) {
         val intent =
             Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
