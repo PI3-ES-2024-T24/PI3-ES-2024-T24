@@ -234,7 +234,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             dialog.dismiss()
             findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
         }
-            logoutBinding.btnCancel.setOnClickListener {
+        logoutBinding.btnCancel.setOnClickListener {
             Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
