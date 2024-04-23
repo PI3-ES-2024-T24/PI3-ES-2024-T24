@@ -339,6 +339,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val gson = Gson()
         return gson.toJson(qrcode)
     }
+
     private fun generateQRCode(content: String, width: Int, height: Int): Bitmap? {
         try {
             val bitMatrix: BitMatrix = QRCodeWriter().encode(
@@ -360,42 +361,53 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         return null
     }
-    private fun showPayDialogBox(){
+    private fun showPayDialogBox() {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        if (client.card?.nome == "null") {
-
-            dialog.setContentView(bindingPayment.root)
-        } else {
-            dialog.setContentView(bindingCard.root)
-        }
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val cpf : String = client.cpf
+        val cpf: String = client.cpf
 
-        bindingPayment.btnSave.setOnClickListener {
-            saveCard(cpf, bindingPayment.etCardName.text.toString(), bindingPayment.etCardNumber.text.toString(), bindingPayment.etCardValidation.text.toString(), bindingPayment.etCardCCV.text.toString())
-            dialog.dismiss()
-        }
-        bindingPayment.btnCancel.setOnClickListener {
-            Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
-        }
+        val bindingPayment = DialogPaymentBinding.inflate(layoutInflater)
+        val bindingCard = DialogCardBinding.inflate(layoutInflater)
 
-        bindingCard.btnAddCard.setOnClickListener{
+        if (client.card?.nome == "null") {
             dialog.setContentView(bindingPayment.root)
-        }
-        bindingCard.btnCancel.setOnClickListener{
-            dialog.dismiss()
-        }
-        bindingCard.btnDeleteCard.setOnClickListener{
-            saveCard(cpf,"null","null", "null", "null")
-            dialog.dismiss()
+
+            bindingPayment.btnSave.setOnClickListener {
+                saveCard(
+                    cpf,
+                    bindingPayment.etCardName.text.toString(),
+                    bindingPayment.etCardNumber.text.toString(),
+                    bindingPayment.etCardValidation.text.toString(),
+                    bindingPayment.etCardCCV.text.toString()
+                )
+                dialog.dismiss()
+            }
+            bindingPayment.btnCancel.setOnClickListener {
+                Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+        } else {
+            dialog.setContentView(bindingCard.root)
+
+            bindingCard.btnAddCard.setOnClickListener {
+                dialog.dismiss()
+                showPayDialogBox()
+            }
+            bindingCard.btnCancel.setOnClickListener {
+                dialog.dismiss()
+            }
+            bindingCard.btnDeleteCard.setOnClickListener {
+                saveCard(cpf, "null", "null", "null", "null")
+                dialog.dismiss()
+            }
         }
 
         dialog.show()
     }
+
     private fun navIntent(location: LatLng) {
         val intent =
             Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
