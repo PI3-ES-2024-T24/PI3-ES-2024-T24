@@ -157,6 +157,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                     val referencia = localizacao["referencia"] as String
 
                     locations.add(MarkerData(
+                        unityId,
                         nome,
                         LatLng(latitude, longitude),
                         endereco,

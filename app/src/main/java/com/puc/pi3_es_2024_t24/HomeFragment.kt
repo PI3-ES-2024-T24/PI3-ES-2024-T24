@@ -3,6 +3,7 @@ package com.puc.pi3_es_2024_t24
 import android.Manifest
 import android.app.Dialog
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -169,11 +170,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         map.isMyLocationEnabled = true
         map.setOnMarkerClickListener { marker ->
             marker.showInfoWindow()
-            Log.d(ContentValues.TAG, "marker =")
-            Log.e(ContentValues.TAG, marker.id)
-            Log.e(ContentValues.TAG, marker.title.toString())
-            
-
+            val unityId = marker.tag as String
             binding.fabExpand.show()
             binding.fabExpand.setOnClickListener{
                 if (!clicked){
@@ -193,7 +190,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 navIntent(marker.position)
             }
             binding.fabLocation.setOnClickListener {
-                showLocationDialog(marker.id)
+
+                Toast.makeText(requireContext(), "Locate ${unityId}", Toast.LENGTH_SHORT).show()
+                showLocationDialog(unityId)
+                initPrices(unityId)
             }
             true
         }
@@ -204,6 +204,26 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             clicked = false
         }
 
+    }
+    private fun initPrices(unityId: String){
+        db.collection("unidades")
+            .whereEqualTo("unityId", unityId)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    Log.d(TAG, "documentos")
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    val precos = document.get("precos") as? Map<*, *>
+                    bindingLocation.txt30.text = "${precos?.get("30")} R$"
+                    bindingLocation.txt1.text = "${precos?.get("60")} R$"
+                    bindingLocation.txt2.text = "${precos?.get("120")} R$"
+                    bindingLocation.txt4.text = "${precos?.get("240")} R$"
+                    bindingLocation.txt18.text = "${precos?.get("18h")} R$"
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents: ", exception)
+            }
     }
     private fun getUnities(): Task<Unit> {
         return functions
@@ -223,7 +243,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     val gerenteCpf = unity["gerenteCpf"] as String
                     val precos = unity["precos"] as Map<String, Int>
                     val localizacao = unity["localizacao"] as Map<String, Any>
-
                     val nome = localizacao["nome"] as String
                     val latitude = localizacao["latitude"] as Double
                     val longitude = localizacao["longitude"] as Double
@@ -231,6 +250,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     val referencia = localizacao["referencia"] as String
 
                     locations.add(MarkerData(
+                        unityId,
                         nome,
                         LatLng(latitude, longitude),
                         endereco,
@@ -270,14 +290,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         dialog.show()
     }
-    private fun showLocationDialog(markerId:String) {
+    private fun showLocationDialog(unityId:String) {
         if (!::locationDialog.isInitialized) {
             locationDialog = Dialog(requireContext())
             locationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             locationDialog.setCancelable(false)
             locationDialog.setContentView(bindingLocation.root)
             locationDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
             bindingLocation.btnConfirm.setOnClickListener {
                 var option = 0
                 when (bindingLocation.radioGroupLocation.checkedRadioButtonId) {
@@ -288,7 +307,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     bindingLocation.radio18hr.id -> option = 18
                 }
                 locationDialog.dismiss()
-                val markerJson = makeJsonQr(markerId, option)
+                val markerJson = makeJsonQr(unityId, option)
                 Toast.makeText(requireContext(), "Locate $markerJson", Toast.LENGTH_SHORT).show()
                 showQrCode(markerJson)
             }
@@ -402,12 +421,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         )
                     )
             )
-            marker?.tag = location
-
-
+            marker?.tag = location.unityId
         }
-
-
     }
     private fun calculateDistance(userLocation: LatLng, markerLatLng: LatLng): Float {
 
@@ -416,8 +431,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             markerLatLng.latitude, markerLatLng.longitude, locationResult)
         return locationResult[0]
     }
-
-
     private fun saveCard(cpf: String, cardName: String, cardNumber: String, cardValidation: String, cardCVV: String) : Task<Unit> {
         val body = hashMapOf(
             "cpf" to cpf,
