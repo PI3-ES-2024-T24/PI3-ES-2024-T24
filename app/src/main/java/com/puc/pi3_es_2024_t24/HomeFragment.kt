@@ -361,8 +361,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             qrCodeDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             val savedContent = loadQRCodeContent()
             bindingQrCode.qrCodeImg.setImageBitmap(savedContent?.let { generateQRCode(it, 800, 800) })
-
-
             bindingQrCode.btnCancel.setOnClickListener {
                 showCancelDialog()
             }
