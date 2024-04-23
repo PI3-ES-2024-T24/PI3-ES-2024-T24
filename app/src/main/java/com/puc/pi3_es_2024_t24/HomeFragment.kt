@@ -46,6 +46,7 @@ import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import qrcode.QRCode
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
@@ -144,10 +145,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
     override fun onMapReady(googleMap: GoogleMap) {
         val currentLoc= LatLng(currentLocation.latitude,currentLocation.longitude)
-        //val puc apenas pra testes fora do emulador
-        val puc = LatLng(-22.83400, -47.05276)
         map = googleMap
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc,15f))
         getUnities()
         if (ActivityCompat.checkSelfPermission(
@@ -163,6 +161,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         map.isMyLocationEnabled = true
         map.setOnMarkerClickListener { marker ->
             marker.showInfoWindow()
+            Log.d(ContentValues.TAG, "marker =")
+            Log.e(ContentValues.TAG, marker.id)
+            Log.e(ContentValues.TAG, marker.title.toString())
+            
+
             binding.fabExpand.show()
             binding.fabExpand.setOnClickListener{
                 if (!clicked){
@@ -260,8 +263,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         dialog.show()
     }
 
-
-
     private fun showLocationDialog() {
         if (!::locationDialog.isInitialized) {
             locationDialog = Dialog(requireContext())
@@ -272,6 +273,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
             bindingLocation.btnConfirm.setOnClickListener {
                 var option = 0
+                val helloWorld = QRCode.ofSquares()
+
                 when (bindingLocation.radioGroupLocation.checkedRadioButtonId) {
                     bindingLocation.radio30min.id -> {
                         Toast.makeText(requireContext(), "30 min", Toast.LENGTH_SHORT).show()
