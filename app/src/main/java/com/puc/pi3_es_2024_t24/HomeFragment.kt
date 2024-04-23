@@ -161,11 +161,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
         map.setOnMarkerClickListener { marker ->
+
             binding.fabExpand.show()
             binding.fabExpand.setOnClickListener{
                 if (!clicked){
                     binding.fabNavigation.show()
-                    binding.fabLocation.show()
+                    val distance = calculateDistance(currentLoc, marker.position)
+                    if (distance < 1000) {
+                        binding.fabLocation.show()
+                    }
                 }
                 else{
                     binding.fabNavigation.hide()
@@ -320,6 +324,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
     }
+
+    private fun calculateDistance(userLocation: LatLng, markerLatLng: LatLng): Float {
+
+        val locationResult = FloatArray(3)
+        Location.distanceBetween(userLocation.latitude, userLocation.longitude,
+            markerLatLng.latitude, markerLatLng.longitude, locationResult)
+        return locationResult[0]
+    }
+
 
     private fun saveCard(cpf: String, cardName: String, cardNumber: String, cardValidation: String, cardCVV: String) : Task<Unit> {
         val body = hashMapOf(
