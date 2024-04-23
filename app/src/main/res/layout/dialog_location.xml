@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="20dp"
@@ -33,33 +33,36 @@
     android:layout_marginStart="15dp"
     android:orientation="horizontal">
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/radioGroupLocation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:checkedButton="@+id/radio30min">
         <RadioButton
-            android:id="@+id/b30"
+            android:id="@+id/radio30min"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="30 minutos" />
 
         <RadioButton
-            android:id="@+id/b1"
+            android:id="@+id/radio1hr"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="1 hora" />
 
         <RadioButton
+            android:id="@+id/radio2hr"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="2 horas" />
 
         <RadioButton
+            android:id="@+id/radio4hr"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="4 horas" />
 
         <RadioButton
+            android:id="@+id/radio18hr"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="18 horas" />

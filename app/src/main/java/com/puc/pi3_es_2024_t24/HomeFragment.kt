@@ -161,10 +161,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             return
         }
         map.isMyLocationEnabled = true
-
-
         map.setOnMarkerClickListener { marker ->
-
+            marker.showInfoWindow()
             binding.fabExpand.show()
             binding.fabExpand.setOnClickListener{
                 if (!clicked){
@@ -186,7 +184,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             binding.fabLocation.setOnClickListener {
                 showLocationDialog()
             }
-            marker.showInfoWindow()
             true
         }
         map.setOnMapClickListener {
@@ -262,14 +259,30 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         dialog.show()
     }
+
     private fun showLocationDialog(){
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
+        dialog.setCancelable(true)
         dialog.setContentView(bindingLocation.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         bindingLocation.btnConfirm.setOnClickListener {
+            var option = 0
+            when (bindingLocation.radioGroupLocation.checkedRadioButtonId) {
+
+                bindingLocation.radio30min.id ->{
+                    Toast.makeText(requireContext(), "30 min", Toast.LENGTH_SHORT).show()
+                    option = 30
+                }
+                bindingLocation.radio1hr.id -> Toast.makeText(requireContext(), "1hr", Toast.LENGTH_SHORT).show()
+
+                bindingLocation.radio2hr.id -> Toast.makeText(requireContext(), "2hr", Toast.LENGTH_SHORT).show()
+
+                bindingLocation.radio4hr.id -> Toast.makeText(requireContext(), "4hr", Toast.LENGTH_SHORT).show()
+
+                bindingLocation.radio18hr.id -> Toast.makeText(requireContext(), "18hr", Toast.LENGTH_SHORT).show()
+            }
             Toast.makeText(requireContext(), "Locate", Toast.LENGTH_SHORT).show()
         }
         dialog.show()
@@ -342,7 +355,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
     }
-
     private fun calculateDistance(userLocation: LatLng, markerLatLng: LatLng): Float {
 
         val locationResult = FloatArray(3)
@@ -383,7 +395,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 }
             }
     }
-
     private fun loadClient() {
         CoroutineScope(Dispatchers.IO).launch {
             val email = auth.currentUser?.email
