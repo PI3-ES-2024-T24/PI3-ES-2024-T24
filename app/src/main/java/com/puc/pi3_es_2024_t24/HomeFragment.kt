@@ -387,6 +387,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         return null
     }
     private fun showPayDialogBox() {
+        if (client == null) {
+            return
+        }
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
