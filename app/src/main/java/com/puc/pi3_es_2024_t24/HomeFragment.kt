@@ -46,22 +46,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-data class Card(
-    val cvv: String,
-    val nome: String,
-    val numero: String,
-    val validade: String
-)
-
-data class Client(
-    val cpf: String,
-    val email: String,
-    val nome: String,
-    val dataNascimento: String,
-    val celular: String,
-    var card: Card?
-)
-
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
