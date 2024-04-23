@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Dialog
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -69,6 +70,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var currentLocation: Location
+    private var currentActiveLocation: Boolean = false
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
     private val db = Firebase.firestore
@@ -91,7 +93,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
-
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when(item.itemId){
                 R.id.bottom_credit_card ->{
@@ -111,6 +112,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        currentActiveLocation = loadLocationState()
+        if (currentActiveLocation){
+            showQrCode()
+        }
         Log.d(ContentValues.TAG, "Criado")
         loadClient()
         Log.d(ContentValues.TAG, "sincronizado")
@@ -311,10 +316,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     bindingLocation.radio4hr.id -> option = 4
                     bindingLocation.radio18hr.id -> option = 18
                 }
+                currentActiveLocation = true
+                saveLocationState(currentActiveLocation)
                 locationDialog.dismiss()
-                val markerJson = makeJsonQr(unityId, option)
-                Toast.makeText(requireContext(), "Locate $markerJson", Toast.LENGTH_SHORT).show()
-                showQrCode(markerJson)
+                makeJsonQr(unityId, option)
+                showQrCode()
+
             }
             bindingLocation.btnCancel.setOnClickListener {
                 locationDialog.dismiss()
@@ -340,18 +347,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
             qrCodeDialog.dismiss()
+            currentActiveLocation = false
+            saveLocationState(currentActiveLocation)
         }
         dialog.show()
     }
-    private fun showQrCode(content: String) {
+    private fun showQrCode() {
         if (!::qrCodeDialog.isInitialized) {
             qrCodeDialog = Dialog(requireContext())
             qrCodeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             qrCodeDialog.setCancelable(false)
             qrCodeDialog.setContentView(bindingQrCode.root)
             qrCodeDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            val qrCodeBitmap = generateQRCode(content, 800, 800)
-            bindingQrCode.qrCodeImg.setImageBitmap(qrCodeBitmap)
+            val savedContent = loadQRCodeContent()
+            bindingQrCode.qrCodeImg.setImageBitmap(savedContent?.let { generateQRCode(it, 800, 800) })
+
 
             bindingQrCode.btnCancel.setOnClickListener {
                 showCancelDialog()
@@ -359,11 +369,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         qrCodeDialog.show()
     }
-    private fun makeJsonQr(markerid: String, option: Int): String {
+    private fun makeJsonQr(unityId: String, option: Int){
         val userEmail = auth.currentUser?.email.toString()
-        val qrcode = QrCode(markerid,userEmail ,option)
+        val qrcode = QrCode(unityId, userEmail, option)
         val gson = Gson()
-        return gson.toJson(qrcode)
+        val content = gson.toJson(qrcode)
+        saveQRCodeContent(content)
     }
     private fun generateQRCode(content: String, width: Int, height: Int): Bitmap? {
         try {
@@ -526,4 +537,28 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 }
         }
     }
+    private fun saveLocationState(active: Boolean) {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putBoolean("active_location", active)
+            apply()
+        }
+    }
+    private fun loadLocationState(): Boolean {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        return sharedPref.getBoolean("active_location", false)
+    }
+    private fun saveQRCodeContent(content: String) {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("qr_code_content", content)
+            apply()
+        }
+    }
+    private fun loadQRCodeContent(): String? {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        return sharedPref.getString("qr_code_content", null)
+    }
+
+
 }
