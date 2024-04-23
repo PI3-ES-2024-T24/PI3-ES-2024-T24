@@ -3,4 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_gray">#D9D9D9</color>
+    <color name="cinzinha">#999EA1</color>
+    <color name="blue_gray">#55748F</color>
+    <color name="cinzinha_claro">#C6C6C6</color>
+    <color name="light_blue">#639FD5</color>
+    <color name="red">#FB344F</color>
 </resources>

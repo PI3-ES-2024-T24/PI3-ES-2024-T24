@@ -4,14 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WelcomeFragment">
+    tools:context=".WelcomeFragment"
+    android:background="@drawable/background_bluegrayfade">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcome"
-        android:layout_marginTop="20dp"
+        android:fontFamily="@font/manrope_extrabold"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/white"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -23,7 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/appName"
+        android:fontFamily="@font/manrope_medium"
         android:textSize="30sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -31,7 +36,20 @@
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/lock" />
+        android:layout_height="400dp"
+        android:src="@drawable/lock"
+        tools:layout_editor_absoluteX="87dp"
+        tools:layout_editor_absoluteY="154dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gifImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

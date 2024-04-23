@@ -7,16 +7,27 @@
     <string name="email">E-mail</string>
     <string name="cpf">CPF</string>
     <string name="birth">00/00/0000</string>
-    <string name="phone">celular</string>
-    <string name="password">senha</string>
-    <string name="confpassword">confirmar senha</string>
-    <string name="criar_conta">Criar Conta</string>
-    <string name="j_tem_conta_clique_aqui">Já tem conta? Clique aqui</string>
-    <string name="sign_up">Sign up</string>
+    <string name="phone">Celular</string>
+    <string name="password">Senha</string>
+    <string name="confpassword">Confirmar senha</string>
+    <string name="criar_conta">Crie uma conta</string>
+    <string name="j_tem_conta_clique_aqui">Já tem cadastro? Clique aqui</string>
+    <string name="sign_up">Cadastrar</string>
     <string name="entrar">Entrar</string>
-    <string name="registrar_conta">Registrar conta</string>
+    <string name="registrar_conta"></string>
     <string name="login">Login</string>
     <string name="sair_da_conta">Sair da Conta?</string>
     <string name="sair">sair</string>
     <string name="cancelar">cancelar</string>
+    <string name="comece_a_alugar_armarios_agora">Comece a alugar armarios agora! :)</string>
+    <string name="ol_bem_vindo_de_volta">Olá, bem vindo de volta!</string>
+    <string name="msg_sign_up">Faça o login ou crie uma conta para começar a alugar armarios!</string>
+    <string name="esqueceu_a_senha">Esqueceu a senha?</string>
+    <string name="login_text">Faça o login ou crie uma conta para começar a alugar armarios!</string>
+    <string name="verificar_armarios_por_perto">Verificar armarios por perto:</string>
+    <string name="n_o_tem_cadastro_clique_aqui">Não tem cadastro? Clique aqui.</string>
+    <string name="realizar_loca_o">Realizar locação</string>
+    <string name="selectione_uma_op_o_de_tempo">Selectione uma opção de tempo:</string>
+    <string name="confirm">Confirm</string>
+
 </resources>
