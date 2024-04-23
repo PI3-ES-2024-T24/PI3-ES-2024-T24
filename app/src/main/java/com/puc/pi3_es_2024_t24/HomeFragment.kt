@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
@@ -17,7 +18,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -39,14 +39,19 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.gson.Gson
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.WriterException
+import com.google.zxing.common.BitMatrix
+import com.google.zxing.qrcode.QRCodeWriter
 import com.puc.pi3_es_2024_t24.databinding.DialogCardBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogLocationBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogPaymentBinding
+import com.puc.pi3_es_2024_t24.databinding.DialogQrcodeBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import qrcode.QRCode
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
@@ -56,15 +61,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var bindingPayment : DialogPaymentBinding
     private lateinit var bindingCard : DialogCardBinding
     private lateinit var bindingLocation: DialogLocationBinding
+    private lateinit var bindingQrCode: DialogQrcodeBinding
     private val locations = arrayListOf<MarkerData>()
     private lateinit var locationDialog: Dialog
+    private lateinit var qrCodeDialog: Dialog
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var currentLocation: Location
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
     private val db = Firebase.firestore
-    private lateinit var client: Client
+    private lateinit var client:Client
     private var clicked = false
 
     override fun onCreateView(
@@ -77,6 +84,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         bindingPayment = DialogPaymentBinding.inflate(inflater, container, false)
         bindingCard = DialogCardBinding.inflate(inflater, container, false)
         bindingLocation = DialogLocationBinding.inflate(inflater, container, false)
+        bindingQrCode = DialogQrcodeBinding.inflate(inflater, container, false)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         getLocation()
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
@@ -185,7 +193,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 navIntent(marker.position)
             }
             binding.fabLocation.setOnClickListener {
-                showLocationDialog()
+                showLocationDialog(marker.id)
             }
             true
         }
@@ -262,8 +270,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         dialog.show()
     }
-
-    private fun showLocationDialog() {
+    private fun showLocationDialog(markerId:String) {
         if (!::locationDialog.isInitialized) {
             locationDialog = Dialog(requireContext())
             locationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -273,19 +280,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
             bindingLocation.btnConfirm.setOnClickListener {
                 var option = 0
-                val helloWorld = QRCode.ofSquares()
-
                 when (bindingLocation.radioGroupLocation.checkedRadioButtonId) {
-                    bindingLocation.radio30min.id -> {
-                        Toast.makeText(requireContext(), "30 min", Toast.LENGTH_SHORT).show()
-                        option = 30
-                    }
-                    bindingLocation.radio1hr.id -> Toast.makeText(requireContext(), "1hr", Toast.LENGTH_SHORT).show()
-                    bindingLocation.radio2hr.id -> Toast.makeText(requireContext(), "2hr", Toast.LENGTH_SHORT).show()
-                    bindingLocation.radio4hr.id -> Toast.makeText(requireContext(), "4hr", Toast.LENGTH_SHORT).show()
-                    bindingLocation.radio18hr.id -> Toast.makeText(requireContext(), "18hr", Toast.LENGTH_SHORT).show()
+                    bindingLocation.radio30min.id -> option = 30
+                    bindingLocation.radio1hr.id -> option = 1
+                    bindingLocation.radio2hr.id -> option = 2
+                    bindingLocation.radio4hr.id -> option = 4
+                    bindingLocation.radio18hr.id -> option = 18
                 }
-                Toast.makeText(requireContext(), "Locate", Toast.LENGTH_SHORT).show()
+                locationDialog.dismiss()
+                val markerJson = makeJsonQr(markerId, option)
+                Toast.makeText(requireContext(), "Locate $markerJson", Toast.LENGTH_SHORT).show()
+                showQrCode(markerJson)
             }
             bindingLocation.btnCancel.setOnClickListener {
                 locationDialog.dismiss()
@@ -293,13 +298,34 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         locationDialog.show()
     }
+    private fun showQrCode(content: String) {
+        if (!::qrCodeDialog.isInitialized) {
+            qrCodeDialog = Dialog(requireContext())
+            qrCodeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            qrCodeDialog.setCancelable(false)
+            qrCodeDialog.setContentView(bindingQrCode.root)
+            qrCodeDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val qrCodeBitmap = generateQRCode(content, 800, 800)
+            bindingQrCode.qrCodeImg.setImageBitmap(qrCodeBitmap)
 
-
+            bindingQrCode.btnCancel.setOnClickListener {
+                qrCodeDialog.dismiss()
+            }
+        }
+        qrCodeDialog.show()
+    }
+    private fun makeJsonQr(markerid: String, option: Int): String {
+        val userEmail = auth.currentUser?.email.toString()
+        val qrcode = QrCode(markerid,userEmail ,option)
+        val gson = Gson()
+        return gson.toJson(qrcode)
+    }
     private fun showPayDialogBox(){
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         if (client.card?.nome == "null") {
+
             dialog.setContentView(bindingPayment.root)
         } else {
             dialog.setContentView(bindingCard.root)
@@ -329,6 +355,27 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
 
         dialog.show()
+    }
+    private fun generateQRCode(content: String, width: Int, height: Int): Bitmap? {
+        try {
+            val bitMatrix: BitMatrix = QRCodeWriter().encode(
+                content,
+                BarcodeFormat.QR_CODE,
+                width,
+                height,
+                null
+            )
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    bitmap.setPixel(x, y, if (bitMatrix[x, y]) 0xFF000000.toInt() else 0xFFFFFFFF.toInt())
+                }
+            }
+            return bitmap
+        } catch (e: WriterException) {
+            e.printStackTrace()
+        }
+        return null
     }
 
     private fun navIntent(location: LatLng) {

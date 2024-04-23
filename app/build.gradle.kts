@@ -64,6 +64,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-functions")
     implementation("com.google.firebase:firebase-firestore-ktx:24.11.1")
-    implementation("io.github.g0dkar:qrcode-kotlin:4.1.1")
+    implementation ("com.google.zxing:core:3.4.1")
+    implementation ("com.google.code.gson:gson:2.10.1")
+
 
 }
