@@ -21,9 +21,9 @@
     <string name="cancelar">cancelar</string>
     <string name="comece_a_alugar_armarios_agora">Comece a alugar armarios agora! :)</string>
     <string name="ol_bem_vindo_de_volta">Olá, bem vindo de volta!</string>
-    <string name="msg_sign_up">Faça o login ou crie uma conta para começar a alugar armarios! :)</string>
+    <string name="msg_sign_up">Faça o login ou crie uma conta para começar a alugar armarios!</string>
     <string name="esqueceu_a_senha">Esqueceu a senha?</string>
-    <string name="login_text">Faça o login ou crie uma conta para começar a alugar armarios! ;)</string>
+    <string name="login_text">Faça o login ou crie uma conta para começar a alugar armarios!</string>
     <string name="verificar_armarios_por_perto">Verificar armarios por perto:</string>
     <string name="n_o_tem_cadastro_clique_aqui">Não tem cadastro? Clique aqui.</string>
     <string name="realizar_loca_o">Realizar locação</string>
