@@ -214,11 +214,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     Log.d(TAG, "documentos")
                     Log.d(TAG, "${document.id} => ${document.data}")
                     val precos = document.get("precos") as? Map<*, *>
-                    bindingLocation.txt30.text = "${precos?.get("30")} R$"
-                    bindingLocation.txt1.text = "${precos?.get("60")} R$"
-                    bindingLocation.txt2.text = "${precos?.get("120")} R$"
-                    bindingLocation.txt4.text = "${precos?.get("240")} R$"
-                    bindingLocation.txt18.text = "${precos?.get("18h")} R$"
+                    bindingLocation.txt30.text = "Preço: ${precos?.get("30")} R$"
+                    bindingLocation.txt1.text = "Preço: ${precos?.get("60")} R$"
+                    bindingLocation.txt2.text = "Preço: ${precos?.get("120")} R$"
+                    bindingLocation.txt4.text = "Preço: ${precos?.get("240")} R$"
+                    bindingLocation.txt18.text = "Preço: ${precos?.get("18h")} R$"
                 }
             }
             .addOnFailureListener { exception ->
@@ -339,6 +339,27 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val gson = Gson()
         return gson.toJson(qrcode)
     }
+    private fun generateQRCode(content: String, width: Int, height: Int): Bitmap? {
+        try {
+            val bitMatrix: BitMatrix = QRCodeWriter().encode(
+                content,
+                BarcodeFormat.QR_CODE,
+                width,
+                height,
+                null
+            )
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    bitmap.setPixel(x, y, if (bitMatrix[x, y]) 0xFF000000.toInt() else 0xFFFFFFFF.toInt())
+                }
+            }
+            return bitmap
+        } catch (e: WriterException) {
+            e.printStackTrace()
+        }
+        return null
+    }
     private fun showPayDialogBox(){
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -375,28 +396,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         dialog.show()
     }
-    private fun generateQRCode(content: String, width: Int, height: Int): Bitmap? {
-        try {
-            val bitMatrix: BitMatrix = QRCodeWriter().encode(
-                content,
-                BarcodeFormat.QR_CODE,
-                width,
-                height,
-                null
-            )
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    bitmap.setPixel(x, y, if (bitMatrix[x, y]) 0xFF000000.toInt() else 0xFFFFFFFF.toInt())
-                }
-            }
-            return bitmap
-        } catch (e: WriterException) {
-            e.printStackTrace()
-        }
-        return null
-    }
-
     private fun navIntent(location: LatLng) {
         val intent =
             Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
@@ -404,8 +403,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         mapIntent.setPackage("com.google.android.apps.maps")
         startActivity(mapIntent)
     }
-
-
     private fun addMarkers(googleMap: GoogleMap) {
         locations.forEach { location ->
             val marker = googleMap.addMarker(
