@@ -30,8 +30,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="15dp"
-    android:layout_marginStart="15dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_gravity="center">
     <RadioGroup
         android:id="@+id/radioGroupLocation"
         android:layout_width="match_parent"
@@ -110,13 +110,30 @@
             android:textSize="17dp" />
     </LinearLayout>
 </LinearLayout>
-    <Button
-        android:layout_gravity="center"
-        android:id="@+id/btnConfirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <LinearLayout
+        android:gravity="center"
         android:layout_marginTop="20dp"
-        android:text="@string/confirm" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:text="Confirmar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btnCancel"
+            android:textSize="14sp"
+            android:layout_marginStart="15dp"
+            android:textAllCaps="true"
+            android:text="@string/cancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 </LinearLayout>
 
 </androidx.cardview.widget.CardView>

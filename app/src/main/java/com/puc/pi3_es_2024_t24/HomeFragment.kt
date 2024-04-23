@@ -56,6 +56,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var bindingCard : DialogCardBinding
     private lateinit var bindingLocation: DialogLocationBinding
     private val locations = arrayListOf<MarkerData>()
+    private lateinit var locationDialog: Dialog
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var currentLocation: Location
@@ -103,7 +104,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         Log.d(ContentValues.TAG, "Criado")
         loadClient()
         Log.d(ContentValues.TAG, "sincronizado")
-
     }
     private fun getLocation() {
         val locationPermissionRequest = registerForActivityResult(
@@ -260,33 +260,37 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         dialog.show()
     }
 
-    private fun showLocationDialog(){
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(true)
-        dialog.setContentView(bindingLocation.root)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        bindingLocation.btnConfirm.setOnClickListener {
-            var option = 0
-            when (bindingLocation.radioGroupLocation.checkedRadioButtonId) {
 
-                bindingLocation.radio30min.id ->{
-                    Toast.makeText(requireContext(), "30 min", Toast.LENGTH_SHORT).show()
-                    option = 30
+    private fun showLocationDialog() {
+        if (!::locationDialog.isInitialized) {
+            locationDialog = Dialog(requireContext())
+            locationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            locationDialog.setCancelable(false)
+            locationDialog.setContentView(bindingLocation.root)
+            locationDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            bindingLocation.btnConfirm.setOnClickListener {
+                var option = 0
+                when (bindingLocation.radioGroupLocation.checkedRadioButtonId) {
+                    bindingLocation.radio30min.id -> {
+                        Toast.makeText(requireContext(), "30 min", Toast.LENGTH_SHORT).show()
+                        option = 30
+                    }
+                    bindingLocation.radio1hr.id -> Toast.makeText(requireContext(), "1hr", Toast.LENGTH_SHORT).show()
+                    bindingLocation.radio2hr.id -> Toast.makeText(requireContext(), "2hr", Toast.LENGTH_SHORT).show()
+                    bindingLocation.radio4hr.id -> Toast.makeText(requireContext(), "4hr", Toast.LENGTH_SHORT).show()
+                    bindingLocation.radio18hr.id -> Toast.makeText(requireContext(), "18hr", Toast.LENGTH_SHORT).show()
                 }
-                bindingLocation.radio1hr.id -> Toast.makeText(requireContext(), "1hr", Toast.LENGTH_SHORT).show()
-
-                bindingLocation.radio2hr.id -> Toast.makeText(requireContext(), "2hr", Toast.LENGTH_SHORT).show()
-
-                bindingLocation.radio4hr.id -> Toast.makeText(requireContext(), "4hr", Toast.LENGTH_SHORT).show()
-
-                bindingLocation.radio18hr.id -> Toast.makeText(requireContext(), "18hr", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Locate", Toast.LENGTH_SHORT).show()
             }
-            Toast.makeText(requireContext(), "Locate", Toast.LENGTH_SHORT).show()
+            bindingLocation.btnCancel.setOnClickListener {
+                locationDialog.dismiss()
+            }
         }
-        dialog.show()
+        locationDialog.show()
     }
+
 
     private fun showPayDialogBox(){
         val dialog = Dialog(requireContext())
