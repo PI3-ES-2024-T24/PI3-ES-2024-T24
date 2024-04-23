@@ -40,6 +40,7 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.puc.pi3_es_2024_t24.databinding.DialogCardBinding
+import com.puc.pi3_es_2024_t24.databinding.DialogLocationBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogPaymentBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
 import kotlinx.coroutines.CoroutineScope
@@ -53,6 +54,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var bindingPayment : DialogPaymentBinding
     private lateinit var bindingCard : DialogCardBinding
+    private lateinit var bindingLocation: DialogLocationBinding
     private val locations = arrayListOf<MarkerData>()
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -72,6 +74,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         bindingPayment = DialogPaymentBinding.inflate(inflater, container, false)
         bindingCard = DialogCardBinding.inflate(inflater, container, false)
+        bindingLocation = DialogLocationBinding.inflate(inflater, container, false)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         getLocation()
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
@@ -180,6 +183,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             binding.fabNavigation.setOnClickListener{
                 navIntent(marker.position)
             }
+            binding.fabLocation.setOnClickListener {
+                showLocationDialog()
+            }
             marker.showInfoWindow()
             true
         }
@@ -253,6 +259,18 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         btnCancel.setOnClickListener {
             Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
+        }
+        dialog.show()
+    }
+    private fun showLocationDialog(){
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(bindingLocation.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        bindingLocation.btnConfirm.setOnClickListener {
+            Toast.makeText(requireContext(), "Locate", Toast.LENGTH_SHORT).show()
         }
         dialog.show()
     }
