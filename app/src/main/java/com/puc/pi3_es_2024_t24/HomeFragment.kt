@@ -398,9 +398,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         return null
     }
     private fun showPayDialogBox() {
-        if (client == null) {
-            return
-        }
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -411,7 +408,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val bindingPayment = DialogPaymentBinding.inflate(layoutInflater)
         val bindingCard = DialogCardBinding.inflate(layoutInflater)
 
-        if (client.card?.nome == "null") {
+        if (client.card?.nome == "null" || client.card?.nome == null) {
             dialog.setContentView(bindingPayment.root)
 
             bindingPayment.btnSave.setOnClickListener {
@@ -430,6 +427,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
         } else {
             dialog.setContentView(bindingCard.root)
+            bindingCard.tvCardNumber.text = client.card?.numero
 
             bindingCard.btnAddCard.setOnClickListener {
                 dialog.dismiss()
