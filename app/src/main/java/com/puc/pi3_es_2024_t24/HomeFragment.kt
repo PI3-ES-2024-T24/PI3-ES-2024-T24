@@ -3,8 +3,11 @@ package com.puc.pi3_es_2024_t24
 import android.Manifest
 import android.app.Dialog
 import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
@@ -17,7 +20,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -39,8 +41,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.gson.Gson
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.WriterException
+import com.google.zxing.common.BitMatrix
+import com.google.zxing.qrcode.QRCodeWriter
 import com.puc.pi3_es_2024_t24.databinding.DialogCardBinding
+import com.puc.pi3_es_2024_t24.databinding.DialogLocationBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogPaymentBinding
+import com.puc.pi3_es_2024_t24.databinding.DialogQrcodeBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,14 +62,19 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var bindingPayment : DialogPaymentBinding
     private lateinit var bindingCard : DialogCardBinding
+    private lateinit var bindingLocation: DialogLocationBinding
+    private lateinit var bindingQrCode: DialogQrcodeBinding
     private val locations = arrayListOf<MarkerData>()
+    private lateinit var locationDialog: Dialog
+    private lateinit var qrCodeDialog: Dialog
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var currentLocation: Location
+    private var currentActiveLocation: Boolean = false
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
     private val db = Firebase.firestore
-    private lateinit var client: Client
+    private lateinit var client:Client
     private var clicked = false
 
     override fun onCreateView(
@@ -72,12 +86,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         bindingPayment = DialogPaymentBinding.inflate(inflater, container, false)
         bindingCard = DialogCardBinding.inflate(inflater, container, false)
+        bindingLocation = DialogLocationBinding.inflate(inflater, container, false)
+        bindingQrCode = DialogQrcodeBinding.inflate(inflater, container, false)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         getLocation()
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
-
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when(item.itemId){
                 R.id.bottom_credit_card ->{
@@ -97,10 +112,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        currentActiveLocation = loadLocationState()
+        if (currentActiveLocation){
+            showQrCode()
+        }
         Log.d(ContentValues.TAG, "Criado")
         loadClient()
         Log.d(ContentValues.TAG, "sincronizado")
-
     }
     private fun getLocation() {
         val locationPermissionRequest = registerForActivityResult(
@@ -120,10 +138,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         return@registerForActivityResult
                     }
                     fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                        currentLocation=location
-                        Toast.makeText(requireContext(), "Localizado",Toast.LENGTH_SHORT).show()
-                        val homeMapFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
-                        homeMapFragment.getMapAsync(this)
+                        location?.let {
+                            currentLocation = it
+                            Toast.makeText(requireContext(), "Localizado", Toast.LENGTH_SHORT).show()
+                            val homeMapFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
+                            homeMapFragment.getMapAsync(this)
+                        } ?: run {
+                            // Handle case where location is null
+                            Toast.makeText(requireContext(), "Não foi possível obter a localização", Toast.LENGTH_SHORT).show()
+                        }
 
                     }
                 }else -> {
@@ -141,10 +164,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
     override fun onMapReady(googleMap: GoogleMap) {
         val currentLoc= LatLng(currentLocation.latitude,currentLocation.longitude)
-        //val puc apenas pra testes fora do emulador
-        val puc = LatLng(-22.83400, -47.05276)
         map = googleMap
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc,15f))
         getUnities()
         if (ActivityCompat.checkSelfPermission(
@@ -158,10 +178,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             return
         }
         map.isMyLocationEnabled = true
-
-
         map.setOnMarkerClickListener { marker ->
-
+            marker.showInfoWindow()
+            val unityId = marker.tag as String
             binding.fabExpand.show()
             binding.fabExpand.setOnClickListener{
                 if (!clicked){
@@ -180,7 +199,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             binding.fabNavigation.setOnClickListener{
                 navIntent(marker.position)
             }
-            marker.showInfoWindow()
+            binding.fabLocation.setOnClickListener {
+
+                Toast.makeText(requireContext(), "Locate ${unityId}", Toast.LENGTH_SHORT).show()
+                showLocationDialog(unityId)
+                initPrices(unityId)
+            }
             true
         }
         map.setOnMapClickListener {
@@ -190,6 +214,26 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             clicked = false
         }
 
+    }
+    private fun initPrices(unityId: String){
+        db.collection("unidades")
+            .whereEqualTo("unityId", unityId)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    Log.d(TAG, "documentos")
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    val precos = document.get("precos") as? Map<*, *>
+                    bindingLocation.txt30.text = "Preço: ${precos?.get("30")} R$"
+                    bindingLocation.txt1.text = "Preço: ${precos?.get("60")} R$"
+                    bindingLocation.txt2.text = "Preço: ${precos?.get("120")} R$"
+                    bindingLocation.txt4.text = "Preço: ${precos?.get("240")} R$"
+                    bindingLocation.txt18.text = "Preço: ${precos?.get("18h")} R$"
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents: ", exception)
+            }
     }
     private fun getUnities(): Task<Unit> {
         return functions
@@ -209,7 +253,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     val gerenteCpf = unity["gerenteCpf"] as String
                     val precos = unity["precos"] as Map<String, Int>
                     val localizacao = unity["localizacao"] as Map<String, Any>
-
                     val nome = localizacao["nome"] as String
                     val latitude = localizacao["latitude"] as Double
                     val longitude = localizacao["longitude"] as Double
@@ -217,6 +260,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     val referencia = localizacao["referencia"] as String
 
                     locations.add(MarkerData(
+                        unityId,
                         nome,
                         LatLng(latitude, longitude),
                         endereco,
@@ -256,43 +300,148 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
         dialog.show()
     }
+    private fun showLocationDialog(unityId:String) {
+        if (!::locationDialog.isInitialized) {
+            locationDialog = Dialog(requireContext())
+            locationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            locationDialog.setCancelable(false)
+            locationDialog.setContentView(bindingLocation.root)
+            locationDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            bindingLocation.btnConfirm.setOnClickListener {
+                var option = 0
+                when (bindingLocation.radioGroupLocation.checkedRadioButtonId) {
+                    bindingLocation.radio30min.id -> option = 30
+                    bindingLocation.radio1hr.id -> option = 1
+                    bindingLocation.radio2hr.id -> option = 2
+                    bindingLocation.radio4hr.id -> option = 4
+                    bindingLocation.radio18hr.id -> option = 18
+                }
+                currentActiveLocation = true
+                saveLocationState(currentActiveLocation)
+                locationDialog.dismiss()
+                makeJsonQr(unityId, option)
+                showQrCode()
 
-    private fun showPayDialogBox(){
+            }
+            bindingLocation.btnCancel.setOnClickListener {
+                locationDialog.dismiss()
+            }
+        }
+        locationDialog.show()
+    }
+    private fun showCancelDialog(){
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        if (client.card?.nome == "null") {
-            dialog.setContentView(bindingPayment.root)
-        } else {
-            dialog.setContentView(bindingCard.root)
-        }
+        dialog.setContentView(R.layout.dialog_cancel)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val cpf : String = client.cpf
+        val btnNotCancel : Button = dialog.findViewById(R.id.btnNotCancel)
+        val btnCancel : Button = dialog.findViewById(R.id.btnCancel)
 
-        bindingPayment.btnSave.setOnClickListener {
-            saveCard(cpf, bindingPayment.etCardName.text.toString(), bindingPayment.etCardNumber.text.toString(), bindingPayment.etCardValidation.text.toString(), bindingPayment.etCardCCV.text.toString())
+        btnNotCancel.setOnClickListener {
+            Toast.makeText(requireContext(), "Não Cancelou", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
-        bindingPayment.btnCancel.setOnClickListener {
+        btnCancel.setOnClickListener {
             Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
+            qrCodeDialog.dismiss()
+            currentActiveLocation = false
+            saveLocationState(currentActiveLocation)
         }
+        dialog.show()
+    }
+    private fun showQrCode() {
+        if (!::qrCodeDialog.isInitialized) {
+            qrCodeDialog = Dialog(requireContext())
+            qrCodeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            qrCodeDialog.setCancelable(false)
+            qrCodeDialog.setContentView(bindingQrCode.root)
+            qrCodeDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val savedContent = loadQRCodeContent()
+            bindingQrCode.qrCodeImg.setImageBitmap(savedContent?.let { generateQRCode(it, 800, 800) })
+            bindingQrCode.btnCancel.setOnClickListener {
+                showCancelDialog()
+            }
+        }
+        qrCodeDialog.show()
+    }
+    private fun makeJsonQr(unityId: String, option: Int){
+        val userEmail = auth.currentUser?.email.toString()
+        val qrcode = QrCode(unityId, userEmail, option)
+        val gson = Gson()
+        val content = gson.toJson(qrcode)
+        saveQRCodeContent(content)
+    }
+    private fun generateQRCode(content: String, width: Int, height: Int): Bitmap? {
+        try {
+            val bitMatrix: BitMatrix = QRCodeWriter().encode(
+                content,
+                BarcodeFormat.QR_CODE,
+                width,
+                height,
+                null
+            )
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    bitmap.setPixel(x, y, if (bitMatrix[x, y]) 0xFF000000.toInt() else 0xFFFFFFFF.toInt())
+                }
+            }
+            return bitmap
+        } catch (e: WriterException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+    private fun showPayDialogBox() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        bindingCard.btnAddCard.setOnClickListener{
+        val cpf: String = client.cpf
+
+        val bindingPayment = DialogPaymentBinding.inflate(layoutInflater)
+        val bindingCard = DialogCardBinding.inflate(layoutInflater)
+
+        if (client.card?.nome == "null" || client.card?.nome == null) {
             dialog.setContentView(bindingPayment.root)
-        }
-        bindingCard.btnCancel.setOnClickListener{
-            dialog.dismiss()
-        }
-        bindingCard.btnDeleteCard.setOnClickListener{
-            saveCard(cpf,"null","null", "null", "null")
-            dialog.dismiss()
+
+            bindingPayment.btnSave.setOnClickListener {
+                saveCard(
+                    cpf,
+                    bindingPayment.etCardName.text.toString(),
+                    bindingPayment.etCardNumber.text.toString(),
+                    bindingPayment.etCardValidation.text.toString(),
+                    bindingPayment.etCardCCV.text.toString()
+                )
+                dialog.dismiss()
+            }
+            bindingPayment.btnCancel.setOnClickListener {
+                Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+        } else {
+            dialog.setContentView(bindingCard.root)
+            bindingCard.tvCardNumber.text = client.card?.numero
+
+            bindingCard.btnAddCard.setOnClickListener {
+                dialog.dismiss()
+                showPayDialogBox()
+            }
+            bindingCard.btnCancel.setOnClickListener {
+                dialog.dismiss()
+            }
+            bindingCard.btnDeleteCard.setOnClickListener {
+                saveCard(cpf, "null", "null", "null", "null")
+                dialog.dismiss()
+            }
         }
 
         dialog.show()
     }
-
     private fun navIntent(location: LatLng) {
         val intent =
             Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
@@ -300,8 +449,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         mapIntent.setPackage("com.google.android.apps.maps")
         startActivity(mapIntent)
     }
-
-
     private fun addMarkers(googleMap: GoogleMap) {
         locations.forEach { location ->
             val marker = googleMap.addMarker(
@@ -317,14 +464,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         )
                     )
             )
-            marker?.tag = location
-
-
+            marker?.tag = location.unityId
         }
-
-
     }
-
     private fun calculateDistance(userLocation: LatLng, markerLatLng: LatLng): Float {
 
         val locationResult = FloatArray(3)
@@ -332,8 +474,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             markerLatLng.latitude, markerLatLng.longitude, locationResult)
         return locationResult[0]
     }
-
-
     private fun saveCard(cpf: String, cardName: String, cardNumber: String, cardValidation: String, cardCVV: String) : Task<Unit> {
         val body = hashMapOf(
             "cpf" to cpf,
@@ -365,7 +505,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 }
             }
     }
-
     private fun loadClient() {
         CoroutineScope(Dispatchers.IO).launch {
             val email = auth.currentUser?.email
@@ -394,4 +533,28 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 }
         }
     }
+    private fun saveLocationState(active: Boolean) {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putBoolean("active_location", active)
+            apply()
+        }
+    }
+    private fun loadLocationState(): Boolean {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        return sharedPref.getBoolean("active_location", false)
+    }
+    private fun saveQRCodeContent(content: String) {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("qr_code_content", content)
+            apply()
+        }
+    }
+    private fun loadQRCodeContent(): String? {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        return sharedPref.getString("qr_code_content", null)
+    }
+
+
 }

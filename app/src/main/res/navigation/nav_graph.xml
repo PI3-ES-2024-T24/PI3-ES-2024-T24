@@ -64,9 +64,6 @@
             app:destination="@id/signInFragment"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim" />
-        <action
-            android:id="@+id/action_homeFragment_to_locationFragment"
-            app:destination="@id/locationFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
@@ -81,9 +78,5 @@
             android:id="@+id/action_forgotPasswordFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/locationFragment"
-        android:name="com.puc.pi3_es_2024_t24.LocationFragment"
-        android:label="fragment_location"
-        tools:layout="@layout/fragment_location" />
+
 </navigation>
