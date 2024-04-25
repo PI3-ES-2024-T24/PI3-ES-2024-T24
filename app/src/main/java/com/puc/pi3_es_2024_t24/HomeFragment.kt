@@ -472,6 +472,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     )
             )
             marker?.tag = location.unityId
+
         }
     }
     private fun calculateDistance(userLocation: LatLng, markerLatLng: LatLng): Float {
