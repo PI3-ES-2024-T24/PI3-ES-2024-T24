@@ -348,7 +348,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             bindingLocation.txtTime18.visibility = View.VISIBLE
         }
     }
-
     private fun showCancelDialog(){
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
