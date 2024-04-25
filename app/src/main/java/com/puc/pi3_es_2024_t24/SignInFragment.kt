@@ -51,7 +51,7 @@ class SignInFragment : Fragment() {
                         }
                     }else {
                         //cria um log do nivel E (error) no LogCat
-                        Toast.makeText(requireContext(),"Email e/ou senha errados",Toast.LENGTH_SHORT).show()
+                        binding.textInputLayoutEmail.error = "Email e/ou senha errados"
                         Log.e("error: ", it.exception.toString())
                     }
                 }
