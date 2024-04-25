@@ -84,7 +84,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.santalu.maskara.widget.MaskEditText
             android:id="@+id/etCpf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -105,14 +105,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.santalu.maskara.widget.MaskEditText
             android:id="@+id/etBirth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/birth"
             android:inputType="date"
-            android:textColor="@color/cinzinha"
-            app:mask="00/00/00"
+            app:mask="00/00/0000"
             app:maskCharacter="0"
             app:maskStyle="completable" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -135,9 +134,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/phone"
-            android:inputType="phone"
-            android:textColor="@color/cinzinha"
-            app:mask="+55 (__) _____-____"
+            android:inputType="phone" app:mask="+55 (__) _____-____"
             app:maskCharacter="_"
             app:maskStyle="completable" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -210,7 +207,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="17dp"
         android:fontFamily="@font/manrope_semibold"
-        android:text="Já tem cadastro? Clique aqui."
+        android:text="@string/j_tem_cadastro_clique_aqui"
         android:textColor="@color/cinzinha"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

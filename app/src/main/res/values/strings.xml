@@ -6,7 +6,7 @@
     <string name="name">Nome Completo</string>
     <string name="email">E-mail</string>
     <string name="cpf">CPF</string>
-    <string name="birth">00/00/0000</string>
+    <string name="birth">Data de nascimento</string>
     <string name="phone">Celular</string>
     <string name="password">Senha</string>
     <string name="confpassword">Confirmar senha</string>
@@ -29,5 +29,6 @@
     <string name="realizar_loca_o">Realizar locação</string>
     <string name="selectione_uma_op_o_de_tempo">Selectione uma opção de tempo:</string>
     <string name="confirm">Confirmar</string>
+    <string name="j_tem_cadastro_clique_aqui">Já tem cadastro? Clique aqui.</string>
 
 </resources>
