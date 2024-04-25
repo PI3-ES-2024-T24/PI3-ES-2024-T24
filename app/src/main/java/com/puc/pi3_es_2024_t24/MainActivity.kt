@@ -12,9 +12,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
-
+// implementa a função de voltar com a seta de voltar do celular
     override fun onSupportNavigateUp(): Boolean {
+        // Declara Main activity como Host de navegação
         navController= findNavController(R.id.navHostFragmentContainerView)
+    // retorna a pilha anterior
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

@@ -54,6 +54,8 @@ import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalTime
+import java.util.Calendar
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
@@ -307,6 +309,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             locationDialog.setCancelable(false)
             locationDialog.setContentView(bindingLocation.root)
             locationDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            check18hr()
             bindingLocation.btnConfirm.setOnClickListener {
                 var option = 0
                 when (bindingLocation.radioGroupLocation.checkedRadioButtonId) {
@@ -328,6 +331,22 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
         }
         locationDialog.show()
+    }
+    private fun isBetween7And8(): Boolean {
+        val currentTime = Calendar.getInstance()
+        val hour = currentTime.get(Calendar.HOUR_OF_DAY)
+
+        return hour in 7..7
+    }
+    private fun check18hr(){
+        if (isBetween7And8()){
+            bindingLocation.radio18hr.isClickable = true
+            bindingLocation.txtTime18.visibility = View.INVISIBLE
+        }
+        else{
+            bindingLocation.radio18hr.isClickable = false
+            bindingLocation.txtTime18.visibility = View.VISIBLE
+        }
     }
     private fun showCancelDialog(){
         val dialog = Dialog(requireContext())
