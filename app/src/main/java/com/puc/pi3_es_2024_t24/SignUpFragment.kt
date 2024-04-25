@@ -115,7 +115,7 @@ class SignUpFragment : Fragment() {
         if (binding.etCpf.text.toString().isEmpty()) {
             binding.textInputLayoutCpf.error = "é necessario preencher esse campo"
             return false
-        } else if (binding.etCpf.length() != 11) {
+        } else if (binding.etCpf.length() != 14) {
             binding.textInputLayoutCpf.error = "porfavor digite um cpf valido"
             return false
         } else {

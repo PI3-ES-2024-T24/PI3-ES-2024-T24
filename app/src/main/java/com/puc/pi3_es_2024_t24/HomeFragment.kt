@@ -111,6 +111,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         currentActiveLocation = loadLocationState()
+        // caso tenha uma locação pendente chama o dialogo do qr code
         if (currentActiveLocation){
             showQrCode()
         }
@@ -176,7 +177,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         map.isMyLocationEnabled = true
         map.setOnMarkerClickListener { marker ->
             marker.showInfoWindow()
-            val unityId = marker.tag as String
+            val location = marker.tag as MarkerData
             binding.fabExpand.show()
             binding.fabExpand.setOnClickListener{
                 if (!clicked){
@@ -196,8 +197,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 navIntent(marker.position)
             }
             binding.fabLocation.setOnClickListener {
-                showLocationDialog(unityId)
-                initPrices(unityId)
+                showLocationDialog(location.unityId)
+                initPrices(location.unityId)
             }
             true
         }
@@ -209,6 +210,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
 
     }
+    //puxa do firestore os preços da hora da unidade
     private fun initPrices(unityId: String){
         db.collection("unidades")
             .whereEqualTo("unityId", unityId)
@@ -471,7 +473,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         )
                     )
             )
-            marker?.tag = location.unityId
+            marker?.tag = location
         }
     }
     private fun calculateDistance(userLocation: LatLng, markerLatLng: LatLng): Float {

@@ -93,15 +93,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             )
         )
     }
-
-
-
+    // override quando o mapa do google maps fica pronto
     override fun onMapReady(googleMap: GoogleMap) {
         val currentLoc= LatLng(currentLocation.latitude,currentLocation.longitude)
         map = googleMap
         // move a camera como posição inicial baseada na ultima localização do usuario
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc,15f))
         getUnities()
+        //checa permissões de rede
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -132,6 +131,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }
 
     }
+    // puxa do banco de dados os dados das unidades
     private fun getUnities(): Task<Unit> {
         return functions
             .getHttpsCallable("getAllUnities")
@@ -177,14 +177,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 Log.e(TAG, "Falha ao obter as localizações", exception)
             }
     }
+    // função que inicia navegação do marker
     private fun navIntent(location: LatLng) {
-        val intent =
-            Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
+        val intent = Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
         val mapIntent = Intent(Intent.ACTION_VIEW, intent)
         mapIntent.setPackage("com.google.android.apps.maps")
         startActivity(mapIntent)
     }
-
+    // adiciona markers ao mapa
     private fun addMarkers(googleMap: GoogleMap) {
         locations.forEach { location ->
             val marker = googleMap.addMarker(

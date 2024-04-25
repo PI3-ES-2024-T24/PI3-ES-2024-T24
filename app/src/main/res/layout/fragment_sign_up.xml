@@ -111,8 +111,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/birth"
             android:inputType="date"
-            app:mask="00/00/0000"
-            app:maskCharacter="0"
+            app:mask="**/**/****"
+            app:maskCharacter="*"
             app:maskStyle="completable" />
     </com.google.android.material.textfield.TextInputLayout>
 
