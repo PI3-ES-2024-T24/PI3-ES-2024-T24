@@ -43,21 +43,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+        // pega a instancia do firebase da equipe
         functions = FirebaseFunctions.getInstance(firebaseApp, "southamerica-east1")
+        //infla bindings relacionados
         binding = FragmentMapsBinding.inflate(inflater, container, false)
+        //Acessa os serviços de localização da atividade relacionada à esse fragmento
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         getLocation()
         return binding.root
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "Criado")
-        Log.d(TAG, "sincronizado")
-
-    }
     private fun getLocation() {
+        //cria as instruçôes de permissão para o aplicativo da localização precisa ou aproximada
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
@@ -75,8 +72,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                         return@registerForActivityResult
                     }
                     fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                        //registra a ultima localizção do usuario
                         currentLocation=location
                         Toast.makeText(requireContext(), "Localizado",Toast.LENGTH_SHORT).show()
+                        //sincroniza o mapa "map" com o fragmeento
                         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
                         mapFragment.getMapAsync(this)
 
@@ -86,7 +85,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             }
             }
         }
-
+        //lança as instruções de permissão
         locationPermissionRequest.launch(
             arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -99,10 +98,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         val currentLoc= LatLng(currentLocation.latitude,currentLocation.longitude)
-        //val puc apenas pra testes fora do emulador
-        val puc = LatLng(-22.83400, -47.05276)
         map = googleMap
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(puc, 15f))
+        // move a camera como posição inicial baseada na ultima localização do usuario
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc,15f))
         getUnities()
         if (ActivityCompat.checkSelfPermission(
@@ -115,17 +112,21 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         ) {
             return
         }
+        //incia icone da localizção do usario
         map.isMyLocationEnabled = true
 
-
+        //ao clicar em algum marcador...
         map.setOnMarkerClickListener { marker ->
+            //seta  visibilidade do botão como visivel
             binding.navFab.visibility = View.VISIBLE
             binding.navFab.setOnClickListener {
+                // chama a função navIntent tendo a posição do marcador clicada como
                 navIntent(marker.position)
             }
             marker.showInfoWindow()
             true
         }
+        // ao clicar no mapa
         map.setOnMapClickListener {
             binding.navFab.visibility = View.GONE
         }

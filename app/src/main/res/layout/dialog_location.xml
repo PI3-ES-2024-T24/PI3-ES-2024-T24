@@ -66,12 +66,15 @@
         <RadioButton
             android:id="@+id/radio18hr"
             android:layout_width="match_parent"
+            android:clickable="false"
             android:layout_height="match_parent"
             android:text="18 horas" />
         <TextView
+            android:id="@+id/txtTime18"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
+            android:visibility="visible"
             android:text="apenas dps das 18"/>
 
     </RadioGroup>
