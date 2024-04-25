@@ -24,8 +24,6 @@ class MarkerInfoAdapter(private val context: Context): GoogleMap.InfoWindowAdapt
         view.findViewById<TextView>(R.id.txt_title).text = location.name
         view.findViewById<TextView>(R.id.txt_address).text = location.address
         view.findViewById<TextView>(R.id.txt_reference).text = location.reference
-
-
         return view
     }
 }

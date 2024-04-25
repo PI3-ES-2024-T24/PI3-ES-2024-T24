@@ -111,6 +111,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         currentActiveLocation = loadLocationState()
+        // caso tenha uma locação pendente chama o dialogo do qr code
         if (currentActiveLocation){
             showQrCode()
         }
@@ -209,6 +210,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
 
     }
+    //puxa do firestore os preços da hora da unidade
     private fun initPrices(unityId: String){
         db.collection("unidades")
             .whereEqualTo("unityId", unityId)
