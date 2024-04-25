@@ -30,13 +30,11 @@ class SignInFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentSignInBinding.inflate(inflater, container, false)
-
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
 
         db = Firebase.firestore
-
         binding.btnSignIn.setOnClickListener {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
@@ -53,6 +51,7 @@ class SignInFragment : Fragment() {
                         }
                     }else {
                         //cria um log do nivel E (error) no LogCat
+                        Toast.makeText(requireContext(),"Email e/ou senha errados",Toast.LENGTH_SHORT).show()
                         Log.e("error: ", it.exception.toString())
                     }
                 }
@@ -61,7 +60,6 @@ class SignInFragment : Fragment() {
         binding.btnMaps.setOnClickListener{
             it.findNavController().navigate(R.id.action_signInFragment_to_mapsFragment)
         }
-
         binding.btnRegister.setOnClickListener{
             it.findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
         }
@@ -70,7 +68,6 @@ class SignInFragment : Fragment() {
         }
         return binding.root
     }
-
     private fun validate(): Boolean{
         val email = binding.etEmail.text.toString()
         if(binding.etEmail.text.toString() == ""){

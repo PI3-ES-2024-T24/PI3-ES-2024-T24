@@ -178,8 +178,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             }
     }
     private fun navIntent(location: LatLng) {
-        val intent =
-            Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
+        val intent = Uri.parse("google.navigation:q=${location.latitude}, ${location.longitude}&mode=w")
         val mapIntent = Intent(Intent.ACTION_VIEW, intent)
         mapIntent.setPackage("com.google.android.apps.maps")
         startActivity(mapIntent)
