@@ -98,18 +98,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when(item.itemId){
                 R.id.bottom_credit_card ->{
-                    Toast.makeText(requireContext(), "Fragmento pagamento!!!", Toast.LENGTH_SHORT).show()
                     showPayDialogBox()
                 }
-
                 R.id.bottom_logout ->{
-                    Toast.makeText(requireContext(), "dialog logout", Toast.LENGTH_SHORT).show()
                     showLogoutDialogBox()
                 }
             }
             true
         }
-
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -118,9 +114,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         if (currentActiveLocation){
             showQrCode()
         }
-        Log.d(ContentValues.TAG, "Criado")
         loadClient()
-        Log.d(ContentValues.TAG, "sincronizado")
+        Log.d(ContentValues.TAG, "Cliente carregado")
     }
     private fun getLocation() {
         val locationPermissionRequest = registerForActivityResult(
@@ -142,7 +137,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                         location?.let {
                             currentLocation = it
-                            Toast.makeText(requireContext(), "Localizado", Toast.LENGTH_SHORT).show()
                             val homeMapFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
                             homeMapFragment.getMapAsync(this)
                         } ?: run {
@@ -202,8 +196,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 navIntent(marker.position)
             }
             binding.fabLocation.setOnClickListener {
-
-                Toast.makeText(requireContext(), "Locate ${unityId}", Toast.LENGTH_SHORT).show()
                 showLocationDialog(unityId)
                 initPrices(unityId)
             }
@@ -297,7 +289,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
         }
         btnCancel.setOnClickListener {
-            Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
         dialog.show()
@@ -359,11 +350,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val btnCancel : Button = dialog.findViewById(R.id.btnCancel)
 
         btnNotCancel.setOnClickListener {
-            Toast.makeText(requireContext(), "Não Cancelou", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
         btnCancel.setOnClickListener {
-            Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
             qrCodeDialog.dismiss()
             currentActiveLocation = false
@@ -439,7 +428,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 dialog.dismiss()
             }
             bindingPayment.btnCancel.setOnClickListener {
-                Toast.makeText(requireContext(), "Cancelou", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
         } else {

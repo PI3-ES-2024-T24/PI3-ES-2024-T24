@@ -51,7 +51,7 @@ class ForgotPasswordFragment : Fragment() {
             return false
         }
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            binding.textInputLayoutEmail.error = "porfavor digite um email valido"
+            binding.textInputLayoutEmail.error = "Porfavor digite um email valido"
             return false
         }
         return true
