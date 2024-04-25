@@ -177,7 +177,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         map.isMyLocationEnabled = true
         map.setOnMarkerClickListener { marker ->
             marker.showInfoWindow()
-            val unityId = marker.tag as String
+            val location = marker.tag as MarkerData
             binding.fabExpand.show()
             binding.fabExpand.setOnClickListener{
                 if (!clicked){
@@ -197,8 +197,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 navIntent(marker.position)
             }
             binding.fabLocation.setOnClickListener {
-                showLocationDialog(unityId)
-                initPrices(unityId)
+                showLocationDialog(location.unityId)
+                initPrices(location.unityId)
             }
             true
         }
@@ -473,8 +473,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         )
                     )
             )
-            marker?.tag = location.unityId
-
+            marker?.tag = location
         }
     }
     private fun calculateDistance(userLocation: LatLng, markerLatLng: LatLng): Float {
