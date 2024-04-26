@@ -12,6 +12,20 @@
 * Colletion "armários"
 * Collection "locações"
 * Colletion "gerentes"
+
+# Login Firebase auth
+
+**Contents**
+
+#### Usuário sem login
+
+* E-mail - hcostarios@gmail.com
+* senha - user123
+  
+#### Usuário login
+
+* E-mail - hcostarios@gmail.com
+* senha - henri123
   
 # ENDPOINTS
 
