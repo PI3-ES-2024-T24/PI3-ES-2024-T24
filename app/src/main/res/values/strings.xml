@@ -16,7 +16,7 @@
     <string name="entrar">Entrar</string>
     <string name="registrar_conta"></string>
     <string name="login">Login</string>
-    <string name="sair_da_conta">Sair da Conta?</string>
+    <string name="sair_da_conta">Sair da conta?</string>
     <string name="sair">sair</string>
     <string name="cancelar">cancelar</string>
     <string name="comece_a_alugar_armarios_agora">Comece a alugar armarios agora! :)</string>
@@ -27,7 +27,7 @@
     <string name="verificar_armarios_por_perto">Verificar armarios por perto:</string>
     <string name="n_o_tem_cadastro_clique_aqui">Não tem cadastro? Clique aqui.</string>
     <string name="realizar_loca_o">Realizar locação</string>
-    <string name="selectione_uma_op_o_de_tempo">Selectione uma opção de tempo:</string>
+    <string name="selectione_uma_op_o_de_tempo">Selecione uma opção de tempo:</string>
     <string name="confirm">Confirmar</string>
     <string name="j_tem_cadastro_clique_aqui">Já tem cadastro? Clique aqui.</string>
 
