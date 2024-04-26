@@ -11,7 +11,9 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="20dp">
 
     <TextView
         android:id="@+id/realizar"
@@ -71,11 +73,12 @@
             android:text="18 horas" />
         <TextView
             android:id="@+id/txtTime18"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="@color/red"
             android:visibility="visible"
-            android:text="apenas dps das 18"/>
+            android:text="Opção apenas disponivel entre 7 e 8 horas da manhã"/>
 
     </RadioGroup>
 
@@ -127,7 +130,6 @@
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <Button
             android:id="@+id/btnConfirm"
             android:textSize="14sp"
