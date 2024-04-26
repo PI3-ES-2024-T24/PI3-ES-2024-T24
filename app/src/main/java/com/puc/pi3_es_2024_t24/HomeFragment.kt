@@ -494,7 +494,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             "nome" to cardName,
             "numero" to cardNumber,
             "validade" to cardValidation,
-            "cvv" to cardCVV
+            "cvv" to "null"
         )
 
         return functions
