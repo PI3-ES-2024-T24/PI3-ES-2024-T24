@@ -144,7 +144,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                             // Handle case where location is null
                             Toast.makeText(requireContext(), "Não foi possível obter a localização", Toast.LENGTH_SHORT).show()
                         }
-
                     }
                 }else -> {
                 // No location access granted.
@@ -197,8 +196,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 navIntent(marker.position)
             }
             binding.fabLocation.setOnClickListener {
-                showLocationDialog(location.unityId)
-                initPrices(location.unityId)
+                if (client.card?.nome == "null" || client.card?.nome == null) {
+                    Toast.makeText(requireContext(),"É necessario ter um cartão registrado para começar a alugar!!",Toast.LENGTH_SHORT).show()
+                    showPayDialogBox()
+                }
+                else{
+                    showLocationDialog(location.unityId)
+                    initPrices(location.unityId)
+                }
             }
             true
         }
