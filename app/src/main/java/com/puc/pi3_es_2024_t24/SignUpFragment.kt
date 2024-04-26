@@ -75,6 +75,7 @@ class SignUpFragment : Fragment() {
                             "Conta criada com sucesso!",
                             Toast.LENGTH_SHORT
                         ).show()
+                        auth.signOut()
                         navController.navigate(R.id.action_signUpFragment_to_signInFragment)
 
                     } else {
