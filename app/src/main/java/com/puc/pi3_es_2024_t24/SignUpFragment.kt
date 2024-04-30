@@ -23,7 +23,6 @@ class SignUpFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding:FragmentSignUpBinding
-    private lateinit var db : FirebaseFirestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,44 +44,49 @@ class SignUpFragment : Fragment() {
             val phone = binding.etPhone.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
 
-            val pessoas = hashMapOf(
-                "cpf" to cpf,
-                "data_de_nascimento" to birth,
-                "celular" to phone,
-                "nome_completo" to name,
-                "email" to email
-            )
             if (validate()) {
-                db.collection("pessoas")
-                    .add(pessoas)
-                    .addOnSuccessListener { documentReference ->
-                        Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w(TAG, "Error adding document", e)
-                    }
-                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        auth.currentUser?.sendEmailVerification()
-                            ?.addOnSuccessListener {
-                                Toast.makeText(requireContext(), "Para completar seu cadastro, verifique seu email!", Toast.LENGTH_SHORT).show()
-                            }
-                            ?.addOnFailureListener {
-                                Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
-                            }
-                        Toast.makeText(
-                            requireContext(),
-                            "Conta criada com sucesso!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        auth.signOut()
-                        navController.navigate(R.id.action_signUpFragment_to_signInFragment)
+                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val currentUser = auth.currentUser
+                        val uid = currentUser?.uid
 
+                        if (uid != null) {
+                            Log.d(TAG, "UID: $uid")
+                            val pessoas = hashMapOf(
+                                "cpf" to cpf,
+                                "data_de_nascimento" to birth,
+                                "celular" to phone,
+                                "nome_completo" to name,
+                                "email" to email
+                            )
+                            db.collection("pessoas").document(uid).set(pessoas)
+                                .addOnSuccessListener {
+                                    Log.d(TAG, "Document added with UID: $uid")
+                                    auth.currentUser?.sendEmailVerification()
+                                        ?.addOnSuccessListener {
+                                            Toast.makeText(requireContext(), "Para completar seu cadastro, verifique seu email!", Toast.LENGTH_SHORT).show()
+                                        }
+                                        ?.addOnFailureListener {
+                                            Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
+                                        }
+                                    Toast.makeText(requireContext(), "Conta criada com sucesso!", Toast.LENGTH_SHORT).show()
+                                    navController.navigate(R.id.action_signUpFragment_to_signInFragment)
+                                    auth.signOut()
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e(TAG, "Error adding document", e)
+                                }
+                        } else {
+                            Log.e(TAG, "UID is null")
+                        }
                     } else {
-                        Log.e("error: ", it.exception.toString())
+                        Log.e(TAG, "Error creating user", task.exception)
                     }
                 }
             }
+
+
+
         }
         binding.btnLogin.setOnClickListener{
             it.findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
