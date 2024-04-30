@@ -66,6 +66,15 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx:24.11.1")
     implementation ("com.google.zxing:core:3.4.1")
     implementation ("com.google.code.gson:gson:2.10.1")
+    val cameraxVersion = "1.3.3"
+    implementation ("androidx.camera:camera-core:${cameraxVersion}")
+    implementation ("androidx.camera:camera-camera2:${cameraxVersion}")
+    implementation ("androidx.camera:camera-lifecycle:${cameraxVersion}")
+    implementation ("androidx.camera:camera-video:${cameraxVersion}")
+
+    implementation ("androidx.camera:camera-view:${cameraxVersion}")
+    implementation ("androidx.camera:camera-extensions:${cameraxVersion}")
+
 
 
 }
