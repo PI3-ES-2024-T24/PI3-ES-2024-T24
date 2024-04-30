@@ -1,4 +1,4 @@
-package com.puc.pi3_es_2024_t24
+package com.puc.pi3_es_2024_t24.main
 
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignInBinding
 
 class SignInFragment : Fragment() {
@@ -27,7 +28,7 @@ class SignInFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentSignInBinding.inflate(inflater, container, false)
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
@@ -44,8 +45,7 @@ class SignInFragment : Fragment() {
                     if (it.isSuccessful) {
                         val verifyemail = auth.currentUser?.isEmailVerified
                         if(verifyemail == true){
-                            Toast.makeText(requireContext(), "Sucesso ao entrar na conta!",Toast.LENGTH_SHORT).show()
-                            navController.navigate(R.id.action_signInFragment_to_homeFragment)
+                            navController.navigate(R.id.action_signInFragment_to_nav_client)
                         }else{
                             Toast.makeText(requireContext(),"Conta não verificada, verfique no seu email",Toast.LENGTH_SHORT).show()
                         }

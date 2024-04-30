@@ -1,4 +1,4 @@
-package com.puc.pi3_es_2024_t24
+package com.puc.pi3_es_2024_t24.main
 
 import android.Manifest
 import android.content.ContentValues.TAG
@@ -16,8 +16,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
@@ -30,6 +28,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.functions.FirebaseFunctions
+import com.puc.pi3_es_2024_t24.BitmapHelper
+import com.puc.pi3_es_2024_t24.MarkerInfoAdapter
+import com.puc.pi3_es_2024_t24.R
+import com.puc.pi3_es_2024_t24.models.MarkerData
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var functions: FirebaseFunctions
@@ -157,14 +159,16 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                     val endereco = localizacao["endereco"] as String
                     val referencia = localizacao["referencia"] as String
 
-                    locations.add(MarkerData(
+                    locations.add(
+                        MarkerData(
                         unityId,
                         nome,
                         LatLng(latitude, longitude),
                         endereco,
                         gerenteCpf.toFloat(),
                         referencia
-                    ))
+                    )
+                    )
                 }
                 val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
                 mapFragment.getMapAsync { googleMap ->
