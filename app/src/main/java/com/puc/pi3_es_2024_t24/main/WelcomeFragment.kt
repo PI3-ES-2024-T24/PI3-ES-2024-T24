@@ -1,4 +1,4 @@
-package com.puc.pi3_es_2024_t24
+package com.puc.pi3_es_2024_t24.main
 
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentWelcomeBinding
 
 class WelcomeFragment : Fragment() {

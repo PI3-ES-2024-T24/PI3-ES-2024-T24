@@ -1,9 +1,10 @@
-package com.puc.pi3_es_2024_t24
+package com.puc.pi3_es_2024_t24.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.puc.pi3_es_2024_t24.R
 
 class MainActivity : AppCompatActivity() {
 

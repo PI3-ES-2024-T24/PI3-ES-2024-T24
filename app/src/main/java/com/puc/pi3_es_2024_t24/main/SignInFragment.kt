@@ -1,4 +1,4 @@
-package com.puc.pi3_es_2024_t24
+package com.puc.pi3_es_2024_t24.main
 
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignInBinding
 
 class SignInFragment : Fragment() {

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="com.puc.pi3_es_2024_t24.WelcomeFragment"
+        android:name="com.puc.pi3_es_2024_t24.main.WelcomeFragment"
         android:label="fragment_welcome"
         tools:layout="@layout/fragment_welcome" >
         <action
@@ -17,12 +17,11 @@
             app:exitAnim="@anim/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_welcomeFragment_to_nav_client"
-            app:destination="@id/nav_client"
-            app:launchSingleTop="false" />
+            app:destination="@id/nav_client" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.puc.pi3_es_2024_t24.SignUpFragment"
+        android:name="com.puc.pi3_es_2024_t24.main.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -33,7 +32,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.puc.pi3_es_2024_t24.SignInFragment"
+        android:name="com.puc.pi3_es_2024_t24.main.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in" >
         <action
@@ -53,11 +52,11 @@
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.puc.pi3_es_2024_t24.MapsFragment"
+        android:name="com.puc.pi3_es_2024_t24.main.MapsFragment"
         android:label="MapsFragment" />
     <fragment
         android:id="@+id/forgotPasswordFragment"
-        android:name="com.puc.pi3_es_2024_t24.ForgotPasswordFragment"
+        android:name="com.puc.pi3_es_2024_t24.main.ForgotPasswordFragment"
         android:label="fragment_forgot_password"
         tools:layout="@layout/fragment_forgot_password" >
         <action
