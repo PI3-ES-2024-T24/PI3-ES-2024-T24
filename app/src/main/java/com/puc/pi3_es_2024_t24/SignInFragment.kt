@@ -44,8 +44,7 @@ class SignInFragment : Fragment() {
                     if (it.isSuccessful) {
                         val verifyemail = auth.currentUser?.isEmailVerified
                         if(verifyemail == true){
-                            Toast.makeText(requireContext(), "Sucesso ao entrar na conta!",Toast.LENGTH_SHORT).show()
-                            navController.navigate(R.id.action_signInFragment_to_homeFragment)
+                            navController.navigate(R.id.action_signInFragment_to_nav_client)
                         }else{
                             Toast.makeText(requireContext(),"Conta não verificada, verfique no seu email",Toast.LENGTH_SHORT).show()
                         }

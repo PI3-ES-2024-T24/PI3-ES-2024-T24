@@ -1,4 +1,4 @@
-package com.puc.pi3_es_2024_t24
+package com.puc.pi3_es_2024_t24.client
 
 import android.Manifest
 import android.app.Dialog
@@ -46,15 +46,21 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
+import com.puc.pi3_es_2024_t24.BitmapHelper
+import com.puc.pi3_es_2024_t24.MarkerInfoAdapter
+import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogCardBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogLocationBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogPaymentBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogQrcodeBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentHomeBinding
+import com.puc.pi3_es_2024_t24.models.Card
+import com.puc.pi3_es_2024_t24.models.Client
+import com.puc.pi3_es_2024_t24.models.MarkerData
+import com.puc.pi3_es_2024_t24.models.QrCode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalTime
 import java.util.Calendar
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
@@ -76,7 +82,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var functions: FirebaseFunctions
     private val firebaseApp = FirebaseApp.getInstance()
     private val db = Firebase.firestore
-    private lateinit var client:Client
+    private lateinit var client: Client
     private var clicked = false
 
     override fun onCreateView(
@@ -260,14 +266,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     val endereco = localizacao["endereco"] as String
                     val referencia = localizacao["referencia"] as String
 
-                    locations.add(MarkerData(
+                    locations.add(
+                        MarkerData(
                         unityId,
                         nome,
                         LatLng(latitude, longitude),
                         endereco,
                         gerenteCpf.toFloat(),
                         referencia
-                    ))
+                    )
+                    )
                 }
                 val homeFragment = childFragmentManager.findFragmentById(R.id.homeMaps) as SupportMapFragment
                 homeFragment.getMapAsync { googleMap ->
@@ -293,7 +301,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             Toast.makeText(requireContext(), "Saiu da Conta", Toast.LENGTH_SHORT).show()
             auth.signOut()
             dialog.dismiss()
-            findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_mainActivity)
         }
         btnCancel.setOnClickListener {
             dialog.dismiss()

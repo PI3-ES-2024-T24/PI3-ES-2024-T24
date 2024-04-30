@@ -16,10 +16,9 @@
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_welcomeFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_welcomeFragment_to_nav_client"
+            app:destination="@id/nav_client"
+            app:launchSingleTop="false" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -43,27 +42,14 @@
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_signInFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim" />
-        <action
             android:id="@+id/action_signInFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
         <action
             android:id="@+id/action_signInFragment_to_forgotPasswordFragment"
             app:destination="@id/forgotPasswordFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.puc.pi3_es_2024_t24.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_signInFragment"
-            app:destination="@id/signInFragment"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_signInFragment_to_nav_client"
+            app:destination="@id/nav_client" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
@@ -78,5 +64,6 @@
             android:id="@+id/action_forgotPasswordFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
     </fragment>
+    <include app:graph="@navigation/nav_client" />
 
 </navigation>

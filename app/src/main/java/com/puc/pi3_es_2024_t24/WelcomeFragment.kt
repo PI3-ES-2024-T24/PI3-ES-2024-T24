@@ -31,7 +31,7 @@ class WelcomeFragment : Fragment() {
         Handler(Looper.getMainLooper()).postDelayed({
             val user = auth.currentUser
             if (user != null) {
-                navController.navigate(R.id.action_welcomeFragment_to_homeFragment)
+                navController.navigate(R.id.action_welcomeFragment_to_nav_client)
             } else {
                 navController.navigate(R.id.action_welcomeFragment_to_signInFragment)
             }

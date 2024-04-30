@@ -1,4 +1,4 @@
-package com.puc.pi3_es_2024_t24
+package com.puc.pi3_es_2024_t24.models
 
 import com.google.android.gms.maps.model.LatLng
 
