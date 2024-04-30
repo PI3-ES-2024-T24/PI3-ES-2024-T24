@@ -66,6 +66,9 @@ class SignInFragment : Fragment() {
         binding.forgotPassword.setOnClickListener {
             it.findNavController().navigate(R.id.action_signInFragment_to_forgotPasswordFragment)
         }
+        binding.testCamera.setOnClickListener {
+            it.findNavController().navigate(R.id.action_signInFragment_to_cameraFragment)
+        }
         return binding.root
     }
     private fun validate(): Boolean{
