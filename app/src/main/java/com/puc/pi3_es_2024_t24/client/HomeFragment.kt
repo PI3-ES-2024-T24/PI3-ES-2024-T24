@@ -532,11 +532,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val email = auth.currentUser?.email
             var card: Card?
 
-            db.collection("pessoas")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnSuccessListener { documents ->
-                    for (document in documents) {
+            auth.currentUser?.uid?.let {
+                db.collection("pessoas")
+                    .document(it)
+                    .get()
+                    .addOnSuccessListener { document ->
                         if (document.get("cartao") == null) {
                             card = null
                         } else {
@@ -552,7 +552,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                             card
                         )
                     }
-                }
+            }
         }
     }
     private fun saveLocationState(active: Boolean) {
