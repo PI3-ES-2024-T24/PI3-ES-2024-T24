@@ -24,7 +24,7 @@
   
 #### Usuário login
 
-* E-mail - hcostarios@gmail.com
+* E-mail - henricostarios@gmail.com
 * senha - henri123
   
 # ENDPOINTS
