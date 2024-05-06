@@ -1,13 +1,13 @@
 package com.puc.pi3_es_2024_t24
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -42,15 +42,19 @@ class CameraFragment : Fragment() {
     }
 
     private fun checkCameraPermissions() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            startCamera()
-        } else {
-            requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
+        val cameraPermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+                Toast.makeText(requireContext(), "Camera permission granted", Toast.LENGTH_SHORT).show()
+                startCamera()
+            } else {
+                Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show()
+            }
         }
+
+        //lança as instruções de permissão
+        cameraPermissionRequest.launch(Manifest.permission.CAMERA)
     }
 
     private fun startCamera() {
@@ -96,9 +100,7 @@ class CameraFragment : Fragment() {
             barcodeScanner.process(inputImage)
                 .addOnSuccessListener { barcodes ->
                     for (barcode in barcodes) {
-                        val valueType = barcode.valueType
                         val value = barcode.rawValue
-                        // Handle barcode value here
                         Log.d(TAG, "Barcode value: $value")
                     }
                     imageProxy.close()
@@ -119,6 +121,5 @@ class CameraFragment : Fragment() {
 
     companion object {
         private const val TAG = "CameraFragment"
-        private const val REQUEST_CAMERA_PERMISSION = 123
     }
 }
