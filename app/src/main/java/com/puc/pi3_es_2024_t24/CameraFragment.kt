@@ -25,6 +25,7 @@ class CameraFragment : Fragment() {
     private lateinit var cameraProvider: ProcessCameraProvider
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var barcodeScanner: BarcodeScanner
+    private lateinit var imageCapture: ImageCapture
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +40,9 @@ class CameraFragment : Fragment() {
         cameraExecutor = Executors.newSingleThreadExecutor()
         barcodeScanner = BarcodeScanning.getClient()
         checkCameraPermissions()
+        binding.btnTakePhoto.setOnClickListener{
+            takePhoto()
+        }
     }
 
     private fun checkCameraPermissions() {
@@ -61,6 +65,7 @@ class CameraFragment : Fragment() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
             cameraProvider = cameraProviderFuture.get()
+            imageCapture = ImageCapture.Builder().build()
 
             val preview = Preview.Builder()
                 .build()
@@ -82,12 +87,17 @@ class CameraFragment : Fragment() {
             try {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageAnalysis
+                    this, cameraSelector, preview, imageAnalysis,imageCapture
                 )
             } catch (exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
             }
         }, ContextCompat.getMainExecutor(requireContext()))
+    }
+    private fun takePhoto(){
+        imageCapture?.let {
+
+        }
     }
 
     @OptIn(ExperimentalGetImage::class)
