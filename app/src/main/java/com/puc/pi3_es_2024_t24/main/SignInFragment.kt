@@ -67,7 +67,7 @@ class SignInFragment : Fragment() {
             it.findNavController().navigate(R.id.action_signInFragment_to_forgotPasswordFragment)
         }
         binding.testCamera.setOnClickListener {
-            it.findNavController().navigate(R.id.action_signInFragment_to_cameraFragment)
+            it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
         }
         return binding.root
     }

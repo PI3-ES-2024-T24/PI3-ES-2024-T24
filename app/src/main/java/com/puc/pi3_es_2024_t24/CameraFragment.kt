@@ -1,6 +1,7 @@
 package com.puc.pi3_es_2024_t24
 
 import android.Manifest
+import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,10 +14,12 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import com.puc.pi3_es_2024_t24.databinding.FragmentCameraBinding
+import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -26,6 +29,7 @@ class CameraFragment : Fragment() {
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var barcodeScanner: BarcodeScanner
     private lateinit var imageCapture: ImageCapture
+    private lateinit var imgTempFile:File
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +46,7 @@ class CameraFragment : Fragment() {
         checkCameraPermissions()
         binding.btnTakePhoto.setOnClickListener{
             takePhoto()
+            Toast.makeText(requireContext(), "Photo taken", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -94,10 +99,22 @@ class CameraFragment : Fragment() {
             }
         }, ContextCompat.getMainExecutor(requireContext()))
     }
-    private fun takePhoto(){
-        imageCapture?.let {
+    private fun takePhoto() {
+        imageCapture.takePicture(ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageCapturedCallback() {
+            @OptIn(ExperimentalGetImage::class)
+            override fun onCaptureSuccess(image: ImageProxy) {
+                capturedImage = image.image ?: throw IllegalStateException("Captured image is null")
+                navigateToQrCode()
+            }
 
-        }
+            override fun onError(exception: ImageCaptureException) {
+                // Handle capture error
+            }
+        })
+    }
+    private fun navigateToQrCode() {
+        val action = CameraFragmentDirections.actionCameraFragmentToQrCodeReadFragment()
+        findNavController().navigate(action)
     }
 
     @OptIn(ExperimentalGetImage::class)

@@ -54,8 +54,8 @@
             app:popUpTo="@id/welcomeFragment"
             app:popUpToInclusive="true"/>
         <action
-            android:id="@+id/action_signInFragment_to_cameraFragment"
-            app:destination="@id/cameraFragment" />
+            android:id="@+id/action_signInFragment_to_nav_manager"
+            app:destination="@id/nav_manager" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
@@ -71,10 +71,6 @@
             app:destination="@id/signInFragment" />
     </fragment>
     <include app:graph="@navigation/nav_client" />
-    <fragment
-        android:id="@+id/cameraFragment"
-        android:name="com.puc.pi3_es_2024_t24.CameraFragment"
-        android:label="fragment_camera"
-        tools:layout="@layout/fragment_camera" />
+    <include app:graph="@navigation/nav_manager" />
 
 </navigation>

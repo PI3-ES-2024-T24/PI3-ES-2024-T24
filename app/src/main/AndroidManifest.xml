@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-feature android:name="android.hardware.camera.any" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/lock_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyFullScreenTheme"
-        tools:targetApi="31"
-        android:icon="@drawable/lock_icon">
+        tools:targetApi="31">
+        <activity
+            android:name=".manager.ManagerActivity"
+            android:exported="false" />
         <activity
             android:name=".main.MainActivity"
             android:exported="true">
@@ -27,9 +29,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA5lL2v8QD3tV_AiR5UKFefqMzk9hvi9j8"/>
+            android:value="AIzaSyA5lL2v8QD3tV_AiR5UKFefqMzk9hvi9j8" />
     </application>
 
 </manifest>

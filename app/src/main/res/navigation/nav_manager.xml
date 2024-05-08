@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_manager"
+    app:startDestination="@id/cameraFragment">
+
+    <fragment
+        android:id="@+id/qrCodeReadFragment"
+        android:name="com.puc.pi3_es_2024_t24.manager.QrCodeReadFragment"
+        android:label="fragment_qr_code_read"
+        tools:layout="@layout/fragment_qr_code_read">
+        <argument
+            android:name="capturedImage"
+            app:argType="android.graphics.Bitmap" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.puc.pi3_es_2024_t24.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_cameraFragment_to_qrCodeReadFragment"
+            app:destination="@id/qrCodeReadFragment" />
+
+    </fragment>
+</navigation>
