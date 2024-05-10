@@ -46,8 +46,8 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
-import com.puc.pi3_es_2024_t24.BitmapHelper
-import com.puc.pi3_es_2024_t24.MarkerInfoAdapter
+import com.puc.pi3_es_2024_t24.utils.BitmapHelper
+import com.puc.pi3_es_2024_t24.utils.MarkerInfoAdapter
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogCardBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogLocationBinding

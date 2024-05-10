@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/cameraFragment"
-        android:name="com.puc.pi3_es_2024_t24.CameraFragment"
+        android:name="com.puc.pi3_es_2024_t24.utils.CameraFragment"
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" >
         <action

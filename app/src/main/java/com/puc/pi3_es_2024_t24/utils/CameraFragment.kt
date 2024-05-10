@@ -1,7 +1,6 @@
-package com.puc.pi3_es_2024_t24
+package com.puc.pi3_es_2024_t24.utils
 
 import android.Manifest
-import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater

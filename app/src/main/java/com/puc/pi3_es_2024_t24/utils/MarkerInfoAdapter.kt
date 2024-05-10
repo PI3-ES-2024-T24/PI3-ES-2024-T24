@@ -1,4 +1,4 @@
-package com.puc.pi3_es_2024_t24
+package com.puc.pi3_es_2024_t24.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.TextView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
+import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.models.MarkerData
 
 class MarkerInfoAdapter(private val context: Context): GoogleMap.InfoWindowAdapter {
