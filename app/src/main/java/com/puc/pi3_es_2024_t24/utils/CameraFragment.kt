@@ -1,6 +1,8 @@
 package com.puc.pi3_es_2024_t24.utils
 
 import android.Manifest
+import android.media.Image
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,7 +30,6 @@ class CameraFragment : Fragment() {
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var barcodeScanner: BarcodeScanner
     private lateinit var imageCapture: ImageCapture
-    private lateinit var imgTempFile:File
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -99,21 +100,21 @@ class CameraFragment : Fragment() {
         }, ContextCompat.getMainExecutor(requireContext()))
     }
     private fun takePhoto() {
-        imageCapture.takePicture(ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageCapturedCallback() {
-            @OptIn(ExperimentalGetImage::class)
-            override fun onCaptureSuccess(image: ImageProxy) {
-                capturedImage = image.image ?: throw IllegalStateException("Captured image is null")
-                navigateToQrCode()
-            }
+        val photoFile = File(requireContext().externalMediaDirs.firstOrNull(), "FOTO_JPEG${System.currentTimeMillis()}")
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
-            override fun onError(exception: ImageCaptureException) {
-                // Handle capture error
-            }
-        })
-    }
-    private fun navigateToQrCode() {
-        val action = CameraFragmentDirections.actionCameraFragmentToQrCodeReadFragment()
-        findNavController().navigate(action)
+        imageCapture.takePicture(
+            outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    val savedUri = Uri.fromFile(photoFile)
+                    Toast.makeText(requireContext(), "Photo saved: $savedUri", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
+                    Toast.makeText(requireContext(), "Photo capture failed", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
     @OptIn(ExperimentalGetImage::class)
