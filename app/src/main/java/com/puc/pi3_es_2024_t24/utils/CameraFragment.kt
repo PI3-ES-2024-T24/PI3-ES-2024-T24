@@ -1,7 +1,6 @@
 package com.puc.pi3_es_2024_t24.utils
 
 import android.Manifest
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -102,12 +101,13 @@ class CameraFragment : Fragment() {
     private fun takePhoto() {
         val photoFile = File(requireContext().externalMediaDirs.firstOrNull(), "FOTO_JPEG${System.currentTimeMillis()}")
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-
         imageCapture.takePicture(
             outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
                     Toast.makeText(requireContext(), "Photo saved: $savedUri", Toast.LENGTH_SHORT).show()
+                    val action = CameraFragmentDirections.actionCameraFragmentToQrCodeReadFragment(savedUri.toString())
+                    findNavController().navigate(action)
                 }
 
                 override fun onError(exception: ImageCaptureException) {

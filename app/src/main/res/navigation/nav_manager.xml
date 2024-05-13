@@ -11,8 +11,8 @@
         android:label="fragment_qr_code_read"
         tools:layout="@layout/fragment_qr_code_read">
         <argument
-            android:name="capturedImage"
-            app:argType="android.graphics.Bitmap" />
+            android:name="PhotoUri"
+            app:argType="string" />
 
     </fragment>
 
