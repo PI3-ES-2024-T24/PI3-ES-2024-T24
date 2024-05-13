@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_manager"
-    app:startDestination="@id/cameraFragment">
+    app:startDestination="@id/qrCodeReadFragment">
 
     <fragment
         android:id="@+id/qrCodeReadFragment"
@@ -11,9 +11,13 @@
         android:label="fragment_qr_code_read"
         tools:layout="@layout/fragment_qr_code_read">
         <argument
-            android:name="PhotoUri"
-            app:argType="string" />
-
+            android:name="photoUri"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+        <action
+            android:id="@+id/action_qrCodeReadFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
     </fragment>
 
     <fragment
@@ -23,7 +27,11 @@
         tools:layout="@layout/fragment_camera" >
         <action
             android:id="@+id/action_cameraFragment_to_qrCodeReadFragment"
-            app:destination="@id/qrCodeReadFragment" />
+            app:destination="@id/qrCodeReadFragment"
+            app:popUpTo="@id/qrCodeReadFragment"
+            app:popUpToInclusive="true">
+        </action>
+
 
     </fragment>
 </navigation>
