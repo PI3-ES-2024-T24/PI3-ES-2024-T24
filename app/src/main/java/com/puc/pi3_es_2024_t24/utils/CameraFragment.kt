@@ -127,8 +127,9 @@ class CameraFragment : Fragment() {
             barcodeScanner.process(inputImage)
                 .addOnSuccessListener { barcodes ->
                     for (barcode in barcodes) {
-                        val value = barcode.rawValue
-                        Log.d(TAG, "Barcode value: $value")
+                        val qrCodeValue = barcode.rawValue
+                        Log.d(TAG, "Barcode value: $qrCodeValue")
+                        navigationQrCode(qrCodeValue)
                     }
                     imageProxy.close()
                 }
@@ -140,7 +141,10 @@ class CameraFragment : Fragment() {
             imageProxy.close()
         }
     }
-
+    private fun navigationQrCode(qr:String?){
+        val action = CameraFragmentDirections.actionCameraFragmentToQrCodeReadFragment(qrCodeInfo = qr)
+        findNavController().navigate(action)
+    }
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()

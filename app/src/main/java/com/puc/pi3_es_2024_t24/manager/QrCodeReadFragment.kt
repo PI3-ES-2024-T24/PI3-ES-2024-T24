@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentQrCodeReadBinding
+import org.json.JSONObject
 
 class QrCodeReadFragment : Fragment() {
 
@@ -28,6 +29,13 @@ class QrCodeReadFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val args = QrCodeReadFragmentArgs.fromBundle(requireArguments())
         val argValue = args.photoUri
+        val argQr = args.qrCodeInfo
+        if (argQr != null){
+            val json = JSONObject(argQr)
+            val email = json.getString("currentUserEmail")
+            binding.etEmail.text = email
+        }
+
     }
 
 

@@ -15,6 +15,10 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="null" />
+        <argument
+            android:name="qrCodeInfo"
+            app:argType="string"
+            app:nullable="true" />
         <action
             android:id="@+id/action_qrCodeReadFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
