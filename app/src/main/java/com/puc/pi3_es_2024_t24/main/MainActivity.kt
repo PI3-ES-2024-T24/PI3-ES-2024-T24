@@ -1,7 +1,9 @@
 package com.puc.pi3_es_2024_t24.main
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.puc.pi3_es_2024_t24.R
@@ -19,5 +21,12 @@ class MainActivity : AppCompatActivity() {
         navController= findNavController(R.id.navHostFragmentContainerView)
     // retorna a pilha anterior
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        if (intent != null) {
+            SignInFragment().newIntent(intent)
+        }
+        super.onNewIntent(intent)
     }
 }

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <application
         android:allowBackup="true"
@@ -23,9 +24,11 @@
         <activity
             android:name=".main.MainActivity"
             android:exported="true">
+            <meta-data android:name="android.nfc.action.NDEF_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

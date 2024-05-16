@@ -1,5 +1,10 @@
 package com.puc.pi3_es_2024_t24.main
 
+import android.app.Dialog
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -7,6 +12,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -17,6 +23,8 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.R
+import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
+import com.puc.pi3_es_2024_t24.databinding.DialogPaymentBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignInBinding
 
 class SignInFragment : Fragment() {
@@ -24,6 +32,8 @@ class SignInFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentSignInBinding
     private lateinit var db : FirebaseFirestore
+    private var nfcAdapter: NfcAdapter? = null
+    private lateinit var bindingNfc : DialogNfcBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +44,8 @@ class SignInFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
+
+        nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
 
         db = Firebase.firestore
         binding.btnSignIn.setOnClickListener {
@@ -69,6 +81,9 @@ class SignInFragment : Fragment() {
         binding.testCamera.setOnClickListener {
             it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
         }
+        binding.testNfc.setOnClickListener{
+            showNfc()
+        }
         return binding.root
     }
     private fun validate(): Boolean{
@@ -86,5 +101,26 @@ class SignInFragment : Fragment() {
             return false
         }
         return true
+    }
+
+    private fun showNfc(){
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val bindingNfc = DialogNfcBinding.inflate(layoutInflater)
+
+        dialog.setContentView(bindingNfc.root)
+
+        bindingNfc.btnCloseNfc.setOnClickListener{
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    public fun newIntent(intent: Intent) {
+        Log.d("newIntent", "Novo intent recebido!")
     }
 }
