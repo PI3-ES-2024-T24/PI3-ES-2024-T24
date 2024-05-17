@@ -30,7 +30,7 @@ class QrCodeReadFragment : Fragment() {
         val args = QrCodeReadFragmentArgs.fromBundle(requireArguments())
         val argValue = args.photoUri
         val argQr = args.qrCodeInfo
-        if (argQr != null){
+        if (argQr != "null"){
             val json = JSONObject(argQr)
             val email = json.getString("currentUserEmail")
             binding.etEmail.text = email

@@ -2,4 +2,8 @@
 <resources>
 
     <style name="RoundedCornerTextInputEditText">RoundedCornerTextInputEditText</style>
+    <style name="blueButtonBg" parent="TextAppearance.AppCompat">
+        <item name="android:backgroundTint">@color/light_blue</item>
+    </style>
+
 </resources>

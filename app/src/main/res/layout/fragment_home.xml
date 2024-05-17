@@ -10,7 +10,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".main.HomeFragment"/>
+        tools:context=".client.HomeFragment"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -26,6 +26,7 @@
         app:menu="@menu/bottom_menu" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/blueButtonBg"
         android:id="@+id/fab_expand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,6 +44,7 @@
         android:focusable="true" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        style="@style/blueButtonBg"
         android:id="@+id/fab_navigation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,6 +62,7 @@
         android:focusable="true" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        style="@style/blueButtonBg"
         android:id="@+id/fab_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
