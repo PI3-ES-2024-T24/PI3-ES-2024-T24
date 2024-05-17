@@ -8,10 +8,9 @@
 
     <style name="MyFullScreenTheme" parent="Base.Theme.PI3ES2024T24">
         <item name="android:windowFullscreen">true</item>
-        <item name="colorPrimary">@color/light_blue</item>
+        <item name="colorPrimary">@color/blue_gray</item>
         <item name="colorPrimaryDark">@color/dark_blue</item>
         <item name="colorAccent">@color/dark_blue</item>
-
     </style>
 
 

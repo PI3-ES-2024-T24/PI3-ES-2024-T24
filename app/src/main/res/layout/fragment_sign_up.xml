@@ -28,7 +28,7 @@
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:text="@string/msg_sign_up"
-        android:textColor="@color/cinzinha"
+        android:textColor="@color/lighter_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcome" />
@@ -160,7 +160,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:textColor="@color/cinzinha" />
+            android:textColor="@color/lighter_gray" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -183,7 +183,7 @@
             android:layout_height="match_parent"
             android:hint="@string/confpassword"
             android:inputType="textPassword"
-            android:textColor="@color/cinzinha" />
+            android:textColor="@color/lighter_gray" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -208,7 +208,7 @@
         android:layout_marginTop="17dp"
         android:fontFamily="@font/manrope_semibold"
         android:text="@string/j_tem_cadastro_clique_aqui"
-        android:textColor="@color/cinzinha"
+        android:textColor="@color/lighter_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
