@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentClientPhotoBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentQrCodeReadBinding
+import com.puc.pi3_es_2024_t24.utils.CameraFragmentDirections
 
 class ClientPhotoFragment : Fragment() {
 private lateinit var binding: FragmentClientPhotoBinding
@@ -19,10 +20,11 @@ private lateinit var binding: FragmentClientPhotoBinding
         // Inflate the layout for this fragment
         binding = FragmentClientPhotoBinding.inflate(inflater, container, false)
         binding.btn1access.setOnClickListener {
-            findNavController()
-        }
+            val action = ClientPhotoFragmentDirections.actionClientPhotoFragmentToCameraFragment(1)
+            findNavController().navigate(action)        }
         binding.btn2access.setOnClickListener {
-
+            val action = ClientPhotoFragmentDirections.actionClientPhotoFragmentToCameraFragment(2)
+            findNavController().navigate(action)
         }
         return binding.root
     }

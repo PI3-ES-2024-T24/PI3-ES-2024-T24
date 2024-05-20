@@ -22,13 +22,17 @@ class QrCodeReadFragment : Fragment() {
         binding.btnRescan.setOnClickListener {
             findNavController().navigate(R.id.action_qrCodeReadFragment_to_cameraFragment)
         }
+        binding.btnConfirm.setOnClickListener {
+            findNavController().navigate(R.id.action_qrCodeReadFragment_to_clientPhotoFragment)
+
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args = QrCodeReadFragmentArgs.fromBundle(requireArguments())
-        val argValue = args.photoUri
+        val argUri = args.photoUri
         val argQr = args.qrCodeInfo
         if (argQr != "null"){
             val json = JSONObject(argQr)

@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_qrCodeReadFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_qrCodeReadFragment_to_clientPhotoFragment"
+            app:destination="@id/clientPhotoFragment" />
     </fragment>
 
     <fragment
@@ -30,13 +33,40 @@
         android:name="com.puc.pi3_es_2024_t24.utils.CameraFragment"
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" >
+        <argument
+            android:name="accessNum"
+            app:argType="integer"
+            android:defaultValue="0"/>
         <action
             android:id="@+id/action_cameraFragment_to_qrCodeReadFragment"
             app:destination="@id/qrCodeReadFragment"
             app:popUpTo="@id/qrCodeReadFragment"
             app:popUpToInclusive="true">
         </action>
+        <action
+            android:id="@+id/action_cameraFragment_to_clientPhotoFragment"
+            app:destination="@id/clientPhotoFragment" />
 
+
+    </fragment>
+    <fragment
+        android:id="@+id/clientPhotoFragment"
+        android:name="com.puc.pi3_es_2024_t24.manager.ClientPhotoFragment"
+        android:label="fragment_client_photo"
+        tools:layout="@layout/fragment_client_photo" >
+        <argument
+            android:name="photoUri"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+        <argument
+            android:name="photoUri1"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+        <action
+            android:id="@+id/action_clientPhotoFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
 
     </fragment>
 </navigation>
