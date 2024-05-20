@@ -7,8 +7,12 @@ import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.nfc.NdefMessage
+import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
+import android.nfc.tech.Ndef
+import android.nfc.tech.NfcA
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -30,6 +34,9 @@ import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogPaymentBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignInBinding
+import com.puc.pi3_es_2024_t24.models.NfcTag
+import com.puc.pi3_es_2024_t24.models.QrCode
+import java.nio.charset.Charset
 
 class SignInFragment : Fragment() {
 
@@ -38,6 +45,8 @@ class SignInFragment : Fragment() {
     private lateinit var db : FirebaseFirestore
     private var nfcAdapter: NfcAdapter? = null
     private lateinit var bindingNfc : DialogNfcBinding
+    private lateinit var nfcTag : NfcTag
+    private lateinit var qrCode : QrCode
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +59,7 @@ class SignInFragment : Fragment() {
         auth = Firebase.auth
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
+        nfcTag = NfcTag("", "")
 
         db = Firebase.firestore
         binding.btnSignIn.setOnClickListener {
@@ -86,6 +96,7 @@ class SignInFragment : Fragment() {
             it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
         }
         binding.testNfc.setOnClickListener{
+            nfcTag.method = "read"
             showNfc()
         }
         return binding.root
@@ -147,14 +158,44 @@ class SignInFragment : Fragment() {
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action ||
             NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action ||
             NfcAdapter.ACTION_TECH_DISCOVERED == intent.action) {
-            Log.d("newIntent", "TAG DISCOVERED")
             val tag: Tag? = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
             if (tag != null) {
+                verificarTag(intent, tag)
                 Log.d("TAG", "NFC Tag Detected")
-            } else {
-                Log.d("Tag", "No NFC Tag Detected")
             }
         }
-        Log.d("newIntent", "New intent received!")
+    }
+
+    fun verificarTag(intent: Intent, tag: Tag) {
+
+        // VERIFICAR SE É PARA ESCREVER OU LER A TAG
+        if (nfcTag.method == "write"){
+            try {
+                val ndef = Ndef.get(tag)
+                if (ndef == null) {
+                    Toast.makeText(requireContext(), "Nfc não suporta NDEF", Toast.LENGTH_SHORT).show()
+                } else {
+                    ndef.connect()
+                    val mimeType = "text/plain"
+                    val ndefRecord = NdefRecord.createMime(mimeType, """{"cpfCliente": "${qrCode.clientCpf}", "horaFinal": "${qrCode.horaFinal}", "locationId": "${qrCode.locationId}"}""".toByteArray(Charsets.UTF_8))
+                    val ndefMessage = NdefMessage(arrayOf(ndefRecord))
+                    ndef.writeNdefMessage(ndefMessage)
+                    ndef.close()
+                    Toast.makeText(requireContext(), "TAG REGISTRADA!", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.d("WriteNFC", "Erro ao tentar escrever no nfc!")
+            }
+        } else {
+            intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)?.also {rawMessages ->
+                val ndefMessages = rawMessages.map { it as NdefMessage}
+                for (ndefMessage in  ndefMessages) {
+                    for (record in ndefMessage.records) {
+                        val payload = String(record.payload)
+                        Log.d("TAG", "NDEF RECORD : $payload")
+                    }
+                }
+            }
+        }
     }
 }
