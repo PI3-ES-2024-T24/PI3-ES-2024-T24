@@ -43,6 +43,7 @@ class CameraFragment : Fragment() {
         cameraExecutor = Executors.newSingleThreadExecutor()
         barcodeScanner = BarcodeScanning.getClient()
         checkCameraPermissions()
+        binding.btnTakePhoto.show()
         binding.btnTakePhoto.setOnClickListener{
             takePhoto()
             Toast.makeText(requireContext(), "Photo taken", Toast.LENGTH_SHORT).show()
