@@ -36,6 +36,7 @@ import com.puc.pi3_es_2024_t24.databinding.DialogPaymentBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignInBinding
 import com.puc.pi3_es_2024_t24.models.NfcTag
 import com.puc.pi3_es_2024_t24.models.QrCode
+import org.json.JSONObject
 import java.nio.charset.Charset
 
 class SignInFragment : Fragment() {
@@ -47,6 +48,7 @@ class SignInFragment : Fragment() {
     private lateinit var bindingNfc : DialogNfcBinding
     private lateinit var nfcTag : NfcTag
     private lateinit var qrCode : QrCode
+    private lateinit var clientId: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -96,7 +98,7 @@ class SignInFragment : Fragment() {
             it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
         }
         binding.testNfc.setOnClickListener{
-            nfcTag.method = "read"
+            nfcTag.method = "write"
             showNfc()
         }
         return binding.root
@@ -160,6 +162,7 @@ class SignInFragment : Fragment() {
             NfcAdapter.ACTION_TECH_DISCOVERED == intent.action) {
             val tag: Tag? = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
             if (tag != null) {
+                Toast.makeText(requireContext(), "LEU TAG", Toast.LENGTH_SHORT).show()
                 verificarTag(intent, tag)
                 Log.d("TAG", "NFC Tag Detected")
             }
@@ -177,7 +180,7 @@ class SignInFragment : Fragment() {
                 } else {
                     ndef.connect()
                     val mimeType = "text/plain"
-                    val ndefRecord = NdefRecord.createMime(mimeType, """{"cpfCliente": "${qrCode.clientCpf}", "horaFinal": "${qrCode.horaFinal}", "locationId": "${qrCode.locationId}"}""".toByteArray(Charsets.UTF_8))
+                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": "${123123}"}""".toByteArray(Charsets.UTF_8))
                     val ndefMessage = NdefMessage(arrayOf(ndefRecord))
                     ndef.writeNdefMessage(ndefMessage)
                     ndef.close()
@@ -193,6 +196,8 @@ class SignInFragment : Fragment() {
                     for (record in ndefMessage.records) {
                         val payload = String(record.payload)
                         Log.d("TAG", "NDEF RECORD : $payload")
+                        // instanciar o clientId com o dado recebido pelo nfc
+                        clientId = JSONObject(payload).getString("clientId")
                     }
                 }
             }
