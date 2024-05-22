@@ -59,7 +59,7 @@ class CameraFragment : Fragment() {
             if (argAccess == 1) {
                 takePhoto { uri ->
                     savedUri = uri
-                    val action = CameraFragmentDirections.actionCameraFragmentToClientPhotoFragment(uri.toString())
+                    val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString())
                     findNavController().navigate(action)
                     Toast.makeText(requireContext(), "Photo taken", Toast.LENGTH_SHORT).show()
                 }
@@ -73,7 +73,7 @@ class CameraFragment : Fragment() {
                 } else {
                     takePhoto { uri ->
                         clicked = false
-                        val action = CameraFragmentDirections.actionCameraFragmentToClientPhotoFragment(uri.toString(), savedUri1.toString())
+                        val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString(), savedUri1.toString())
                         findNavController().navigate(action)
                     }
                 }

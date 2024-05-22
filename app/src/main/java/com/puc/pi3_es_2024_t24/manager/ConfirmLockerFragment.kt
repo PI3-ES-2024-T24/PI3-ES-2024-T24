@@ -1,19 +1,39 @@
 package com.puc.pi3_es_2024_t24.manager
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.puc.pi3_es_2024_t24.R
-class ConfirmLockerFragment : Fragment() {
+import com.puc.pi3_es_2024_t24.databinding.FragmentConfirmLockerBinding
+import com.puc.pi3_es_2024_t24.databinding.FragmentQrCodeReadBinding
+import org.json.JSONObject
 
+class ConfirmLockerFragment : Fragment() {
+private lateinit var binding:FragmentConfirmLockerBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_confirm_locker, container, false)
+        binding = FragmentConfirmLockerBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val args = ConfirmLockerFragmentArgs.fromBundle(requireArguments())
+        val argUri1 = args.photoUri
+        val argUri2 = args.photoUri1
+        if (argUri1 != "noImg"){
+            val igm1 = Uri.parse(argUri1)
+            binding.img1.setImageURI(igm1)
+        }
+
     }
 
 }
