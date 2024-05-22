@@ -32,6 +32,11 @@ private lateinit var binding:FragmentConfirmLockerBinding
         if (argUri1 != "noImg"){
             val igm1 = Uri.parse(argUri1)
             binding.img1.setImageURI(igm1)
+            if (argUri2 != "noImg"){
+                val igm2 = Uri.parse(argUri2)
+                binding.img2.setImageURI(igm2)
+                binding.img2.visibility = View.VISIBLE
+            }
         }
 
     }
