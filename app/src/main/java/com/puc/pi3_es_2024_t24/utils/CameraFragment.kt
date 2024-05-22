@@ -50,6 +50,7 @@ class CameraFragment : Fragment() {
         checkCameraPermissions()
 
         if (argAccess > 0) {
+            binding.txtTop.text = "Fotografe o(s) acessante(s) do Locker:"
             binding.btnTakePhoto.show()
         } else {
             binding.btnTakePhoto.hide()
