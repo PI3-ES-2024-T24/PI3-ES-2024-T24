@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.findNavController
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentConfirmLockerBinding
@@ -20,7 +21,7 @@ class LocationSuccessFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentLocationSuccessBinding.inflate(inflater, container, false)
         binding.btnBack.setOnClickListener{
-            it.findNavController().navigate(R.id.action_locationSuccessFragment_to_confirmLockerFragment)
+            Toast.makeText(requireContext(), "Menu gerente", Toast.LENGTH_SHORT).show()
         }
 
         return binding.root

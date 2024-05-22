@@ -36,8 +36,8 @@ private lateinit var binding: FragmentClientAccessBinding
         val args = ClientAccessFragmentArgs.fromBundle(requireArguments())
         val argQr = args.qrCodeInfo
         if (argQr != "null"){
-            val json = JSONObject(argQr)
-            val email = json.getString("clientId")
+            val json = argQr?.let { JSONObject(it) }
+            val email = json?.getString("clientId")
             binding.etEmail.text = email
         }
 
