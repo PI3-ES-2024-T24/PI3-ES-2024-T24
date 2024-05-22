@@ -38,7 +38,7 @@ class ConfirmLockerFragment : Fragment() {
         binding = FragmentConfirmLockerBinding.inflate(inflater, container, false)
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
-        nfcTag = NfcTag("write")
+        nfcTag = NfcTag("read")
 
         binding.btnEnd.setOnClickListener{
             showNfc()

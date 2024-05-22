@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_manager"
-    app:startDestination="@id/qrCodeReadFragment">
+    app:startDestination="@id/confirmLockerFragment2">
 
     <fragment
         android:id="@+id/qrCodeReadFragment"
@@ -34,4 +34,9 @@
 
 
     </fragment>
+    <fragment
+        android:id="@+id/confirmLockerFragment2"
+        android:name="com.puc.pi3_es_2024_t24.manager.ConfirmLockerFragment"
+        android:label="fragment_confirm_locker"
+        tools:layout="@layout/fragment_confirm_locker" />
 </navigation>

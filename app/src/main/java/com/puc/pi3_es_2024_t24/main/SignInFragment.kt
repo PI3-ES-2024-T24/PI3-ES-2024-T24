@@ -34,6 +34,7 @@ import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogPaymentBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignInBinding
+import com.puc.pi3_es_2024_t24.manager.ManagerActivity
 import com.puc.pi3_es_2024_t24.models.NfcTag
 import com.puc.pi3_es_2024_t24.models.QrCode
 import org.json.JSONObject
@@ -87,7 +88,7 @@ class SignInFragment : Fragment() {
             it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
         }
         binding.testNfc.setOnClickListener{
-            it.findNavController().navigate(R.id.action_signInFragment_to_confirmLockerFragment)
+            it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
         }
         return binding.root
     }

@@ -31,7 +31,7 @@ class ManagerActivity : AppCompatActivity() {
                 NfcAdapter.ACTION_TECH_DISCOVERED == it.action ||
                 NfcAdapter.ACTION_TAG_DISCOVERED == it.action) {
                 val navHostFragment =
-                    supportFragmentManager.findFragmentById(R.id.navHostFragmentContainerView) as NavHostFragment
+                    supportFragmentManager.findFragmentById(R.id.navManagerFragmentContainerView) as NavHostFragment
                 val confirmLockerFragment = navHostFragment.childFragmentManager.fragments[0] as ConfirmLockerFragment
                 confirmLockerFragment.newIntent(it)
             }
