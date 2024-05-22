@@ -113,7 +113,8 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
+            android:textSize="15sp"
             android:fontFamily="@font/manrope_semibold"
             android:text="@string/verificar_armarios_por_perto"
             android:textColor="@color/lighter_gray"
@@ -143,7 +144,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnMaps" />
+            app:layout_constraintTop_toBottomOf="@+id/btnMaps"
+            app:layout_constraintVertical_bias="0.696" />
 
         <Button
             android:id="@+id/testCamera"
