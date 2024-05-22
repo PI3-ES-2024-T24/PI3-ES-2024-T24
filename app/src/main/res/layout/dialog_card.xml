@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="20dp"
-    app:cardBackgroundColor="@color/white"
     android:layout_marginHorizontal="20dp">
 
     <TextView
@@ -13,8 +12,9 @@
         android:textStyle="bold"
         android:textSize="25sp"
         android:layout_marginTop="10dp"
-        android:text="Cartão de Crédito"
-        android:textColor="@color/blue_gray"
+        android:text="Cartão de crédito"
+        android:fontFamily="@font/manrope_semibold"
+        android:textColor="@color/light_blue"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 />
 
             <Button

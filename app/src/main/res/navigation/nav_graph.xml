@@ -53,6 +53,9 @@
             app:destination="@id/nav_client"
             app:popUpTo="@id/welcomeFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_signInFragment_to_nav_manager"
+            app:destination="@id/nav_manager" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
@@ -68,5 +71,6 @@
             app:destination="@id/signInFragment" />
     </fragment>
     <include app:graph="@navigation/nav_client" />
+    <include app:graph="@navigation/nav_manager" />
 
 </navigation>

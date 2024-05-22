@@ -14,15 +14,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30dp"
+            android:textSize="25sp"
             android:gravity="center_horizontal"
-            android:text="Tem Certeza que quer cancelar a locação?"/>
+            android:text="@string/tem_certeza_que_quer_cancelar_a_loca_o"
+            android:fontFamily="@font/manrope_semibold"
+            android:textColor="@color/blue_gray"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Você terá que realizar a locação novamente caso cancele-a"
-            android:gravity="center"/>
+            android:text="@string/voc_ter_que_realizar_a_loca_o_novamente_caso_cancele_a"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:fontFamily="@font/manrope_medium"
+            android:textColor="@color/lighter_gray"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +38,8 @@
                 android:id="@+id/btnCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancelar Locação"/>
+                android:text="Cancelar Locação"
+                />
             <Button
                 android:id="@+id/btnNotCancel"
                 android:layout_width="wrap_content"

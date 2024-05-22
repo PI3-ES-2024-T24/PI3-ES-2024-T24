@@ -46,8 +46,8 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
-import com.puc.pi3_es_2024_t24.BitmapHelper
-import com.puc.pi3_es_2024_t24.MarkerInfoAdapter
+import com.puc.pi3_es_2024_t24.utils.BitmapHelper
+import com.puc.pi3_es_2024_t24.utils.MarkerInfoAdapter
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogCardBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogLocationBinding
@@ -391,11 +391,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         qrCodeDialog.show()
     }
     private fun makeJsonQr(unityId: String, option: Int){
-        val userEmail = auth.currentUser?.email.toString()
-        val qrcode = QrCode(unityId, userEmail, option)
-        val gson = Gson()
-        val content = gson.toJson(qrcode)
-        saveQRCodeContent(content)
+        val userUid = auth.currentUser?.uid
+        if (userUid!= null) {
+            val qrcode = QrCode(unityId, userUid, option)
+            val gson = Gson()
+            val content = gson.toJson(qrcode)
+            saveQRCodeContent(content)
+        }
+
     }
     private fun generateQRCode(content: String, width: Int, height: Int): Bitmap? {
         try {
@@ -532,11 +535,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val email = auth.currentUser?.email
             var card: Card?
 
-            db.collection("pessoas")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnSuccessListener { documents ->
-                    for (document in documents) {
+            auth.currentUser?.uid?.let {
+                db.collection("pessoas")
+                    .document(it)
+                    .get()
+                    .addOnSuccessListener { document ->
                         if (document.get("cartao") == null) {
                             card = null
                         } else {
@@ -552,7 +555,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                             card
                         )
                     }
-                }
+            }
         }
     }
     private fun saveLocationState(active: Boolean) {

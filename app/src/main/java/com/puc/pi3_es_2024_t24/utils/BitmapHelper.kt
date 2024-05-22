@@ -1,4 +1,4 @@
-package com.puc.pi3_es_2024_t24
+package com.puc.pi3_es_2024_t24.utils
 
 import android.content.Context
 import android.graphics.Bitmap

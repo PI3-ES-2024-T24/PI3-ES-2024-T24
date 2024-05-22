@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="20dp"
-    app:cardBackgroundColor="@color/white"
     android:layout_marginHorizontal="20dp"
     android:layout_gravity="center">
 
@@ -18,18 +17,23 @@
     <TextView
         android:id="@+id/realizar"
         android:layout_gravity="center"
+        android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/realizar_loca_o"
-        android:textSize="40sp" />
+        android:fontFamily="@font/manrope_semibold"
+        android:textSize="30sp"
+        android:textColor="@color/light_blue"/>
     <TextView
         android:id="@+id/select"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/selectione_uma_op_o_de_tempo"
-        android:textSize="20sp"/>
+        android:textSize="15sp"
+        android:fontFamily="@font/manrope_semibold"
+        android:textColor="@color/light_blue"/>
 <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -45,40 +49,41 @@
             android:id="@+id/radio30min"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="30 minutos" />
+            android:text="@string/_30_minutos" />
 
         <RadioButton
             android:id="@+id/radio1hr"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="1 hora" />
+            android:text="@string/_1_hora" />
 
         <RadioButton
             android:id="@+id/radio2hr"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="2 horas" />
+            android:text="@string/_2_horas" />
 
         <RadioButton
             android:id="@+id/radio4hr"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="4 horas" />
+            android:text="@string/_4_horas" />
 
         <RadioButton
             android:id="@+id/radio18hr"
             android:layout_width="match_parent"
             android:clickable="false"
             android:layout_height="match_parent"
-            android:text="18 horas" />
+            android:text="@string/_18_horas" />
+
         <TextView
             android:id="@+id/txtTime18"
-            android:layout_width="100dp"
+            android:layout_width="140dp"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:text="@string/restriction_time"
             android:textColor="@color/red"
-            android:visibility="visible"
-            android:text="Opção apenas disponivel entre 7 e 8 horas da manhã"/>
+            android:visibility="visible" />
 
     </RadioGroup>
 
@@ -91,50 +96,51 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:gravity="center"
-        android:text="preço de 30 min"
+        android:text="@string/pre_o_de_30_min"
         android:textSize="17sp" />
         <TextView
             android:id="@+id/txt1"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center"
-            android:text="preço de 1 hora"
-            android:textSize="17dp"
+            android:text="@string/valor_1hora"
+            android:textSize="17sp"
 />
         <TextView
             android:id="@+id/txt2"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center"
-            android:text="preço de 2 hora"
-            android:textSize="17dp" />
+            android:text="@string/valor_2h"
+            android:textSize="17sp" />
         <TextView
             android:id="@+id/txt4"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center"
-            android:text="preço de 4 hora"
-            android:textSize="17dp" />
+            android:text="@string/valor_de_4_hora"
+            android:textSize="17sp" />
         <TextView
             android:id="@+id/txt18"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center"
-            android:text="preço de 18 hora"
-            android:textSize="17dp" />
+            android:text="@string/pre_o_de_18_hora"
+            android:textSize="17sp" />
     </LinearLayout>
 </LinearLayout>
 
     <LinearLayout
         android:gravity="center"
+        android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/btnConfirm"
             android:textSize="14sp"
             android:textAllCaps="true"
-            android:text="Confirmar"
+            android:text="@string/confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <Button

@@ -14,7 +14,6 @@
     <string name="j_tem_conta_clique_aqui">Já tem cadastro? Clique aqui</string>
     <string name="sign_up">Cadastrar</string>
     <string name="entrar">Entrar</string>
-    <string name="registrar_conta"></string>
     <string name="login">Login</string>
     <string name="sair_da_conta">Sair da conta?</string>
     <string name="sair">sair</string>
@@ -30,5 +29,34 @@
     <string name="selectione_uma_op_o_de_tempo">Selecione uma opção de tempo:</string>
     <string name="confirm">Confirmar</string>
     <string name="j_tem_cadastro_clique_aqui">Já tem cadastro? Clique aqui.</string>
+    <string name="texto_informativo_redefinir_senha">Digite seu endereço de email para redefinir sua senha</string>
+    <string name="cadastro_cartao">Insira os dados para cadastrar seu cartão de crédito:</string>
+    <string name="nome_do_titular">Nome do titular</string>
+    <string name="n_mero_do_cart_o">Número do cartão</string>
+    <string name="validade">Validade</string>
+    <string name="ccv">CCV</string>
+    <string name="aviso_caucao">Atenção, ao cadastrar o seu cartão de crédito, todas as vezes que realizar uma locação, será cobrada a caução de uma diária e, estornada proporcionalmente de acordo com o período utilizado.</string>
+    <string name="aviso_signout">Tem certeza que deseja sair da sua conta atual?</string>
+    <string name="tem_certeza_que_quer_cancelar_a_loca_o">Tem certeza que deseja cancelar a locação?</string>
+    <string name="voc_ter_que_realizar_a_loca_o_novamente_caso_cancele_a">Você terá que realizar a locação novamente caso cancele-a.</string>
+    <string name="_18_horas">18 horas</string>
+    <string name="restriction_time">Opção disponível apenas entre 7 e 8 horas da manhã.</string>
+    <string name="_4_horas">4 horas</string>
+    <string name="_2_horas">2 horas</string>
+    <string name="_1_hora">1 hora</string>
+    <string name="_30_minutos">30 minutos</string>
+    <string name="pre_o_de_30_min">Valor para 30 min.</string>
+    <string name="valor_1hora">Valor para 1 hora.</string>
+    <string name="pre_o_de_18_hora">Valor para 18 horas.</string>
+    <string name="valor_de_4_hora">Valor para 4 horas.</string>
+    <string name="valor_2h">Valor para 2 horas.</string>
+    <string name="client_name">Client name</string>
+    <string name="client_email">Client Email</string>
+    <string name="cliente">Cliente:</string>
+    <string name="lo_pending">Parece que você tem uma locação pendente.</string>
+    <string name="num_acessantes">Insira o número de acessantes da locação:</string>
+    <string name="_2_pessoas">2 pessoas</string>
+    <string name="_1_pessoa">1 pessoa</string>
+    <string name="rotas">Rotas</string>
 
 </resources>

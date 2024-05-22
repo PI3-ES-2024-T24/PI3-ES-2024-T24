@@ -28,8 +28,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.functions.FirebaseFunctions
-import com.puc.pi3_es_2024_t24.BitmapHelper
-import com.puc.pi3_es_2024_t24.MarkerInfoAdapter
+import com.puc.pi3_es_2024_t24.utils.BitmapHelper
+import com.puc.pi3_es_2024_t24.utils.MarkerInfoAdapter
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.models.MarkerData
 
