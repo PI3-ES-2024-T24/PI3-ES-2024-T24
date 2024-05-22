@@ -44,10 +44,6 @@ class SignInFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentSignInBinding
     private lateinit var db: FirebaseFirestore
-    private var nfcAdapter: NfcAdapter? = null
-    private lateinit var nfcTag: NfcTag
-    private lateinit var qrCode: QrCode
-    private lateinit var clientId: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,9 +53,6 @@ class SignInFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
         auth = Firebase.auth
-
-        nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
-        nfcTag = NfcTag("", "")
 
         db = Firebase.firestore
         binding.btnSignIn.setOnClickListener {
@@ -93,9 +86,8 @@ class SignInFragment : Fragment() {
         binding.testCamera.setOnClickListener {
             it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
         }
-        binding.testNfc.setOnClickListener {
-            nfcTag.method = "write"
-            showNfc()
+        binding.testNfc.setOnClickListener{
+            it.findNavController().navigate(R.id.action_signInFragment_to_confirmLockerFragment)
         }
         return binding.root
     }
@@ -115,97 +107,5 @@ class SignInFragment : Fragment() {
             return false
         }
         return true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val pendingIntent = PendingIntent.getActivity(
-            requireContext(), 0,
-            Intent(requireContext(), javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_MUTABLE
-        )
-        val intentFiltersArray = arrayOf(
-            IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED).apply { addCategory(Intent.CATEGORY_DEFAULT) },
-            IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED).apply { addCategory(Intent.CATEGORY_DEFAULT) },
-            IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED).apply { addCategory(Intent.CATEGORY_DEFAULT) }
-        )
-        val techListArray = arrayOf(
-            arrayOf(android.nfc.tech.Ndef::class.java.name)
-        )
-        nfcAdapter?.enableForegroundDispatch(requireActivity(), pendingIntent, intentFiltersArray, techListArray)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        nfcAdapter?.disableForegroundDispatch(requireActivity())
-    }
-
-    private fun showNfc() {
-        if (!isAdded) return
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val bindingNfc = DialogNfcBinding.inflate(layoutInflater)
-        dialog.setContentView(bindingNfc.root)
-
-        bindingNfc.btnCloseNfc.setOnClickListener {
-            dialog.dismiss()
-        }
-        dialog.show()
-    }
-
-    fun newIntent(intent: Intent) {
-        if (!isAdded) return
-        if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action ||
-            NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action ||
-            NfcAdapter.ACTION_TECH_DISCOVERED == intent.action) {
-            var tag: Tag? = null
-            try {
-                tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
-            } catch (e: Exception) {
-                Log.d("NFC TAG ERROR", "${e.message}")
-            }
-
-            if (tag != null) {
-                Log.d("TAG LIDA", "nfc tag detected")
-                verificarTag(intent, tag)
-                Log.d("TAG", "NFC Tag Detected")
-            }
-        }
-    }
-
-    fun verificarTag(intent: Intent, tag: Tag) {
-        if (!isAdded) return
-
-        if (nfcTag.method == "write") {
-            try {
-                val ndef = Ndef.get(tag)
-                if (ndef == null) {
-                    Log.d("NfcError", "NFC NÃO SUPORTA NDEF")
-                } else {
-                    ndef.connect()
-                    val mimeType = "text/plain"
-                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": "${123123}"}""".toByteArray(Charsets.UTF_8))
-                    val ndefMessage = NdefMessage(arrayOf(ndefRecord))
-                    ndef.writeNdefMessage(ndefMessage)
-                    ndef.close()
-                    Log.d("WRITENFC", "NFC ESCRITO")
-                }
-            } catch (e: Exception) {
-                Log.d("WriteNFC", "Erro ao tentar escrever no nfc!")
-            }
-        } else {
-            intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)?.also { rawMessages ->
-                val ndefMessages = rawMessages.map { it as NdefMessage }
-                for (ndefMessage in ndefMessages) {
-                    for (record in ndefMessage.records) {
-                        val payload = String(record.payload)
-                        Log.d("TAG", "NDEF RECORD : $payload")
-                        clientId = JSONObject(payload).getString("clientId")
-                    }
-                }
-            }
-        }
     }
 }

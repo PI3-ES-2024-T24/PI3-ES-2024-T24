@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.puc.pi3_es_2024_t24.R
+import com.puc.pi3_es_2024_t24.manager.ConfirmLockerFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,19 +26,5 @@ class MainActivity : AppCompatActivity() {
         navController= findNavController(R.id.navHostFragmentContainerView)
     // retorna a pilha anterior
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        intent?.let {
-            if (NfcAdapter.ACTION_NDEF_DISCOVERED == it.action ||
-                NfcAdapter.ACTION_TECH_DISCOVERED == it.action ||
-                NfcAdapter.ACTION_TAG_DISCOVERED == it.action) {
-                val navHostFragment =
-                    supportFragmentManager.findFragmentById(R.id.navHostFragmentContainerView) as NavHostFragment
-                val signInFragment = navHostFragment.childFragmentManager.fragments[0] as SignInFragment
-                signInFragment.newIntent(it)
-            }
-        }
     }
 }

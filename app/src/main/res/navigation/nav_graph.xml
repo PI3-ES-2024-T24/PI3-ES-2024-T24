@@ -56,6 +56,9 @@
         <action
             android:id="@+id/action_signInFragment_to_nav_manager"
             app:destination="@id/nav_manager" />
+        <action
+            android:id="@+id/action_signInFragment_to_confirmLockerFragment"
+            app:destination="@id/confirmLockerFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
@@ -72,5 +75,10 @@
     </fragment>
     <include app:graph="@navigation/nav_client" />
     <include app:graph="@navigation/nav_manager" />
+    <fragment
+        android:id="@+id/confirmLockerFragment"
+        android:name="com.puc.pi3_es_2024_t24.manager.ConfirmLockerFragment"
+        android:label="fragment_confirm_locker"
+        tools:layout="@layout/fragment_confirm_locker" />
 
 </navigation>
