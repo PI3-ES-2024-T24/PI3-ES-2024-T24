@@ -18,6 +18,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentConfirmLockerBinding
@@ -27,6 +29,7 @@ import org.json.JSONObject
 
 class ConfirmLockerFragment : Fragment() {
     private lateinit var binding:FragmentConfirmLockerBinding
+    private lateinit var bindingNfc : DialogNfcBinding
     private var nfcAdapter: NfcAdapter? = null
     private lateinit var nfcTag: NfcTag
     private lateinit var clientId: String
@@ -38,7 +41,7 @@ class ConfirmLockerFragment : Fragment() {
         binding = FragmentConfirmLockerBinding.inflate(inflater, container, false)
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
-        nfcTag = NfcTag("read")
+        nfcTag = NfcTag("write")
 
         binding.btnEnd.setOnClickListener{
             showNfc()
@@ -76,7 +79,7 @@ class ConfirmLockerFragment : Fragment() {
         dialog.setCancelable(false)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val bindingNfc = DialogNfcBinding.inflate(layoutInflater)
+        bindingNfc = DialogNfcBinding.inflate(layoutInflater)
         dialog.setContentView(bindingNfc.root)
 
         bindingNfc.btnCloseNfc.setOnClickListener {
@@ -120,7 +123,9 @@ class ConfirmLockerFragment : Fragment() {
                     val ndefMessage = NdefMessage(arrayOf(ndefRecord))
                     ndef.writeNdefMessage(ndefMessage)
                     ndef.close()
-                    Log.d("WRITENFC", "NFC ESCRITO")
+                    bindingNfc.tvNfc.text = "NFC ENCONTRADO. Escrevendo..."
+                    Toast.makeText(requireContext(), "NFC registrado com sucesso!", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_confirmLockerFragment2_to_locationSuccessFragment)
                 }
             } catch (e: Exception) {
                 Log.d("WriteNFC", "Erro ao tentar escrever no nfc!")
@@ -133,6 +138,8 @@ class ConfirmLockerFragment : Fragment() {
                         val payload = String(record.payload)
                         Log.d("TAG", "NDEF RECORD : $payload")
                         clientId = JSONObject(payload).getString("clientId")
+                        bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
+                        Toast.makeText(requireContext(), "ID DO CLIENTE: $clientId", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

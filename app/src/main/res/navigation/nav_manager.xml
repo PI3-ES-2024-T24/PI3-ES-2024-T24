@@ -38,5 +38,18 @@
         android:id="@+id/confirmLockerFragment2"
         android:name="com.puc.pi3_es_2024_t24.manager.ConfirmLockerFragment"
         android:label="fragment_confirm_locker"
-        tools:layout="@layout/fragment_confirm_locker" />
+        tools:layout="@layout/fragment_confirm_locker" >
+        <action
+            android:id="@+id/action_confirmLockerFragment2_to_locationSuccessFragment"
+            app:destination="@id/locationSuccessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/locationSuccessFragment"
+        android:name="com.puc.pi3_es_2024_t24.manager.LocationSuccessFragment"
+        android:label="fragment_location_success"
+        tools:layout="@layout/fragment_location_success" >
+        <action
+            android:id="@+id/action_locationSuccessFragment_to_confirmLockerFragment2"
+            app:destination="@id/confirmLockerFragment2" />
+    </fragment>
 </navigation>
