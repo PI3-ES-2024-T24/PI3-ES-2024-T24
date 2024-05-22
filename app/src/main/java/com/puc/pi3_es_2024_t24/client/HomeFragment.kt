@@ -398,7 +398,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val content = gson.toJson(qrcode)
             saveQRCodeContent(content)
         }
-
     }
     private fun generateQRCode(content: String, width: Int, height: Int): Bitmap? {
         try {
