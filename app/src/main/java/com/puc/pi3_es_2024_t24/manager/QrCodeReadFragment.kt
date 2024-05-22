@@ -32,11 +32,10 @@ class QrCodeReadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args = QrCodeReadFragmentArgs.fromBundle(requireArguments())
-        val argUri = args.photoUri
         val argQr = args.qrCodeInfo
         if (argQr != "null"){
             val json = JSONObject(argQr)
-            val email = json.getString("currentUserEmail")
+            val email = json.getString("clientId")
             binding.etEmail.text = email
         }
 

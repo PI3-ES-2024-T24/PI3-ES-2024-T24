@@ -391,11 +391,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         qrCodeDialog.show()
     }
     private fun makeJsonQr(unityId: String, option: Int){
-        val userEmail = auth.currentUser?.email.toString()
-        val qrcode = QrCode(unityId, userEmail, option)
-        val gson = Gson()
-        val content = gson.toJson(qrcode)
-        saveQRCodeContent(content)
+        val userUid = auth.currentUser?.uid
+        if (userUid!= null) {
+            val qrcode = QrCode(unityId, userUid, option)
+            val gson = Gson()
+            val content = gson.toJson(qrcode)
+            saveQRCodeContent(content)
+        }
+
     }
     private fun generateQRCode(content: String, width: Int, height: Int): Bitmap? {
         try {
