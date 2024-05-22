@@ -14,13 +14,18 @@
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Locação Pendente"
+    android:text="@string/lo_pending"
     android:gravity="center"
-    android:textSize="40sp"/>
+    android:fontFamily="@font/manrope_semibold"
+    android:textColor="@color/light_blue"
+    android:textSize="20sp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Apresente este QR code ao gerente: @MANAGER"
+        android:text="Apresente este QR code ao gerente:"
+        android:textSize="15sp"
+        android:fontFamily="@font/manrope_semibold"
+        android:textColor="@color/light_blue"
         android:gravity="center"/>
     <ImageView
         android:id="@+id/qrCodeImg"
@@ -28,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:contentDescription="QrCode"
-        android:src="@drawable/googlemaps" />
+        android:src="@drawable/qrcodemini" />
 
     <Button
         android:id="@+id/btnCancel"

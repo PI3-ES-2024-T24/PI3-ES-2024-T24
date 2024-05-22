@@ -4,19 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".manager.ClientPhotoFragment">
+    tools:context=".manager.ClientPhotoFragment"
+    android:background="@drawable/background_bluegrayfade">
 
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="88dp"
+        android:fontFamily="@font/manrope_semibold"
         android:gravity="center"
-        android:text="Insira o número de acessantes da locação:"
+        android:text="@string/num_acessantes"
+        android:textColor="@color/white"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,24 +27,24 @@
         android:id="@+id/btn1access"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1 pessoa"
+        android:text="@string/_1_pessoa"
         android:textSize="20sp"
+        android:fontFamily="@font/manrope_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintVertical_bias="0.433" />
 
     <Button
         android:id="@+id/btn2access"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="2 pessoas"
+        android:layout_marginTop="60dp"
+        android:text="@string/_2_pessoas"
         android:textSize="20sp"
+        android:fontFamily="@font/manrope_medium"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn1access" />
 </androidx.constraintlayout.widget.ConstraintLayout>
