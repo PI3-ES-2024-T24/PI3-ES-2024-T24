@@ -142,6 +142,7 @@ class SignInFragment : Fragment() {
     }
 
     private fun showNfc() {
+        if(!isAdded) return
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -157,19 +158,28 @@ class SignInFragment : Fragment() {
     }
 
     fun newIntent(intent: Intent) {
+        if(!isAdded) return
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action ||
             NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action ||
             NfcAdapter.ACTION_TECH_DISCOVERED == intent.action) {
-            val tag: Tag? = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
+            var tag : Tag? = null
+            try {
+                tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
+            } catch (e: Exception) {
+                Log.d("NFC TAG ERROR", "${e.message}")
+            }
+
             if (tag != null) {
-                Toast.makeText(requireContext(), "LEU TAG", Toast.LENGTH_SHORT).show()
-                verificarTag(intent, tag)
+                // Toast.makeText(requireContext(), "LEU TAG", Toast.LENGTH_SHORT).show()
+                Log.d("TAG LIDA", "nfc tag detected")
+                // verificarTag(intent, tag)
                 Log.d("TAG", "NFC Tag Detected")
             }
         }
     }
 
     fun verificarTag(intent: Intent, tag: Tag) {
+        if(!isAdded) return
 
         // VERIFICAR SE É PARA ESCREVER OU LER A TAG
         if (nfcTag.method == "write"){
@@ -184,6 +194,7 @@ class SignInFragment : Fragment() {
                     val ndefMessage = NdefMessage(arrayOf(ndefRecord))
                     ndef.writeNdefMessage(ndefMessage)
                     ndef.close()
+                    Log.d("WRITENFC", "NFC ESCRITO")
                     Toast.makeText(requireContext(), "TAG REGISTRADA!", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
