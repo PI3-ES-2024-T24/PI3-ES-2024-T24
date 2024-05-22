@@ -173,7 +173,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun navigationQrCode(qr: String?) {
-        val action = CameraFragmentDirections.actionCameraFragmentToQrCodeReadFragment(qrCodeInfo = qr)
+        val action = CameraFragmentDirections.actionCameraFragmentToClientAccessFragment(qrCodeInfo = qr)
         findNavController().navigate(action)
     }
 

@@ -6,11 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
-import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentConfirmLockerBinding
-import com.puc.pi3_es_2024_t24.databinding.FragmentQrCodeReadBinding
-import org.json.JSONObject
+
 
 class ConfirmLockerFragment : Fragment() {
 private lateinit var binding:FragmentConfirmLockerBinding
