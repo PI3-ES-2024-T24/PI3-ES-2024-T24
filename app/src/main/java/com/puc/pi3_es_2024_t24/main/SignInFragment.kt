@@ -170,7 +170,6 @@ class SignInFragment : Fragment() {
             }
 
             if (tag != null) {
-                // Toast.makeText(requireContext(), "LEU TAG", Toast.LENGTH_SHORT).show()
                 Log.d("TAG LIDA", "nfc tag detected")
                 // verificarTag(intent, tag)
                 Log.d("TAG", "NFC Tag Detected")
@@ -186,7 +185,7 @@ class SignInFragment : Fragment() {
             try {
                 val ndef = Ndef.get(tag)
                 if (ndef == null) {
-                    Toast.makeText(requireContext(), "Nfc não suporta NDEF", Toast.LENGTH_SHORT).show()
+                    Log.d("NfcError" "NFC NÃO SUPORTA NDEF")
                 } else {
                     ndef.connect()
                     val mimeType = "text/plain"
@@ -195,7 +194,6 @@ class SignInFragment : Fragment() {
                     ndef.writeNdefMessage(ndefMessage)
                     ndef.close()
                     Log.d("WRITENFC", "NFC ESCRITO")
-                    Toast.makeText(requireContext(), "TAG REGISTRADA!", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Log.d("WriteNFC", "Erro ao tentar escrever no nfc!")
