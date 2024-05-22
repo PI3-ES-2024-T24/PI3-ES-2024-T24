@@ -29,6 +29,7 @@ class CameraFragment : Fragment() {
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var barcodeScanner: BarcodeScanner
     private lateinit var imageCapture: ImageCapture
+    private var qrCodeProcessed: Boolean = false
     private var savedUri: Uri? = null
     private var savedUri1: Uri? = null
     private var clicked: Boolean = false
@@ -151,26 +152,33 @@ class CameraFragment : Fragment() {
 
     @OptIn(ExperimentalGetImage::class)
     private fun scanBarcode(imageProxy: ImageProxy) {
-        val mediaImage = imageProxy.image
-        if (mediaImage != null) {
-            val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-            barcodeScanner.process(inputImage)
-                .addOnSuccessListener { barcodes ->
-                    for (barcode in barcodes) {
-                        val qrCodeValue = barcode.rawValue
-                        Log.d(TAG, "Barcode value: $qrCodeValue")
-                        navigationQrCode(qrCodeValue)
+        if (!qrCodeProcessed) {
+            val mediaImage = imageProxy.image
+            if (mediaImage != null) {
+                val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                barcodeScanner.process(inputImage)
+                    .addOnSuccessListener { barcodes ->
+                        for (barcode in barcodes) {
+                            val qrCodeValue = barcode.rawValue
+                            Log.d(TAG, "Barcode value: $qrCodeValue")
+                            navigationQrCode(qrCodeValue)
+                            qrCodeProcessed = true 
+                            break
+                        }
+                        imageProxy.close()
                     }
-                    imageProxy.close()
-                }
-                .addOnFailureListener { e ->
-                    Log.e(TAG, "Barcode scanning failed", e)
-                    imageProxy.close()
-                }
+                    .addOnFailureListener { e ->
+                        Log.e(TAG, "Barcode scanning failed", e)
+                        imageProxy.close()
+                    }
+            } else {
+                imageProxy.close()
+            }
         } else {
             imageProxy.close()
         }
     }
+
 
     private fun navigationQrCode(qr: String?) {
         val action = CameraFragmentDirections.actionCameraFragmentToClientAccessFragment(qrCodeInfo = qr)
