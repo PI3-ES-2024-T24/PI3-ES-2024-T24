@@ -103,7 +103,7 @@
             android:fontFamily="@font/manrope_semibold"
             android:gravity="center"
             android:text="@string/login_text"
-            android:textColor="@color/cinzinha"
+            android:textColor="@color/lighter_gray"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/textView"
             app:layout_constraintStart_toStartOf="@+id/textView"
@@ -113,10 +113,11 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
+            android:textSize="15sp"
             android:fontFamily="@font/manrope_semibold"
             android:text="@string/verificar_armarios_por_perto"
-            android:textColor="@color/cinzinha"
+            android:textColor="@color/lighter_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
@@ -138,12 +139,13 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/manrope_semibold"
             android:text="@string/n_o_tem_cadastro_clique_aqui"
-            android:textColor="@color/cinzinha"
+            android:textColor="@color/lighter_gray"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnMaps" />
+            app:layout_constraintTop_toBottomOf="@+id/btnMaps"
+            app:layout_constraintVertical_bias="0.696" />
 
         <Button
             android:id="@+id/testCamera"

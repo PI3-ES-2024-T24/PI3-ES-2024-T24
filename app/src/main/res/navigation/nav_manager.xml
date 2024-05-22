@@ -25,13 +25,32 @@
         android:name="com.puc.pi3_es_2024_t24.utils.CameraFragment"
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" >
+        <argument
+            android:name="accessNum"
+            app:argType="integer"
+            android:defaultValue="0"/>
         <action
-            android:id="@+id/action_cameraFragment_to_qrCodeReadFragment"
-            app:destination="@id/qrCodeReadFragment"
-            app:popUpTo="@id/qrCodeReadFragment"
-            app:popUpToInclusive="true">
-        </action>
+            android:id="@+id/action_cameraFragment_to_confirmLockerFragment"
+            app:destination="@id/confirmLockerFragment" />
+        <action
+            android:id="@+id/action_cameraFragment_to_clientAccessFragment"
+            app:destination="@id/clientAccessFragment" />
 
+
+    </fragment>
+    <fragment
+        android:id="@+id/confirmLockerFragment"
+        android:name="com.puc.pi3_es_2024_t24.manager.ConfirmLockerFragment"
+        android:label="fragment_confirm_locker"
+        tools:layout="@layout/fragment_confirm_locker">
+        <argument
+            android:name="photoUri"
+            app:argType="string"
+            android:defaultValue="noImg" />
+        <argument
+            android:name="photoUri1"
+            app:argType="string"
+            android:defaultValue="noImg" />
 
     </fragment>
     <fragment
@@ -51,5 +70,6 @@
         <action
             android:id="@+id/action_locationSuccessFragment_to_confirmLockerFragment"
             app:destination="@id/confirmLockerFragment" />
+
     </fragment>
 </navigation>

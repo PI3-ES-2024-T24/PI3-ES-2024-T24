@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="20dp"
-    app:cardBackgroundColor="@color/white"
     android:layout_marginHorizontal="20dp">
 
     <LinearLayout
@@ -13,26 +12,30 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:text="Cadastar cartão de crédito"
-            android:textColor="@color/blue_gray"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/manrope_extrabold"
+            android:gravity="center"
+            android:text="@string/cadastro_cartao"
+            android:textColor="@color/blue_gray"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_margin="20dp">
+
             <EditText
                 android:background="@drawable/input_shape"
                 android:id="@+id/etCardName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nome do titular"
+                android:hint="@string/nome_do_titular"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -44,7 +47,7 @@
                 android:id="@+id/etCardNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Número do cartão"
+                android:hint="@string/n_mero_do_cart_o"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -57,7 +60,7 @@
                 android:id="@+id/etCardValidation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Validade"
+                android:hint="@string/validade"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:maxLength="5"
@@ -69,7 +72,7 @@
                 android:id="@+id/etCardCCV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="CCV"
+                android:hint="@string/ccv"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:maxLength="3"
@@ -90,9 +93,9 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/manrope_medium"
                 android:gravity="center"
-                android:text="Atenção, ao cadastrar o seu cartão de crédito, todas as vezes que realizar uma locação, será cobrada a caução de uma diária e, estornada proporcionalmente de acordo com o período utilizado."
+                android:text="@string/aviso_caucao"
                 android:textColor="@color/black"
-                android:textSize="9sp" />
+                android:textSize="12sp" />
         </LinearLayout>
         <LinearLayout
             android:gravity="center"
@@ -105,7 +108,7 @@
                 android:id="@+id/btnSave"
                 android:textSize="14sp"
                 android:textAllCaps="true"
-                android:text="Cadastrar"
+                android:text="@string/sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/blue_gray"
