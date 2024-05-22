@@ -24,13 +24,13 @@ import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentConfirmLockerBinding
 import com.puc.pi3_es_2024_t24.models.NfcTag
-import com.puc.pi3_es_2024_t24.models.QrCode
 import org.json.JSONObject
 
 class ConfirmLockerFragment : Fragment() {
     private lateinit var binding:FragmentConfirmLockerBinding
     private lateinit var bindingNfc : DialogNfcBinding
     private var nfcAdapter: NfcAdapter? = null
+    private lateinit var dialog:Dialog
     private lateinit var nfcTag: NfcTag
     private lateinit var clientId: String
     override fun onCreateView(
@@ -76,7 +76,7 @@ class ConfirmLockerFragment : Fragment() {
 
     private fun showNfc() {
         if (!isAdded) return
-        val dialog = Dialog(requireContext())
+        dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -110,7 +110,7 @@ class ConfirmLockerFragment : Fragment() {
         }
     }
 
-    fun verificarTag(intent: Intent, tag: Tag) {
+    private fun verificarTag(intent: Intent, tag: Tag) {
         if (!isAdded) return
 
         if (nfcTag.method == "write") {
@@ -127,7 +127,9 @@ class ConfirmLockerFragment : Fragment() {
                     ndef.close()
                     bindingNfc.tvNfc.text = "NFC ENCONTRADO. Escrevendo..."
                     Toast.makeText(requireContext(), "NFC registrado com sucesso!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_confirmLockerFragment2_to_locationSuccessFragment)
+                    findNavController().navigate(R.id.action_confirmLockerFragment_to_locationSuccessFragment)
+                    dialog.dismiss()
+
                 }
             } catch (e: Exception) {
                 Log.d("WriteNFC", "Erro ao tentar escrever no nfc!")

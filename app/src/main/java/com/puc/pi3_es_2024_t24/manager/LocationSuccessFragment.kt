@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.puc.pi3_es_2024_t24.R
+import com.puc.pi3_es_2024_t24.databinding.FragmentConfirmLockerBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentLocationSuccessBinding
 
 class LocationSuccessFragment : Fragment() {
@@ -16,12 +17,12 @@ class LocationSuccessFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        // Inflate the layout for this fragment
+        binding = FragmentLocationSuccessBinding.inflate(inflater, container, false)
         binding.btnBack.setOnClickListener{
-            it.findNavController().navigate(R.id.action_locationSuccessFragment_to_confirmLockerFragment2)
+            it.findNavController().navigate(R.id.action_locationSuccessFragment_to_confirmLockerFragment)
         }
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_location_success, container, false)
+        return binding.root
     }
 }

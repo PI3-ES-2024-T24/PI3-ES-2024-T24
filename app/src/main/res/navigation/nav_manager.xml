@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_manager"
-    app:startDestination="@id/confirmLockerFragment2">
+    app:startDestination="@id/confirmLockerFragment">
 
     <fragment
         android:id="@+id/qrCodeReadFragment"
@@ -35,12 +35,12 @@
 
     </fragment>
     <fragment
-        android:id="@+id/confirmLockerFragment2"
+        android:id="@+id/confirmLockerFragment"
         android:name="com.puc.pi3_es_2024_t24.manager.ConfirmLockerFragment"
         android:label="fragment_confirm_locker"
         tools:layout="@layout/fragment_confirm_locker" >
         <action
-            android:id="@+id/action_confirmLockerFragment2_to_locationSuccessFragment"
+            android:id="@+id/action_confirmLockerFragment_to_locationSuccessFragment"
             app:destination="@id/locationSuccessFragment" />
     </fragment>
     <fragment
@@ -49,7 +49,7 @@
         android:label="fragment_location_success"
         tools:layout="@layout/fragment_location_success" >
         <action
-            android:id="@+id/action_locationSuccessFragment_to_confirmLockerFragment2"
-            app:destination="@id/confirmLockerFragment2" />
+            android:id="@+id/action_locationSuccessFragment_to_confirmLockerFragment"
+            app:destination="@id/confirmLockerFragment" />
     </fragment>
 </navigation>

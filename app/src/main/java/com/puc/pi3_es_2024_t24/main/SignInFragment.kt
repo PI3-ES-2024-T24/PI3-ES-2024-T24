@@ -88,7 +88,9 @@ class SignInFragment : Fragment() {
             it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
         }
         binding.testNfc.setOnClickListener{
-            it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
+            val intent = Intent(requireContext(),ManagerActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
         }
         return binding.root
     }
