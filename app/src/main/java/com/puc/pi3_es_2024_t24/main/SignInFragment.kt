@@ -43,18 +43,16 @@ class SignInFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentSignInBinding
-    private lateinit var db : FirebaseFirestore
+    private lateinit var db: FirebaseFirestore
     private var nfcAdapter: NfcAdapter? = null
-    private lateinit var bindingNfc : DialogNfcBinding
-    private lateinit var nfcTag : NfcTag
-    private lateinit var qrCode : QrCode
+    private lateinit var nfcTag: NfcTag
+    private lateinit var qrCode: QrCode
     private lateinit var clientId: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = FragmentSignInBinding.inflate(inflater, container, false)
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         val navController = findNavController()
@@ -68,27 +66,25 @@ class SignInFragment : Fragment() {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
             if (validate()) {
-                //função do firebase auth para logar com email e senha
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
                         val verifyemail = auth.currentUser?.isEmailVerified
-                        if(verifyemail == true){
+                        if (verifyemail == true) {
                             navController.navigate(R.id.action_signInFragment_to_nav_client)
-                        }else{
-                            Toast.makeText(requireContext(),"Conta não verificada, verfique no seu email",Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(requireContext(), "Conta não verificada, verfique no seu email", Toast.LENGTH_SHORT).show()
                         }
-                    }else {
-                        //cria um log do nivel E (error) no LogCat
+                    } else {
                         binding.textInputLayoutEmail.error = "Email e/ou senha errados"
                         Log.e("error: ", it.exception.toString())
                     }
                 }
             }
         }
-        binding.btnMaps.setOnClickListener{
+        binding.btnMaps.setOnClickListener {
             it.findNavController().navigate(R.id.action_signInFragment_to_mapsFragment)
         }
-        binding.btnRegister.setOnClickListener{
+        binding.btnRegister.setOnClickListener {
             it.findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
         }
         binding.forgotPassword.setOnClickListener {
@@ -97,23 +93,24 @@ class SignInFragment : Fragment() {
         binding.testCamera.setOnClickListener {
             it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
         }
-        binding.testNfc.setOnClickListener{
+        binding.testNfc.setOnClickListener {
             nfcTag.method = "write"
             showNfc()
         }
         return binding.root
     }
-    private fun validate(): Boolean{
+
+    private fun validate(): Boolean {
         val email = binding.etEmail.text.toString()
-        if(binding.etEmail.text.toString() == ""){
+        if (binding.etEmail.text.toString() == "") {
             binding.textInputLayoutEmail.error = "é necessario preencher esse campo"
             return false
         }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.textInputLayoutEmail.error = "porfavor digite um email valido"
             return false
         }
-        if(binding.etPassword.text.toString() == ""){
+        if (binding.etPassword.text.toString() == "") {
             binding.textInputLayoutPassword.error = "é necessario preencher esse campo"
             return false
         }
@@ -124,7 +121,8 @@ class SignInFragment : Fragment() {
         super.onResume()
         val pendingIntent = PendingIntent.getActivity(
             requireContext(), 0,
-            Intent(requireContext(), javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_MUTABLE)
+            Intent(requireContext(), javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_MUTABLE
+        )
         val intentFiltersArray = arrayOf(
             IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED).apply { addCategory(Intent.CATEGORY_DEFAULT) },
             IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED).apply { addCategory(Intent.CATEGORY_DEFAULT) },
@@ -142,7 +140,7 @@ class SignInFragment : Fragment() {
     }
 
     private fun showNfc() {
-        if(!isAdded) return
+        if (!isAdded) return
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -158,11 +156,11 @@ class SignInFragment : Fragment() {
     }
 
     fun newIntent(intent: Intent) {
-        if(!isAdded) return
+        if (!isAdded) return
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action ||
             NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action ||
             NfcAdapter.ACTION_TECH_DISCOVERED == intent.action) {
-            var tag : Tag? = null
+            var tag: Tag? = null
             try {
                 tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
             } catch (e: Exception) {
@@ -171,21 +169,20 @@ class SignInFragment : Fragment() {
 
             if (tag != null) {
                 Log.d("TAG LIDA", "nfc tag detected")
-                // verificarTag(intent, tag)
+                verificarTag(intent, tag)
                 Log.d("TAG", "NFC Tag Detected")
             }
         }
     }
 
     fun verificarTag(intent: Intent, tag: Tag) {
-        if(!isAdded) return
+        if (!isAdded) return
 
-        // VERIFICAR SE É PARA ESCREVER OU LER A TAG
-        if (nfcTag.method == "write"){
+        if (nfcTag.method == "write") {
             try {
                 val ndef = Ndef.get(tag)
                 if (ndef == null) {
-                    Log.d("NfcError" "NFC NÃO SUPORTA NDEF")
+                    Log.d("NfcError", "NFC NÃO SUPORTA NDEF")
                 } else {
                     ndef.connect()
                     val mimeType = "text/plain"
@@ -199,13 +196,12 @@ class SignInFragment : Fragment() {
                 Log.d("WriteNFC", "Erro ao tentar escrever no nfc!")
             }
         } else {
-            intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)?.also {rawMessages ->
-                val ndefMessages = rawMessages.map { it as NdefMessage}
-                for (ndefMessage in  ndefMessages) {
+            intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)?.also { rawMessages ->
+                val ndefMessages = rawMessages.map { it as NdefMessage }
+                for (ndefMessage in ndefMessages) {
                     for (record in ndefMessage.records) {
                         val payload = String(record.payload)
                         Log.d("TAG", "NDEF RECORD : $payload")
-                        // instanciar o clientId com o dado recebido pelo nfc
                         clientId = JSONObject(payload).getString("clientId")
                     }
                 }

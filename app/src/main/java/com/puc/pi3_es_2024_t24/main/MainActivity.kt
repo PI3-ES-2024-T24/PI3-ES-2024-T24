@@ -1,12 +1,15 @@
 package com.puc.pi3_es_2024_t24.main
 
 import android.content.Intent
+import android.nfc.NfcAdapter
+import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.puc.pi3_es_2024_t24.R
 
 class MainActivity : AppCompatActivity() {
@@ -25,9 +28,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onNewIntent(intent: Intent?) {
-        if (intent != null) {
-            SignInFragment().newIntent(intent)
-        }
         super.onNewIntent(intent)
+        intent?.let {
+            if (NfcAdapter.ACTION_NDEF_DISCOVERED == it.action ||
+                NfcAdapter.ACTION_TECH_DISCOVERED == it.action ||
+                NfcAdapter.ACTION_TAG_DISCOVERED == it.action) {
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.navHostFragmentContainerView) as NavHostFragment
+                val signInFragment = navHostFragment.childFragmentManager.fragments[0] as SignInFragment
+                signInFragment.newIntent(it)
+            }
+        }
     }
 }
