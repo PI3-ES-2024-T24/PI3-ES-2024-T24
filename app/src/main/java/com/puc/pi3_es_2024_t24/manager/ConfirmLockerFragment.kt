@@ -40,6 +40,8 @@ class ConfirmLockerFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentConfirmLockerBinding.inflate(inflater, container, false)
 
+        bindingNfc = DialogNfcBinding.inflate(layoutInflater)
+
         nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
         nfcTag = NfcTag("write")
 
