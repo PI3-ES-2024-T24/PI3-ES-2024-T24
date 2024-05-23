@@ -51,6 +51,7 @@ class ConfirmLockerFragment : Fragment() {
             showNfc()
         }
 
+
         return binding.root
     }
 
@@ -89,6 +90,8 @@ class ConfirmLockerFragment : Fragment() {
         bindingNfc.btnCloseNfc.setOnClickListener {
             dialog.dismiss()
         }
+
+        bindingNfc.tvNfc.text = nfcTag.method
         dialog.show()
     }
 

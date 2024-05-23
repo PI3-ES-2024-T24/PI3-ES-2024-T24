@@ -15,7 +15,7 @@ import com.google.firebase.auth.auth
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentWelcomeBinding
 
-class     WelcomeFragment : Fragment() {
+class WelcomeFragment : Fragment() {
 
     private lateinit var binding: FragmentWelcomeBinding
     private lateinit var auth: FirebaseAuth
