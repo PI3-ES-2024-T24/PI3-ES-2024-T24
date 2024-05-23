@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_manager"
-    app:startDestination="@id/cameraFragment">
+    app:startDestination="@id/menuManagerFragment">
 
     <fragment
         android:id="@+id/cameraFragment"
@@ -45,7 +45,11 @@
         android:id="@+id/locationSuccessFragment"
         android:name="com.puc.pi3_es_2024_t24.manager.LocationSuccessFragment"
         android:label="fragment_location_success"
-        tools:layout="@layout/fragment_location_success" />
+        tools:layout="@layout/fragment_location_success" >
+        <action
+            android:id="@+id/action_locationSuccessFragment_to_menuManagerFragment"
+            app:destination="@id/menuManagerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/clientAccessFragment"
         android:name="com.puc.pi3_es_2024_t24.manager.ClientAccessFragment"
@@ -59,5 +63,14 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="null" />
+    </fragment>
+    <fragment
+        android:id="@+id/menuManagerFragment"
+        android:name="com.puc.pi3_es_2024_t24.manager.MenuManagerFragment"
+        android:label="fragment_menu_manager"
+        tools:layout="@layout/fragment_menu_manager" >
+        <action
+            android:id="@+id/action_menuManagerFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
     </fragment>
 </navigation>

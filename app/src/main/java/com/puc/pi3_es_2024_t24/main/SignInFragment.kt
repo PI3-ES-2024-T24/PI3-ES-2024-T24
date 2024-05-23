@@ -84,9 +84,6 @@ class SignInFragment : Fragment() {
         binding.forgotPassword.setOnClickListener {
             it.findNavController().navigate(R.id.action_signInFragment_to_forgotPasswordFragment)
         }
-        binding.testCamera.setOnClickListener {
-            it.findNavController().navigate(R.id.action_signInFragment_to_nav_manager)
-        }
         binding.testNfc.setOnClickListener{
             val intent = Intent(requireContext(),ManagerActivity::class.java)
             startActivity(intent)

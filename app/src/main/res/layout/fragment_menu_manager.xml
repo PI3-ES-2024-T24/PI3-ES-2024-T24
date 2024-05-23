@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="@string/bem_vindo_de_volta"
+        android:text="@string/welcome_manager"
         android:fontFamily="@font/manrope_extrabold"
         android:textSize="30sp"
         android:textColor="@color/white"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:fontFamily="@font/manrope_medium"
-        android:text="@string/gerente_manager"
+        android:text="@string/manager_name"
         android:textColor="@color/white"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,5 +84,3 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-

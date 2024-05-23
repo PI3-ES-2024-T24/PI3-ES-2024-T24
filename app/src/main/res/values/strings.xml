@@ -58,9 +58,9 @@
     <string name="_2_pessoas">2 pessoas</string>
     <string name="_1_pessoa">1 pessoa</string>
     <string name="rotas">Rotas</string>
-    <string name="abrir_arm_rio">Abrir armário</string>
+    <string name="welcome_manager">Bem vindo de volta,</string>
+    <string name="manager_name">Gerente @manager!</string>
     <string name="release_locker">Liberar locação</string>
-    <string name="gerente_manager">Gerente, @manager</string>
-    <string name="bem_vindo_de_volta">Bem vindo de volta,</string>
+    <string name="abrir_arm_rio">Abrir armário</string>
 
 </resources>
