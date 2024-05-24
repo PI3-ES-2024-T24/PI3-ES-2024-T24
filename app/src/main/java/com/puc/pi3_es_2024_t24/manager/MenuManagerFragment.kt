@@ -22,6 +22,7 @@ import android.view.Window
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -58,6 +59,7 @@ class MenuManagerFragment : Fragment() {
     private lateinit var novoCaucao : Number
     private lateinit var dialogRelease:Dialog
     private lateinit var dialogClose:Dialog
+    private val imageUrls = mutableListOf<String>()
 
     private val db = Firebase.firestore
 
@@ -186,6 +188,7 @@ class MenuManagerFragment : Fragment() {
                             return
                         }
                         armarioId = JSONObject(payload).getString("locationId")
+                        loadLocker()
                         loadClientInfo(clientId)
                         dialog.dismiss()
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
@@ -320,6 +323,34 @@ class MenuManagerFragment : Fragment() {
                 }
                 .addOnFailureListener { exception ->
                     Log.d("Firestore", "Erro ao obter documento: ", exception)
+                }
+        }
+    }
+
+    private fun loadLocker() {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.collection("armarios").document(armarioId).get()
+                .addOnSuccessListener { document ->
+                    val images = document.getString("images")
+                    images?.get(0)?.let {
+                        imageUrls.add(it.toString())
+                        Glide.with(requireContext())
+                            .load(imageUrls.get(0))
+                            .into(bindingRelease.ivPhoto)
+                        Glide.with(requireContext())
+                            .load(imageUrls.get(0))
+                            .into(bindingClose.ivPhoto)
+                    }
+                    images?.get(1)?.let {
+                        imageUrls.add(it.toString())
+                        Glide.with(requireContext())
+                            .load(imageUrls.get(1))
+                            .into(bindingRelease.ivPhoto2)
+                        Glide.with(requireContext())
+                            .load(imageUrls.get(1))
+                            .into(bindingClose.ivPhoto2)
+
+                    }
                 }
         }
     }

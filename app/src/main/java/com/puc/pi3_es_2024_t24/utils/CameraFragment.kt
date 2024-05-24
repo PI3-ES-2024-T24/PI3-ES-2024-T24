@@ -16,6 +16,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.storage.FirebaseStorage
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
@@ -34,6 +35,8 @@ class CameraFragment : Fragment() {
     private var savedUri: Uri? = null
     private var savedUri1: Uri? = null
     private var clicked: Boolean = false
+    private val storage = FirebaseStorage.getInstance()
+    private val imageUrls = mutableListOf<Uri>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,9 +67,11 @@ class CameraFragment : Fragment() {
             if (argAccess == 1) {
                 takePhoto { uri ->
                     savedUri = uri
-                    val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString(), qrInfo = qrId)
-                    findNavController().navigate(action)
-//                    Toast.makeText(requireContext(), "Photo taken", Toast.LENGTH_SHORT).show()
+                    uploadImageToStorage(uri) { downloadUri ->
+                        imageUrls.add(downloadUri)
+                        val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(imageUrls.get(0).toString(), qrInfo = qrId)
+                        findNavController().navigate(action)
+                    }
                 }
             } else {
                 if (!clicked) {
@@ -78,8 +83,14 @@ class CameraFragment : Fragment() {
                 } else {
                     takePhoto { uri ->
                         clicked = false
-                        val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString(), savedUri1.toString(), qrInfo = qrId)
-                        findNavController().navigate(action)
+                        uploadImageToStorage(uri) { downloadUri ->
+                            imageUrls.add(downloadUri)
+                            uploadImageToStorage(savedUri1!!) { downloadUri1 ->
+                                imageUrls.add(downloadUri1)
+                                val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(imageUrls.get(0).toString(), imageUrls.get(1).toString(), qrInfo = qrId)
+                                findNavController().navigate(action)
+                            }
+                        }
                     }
                 }
             }
@@ -142,7 +153,6 @@ class CameraFragment : Fragment() {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val uri = Uri.fromFile(photoFile)
                     onImageSaved(uri)
-//                    Toast.makeText(requireContext(), "Photo saved: $uri", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -150,6 +160,20 @@ class CameraFragment : Fragment() {
                     Toast.makeText(requireContext(), "Photo capture failed", Toast.LENGTH_SHORT).show()
                 }
             })
+    }
+
+    private fun uploadImageToStorage(fileUri: Uri, onSuccess: (Uri) -> Unit) {
+        val storageRef = storage.reference.child("images/${fileUri.lastPathSegment}")
+        storageRef.putFile(fileUri)
+            .addOnSuccessListener { taskSnapshot ->
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    onSuccess(uri)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Image upload failed", e)
+                Toast.makeText(requireContext(), "Image upload failed", Toast.LENGTH_SHORT).show()
+            }
     }
 
     @OptIn(ExperimentalGetImage::class)
@@ -191,6 +215,7 @@ class CameraFragment : Fragment() {
             apply()
         }
     }
+
     private fun loadQRCodeContent(): String? {
         val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
         return sharedPref.getString("qr_code_content", null)

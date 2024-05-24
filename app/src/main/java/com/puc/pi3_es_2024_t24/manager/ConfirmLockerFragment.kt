@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
@@ -13,16 +14,16 @@ import android.nfc.Tag
 import android.nfc.tech.Ndef
 import android.os.Bundle
 import android.util.Log
-import android.net.Uri
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import com.bumptech.glide.Glide
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentConfirmLockerBinding
 import com.puc.pi3_es_2024_t24.models.NfcTag
@@ -34,17 +35,18 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class ConfirmLockerFragment : Fragment() {
-    private lateinit var binding:FragmentConfirmLockerBinding
-    private lateinit var bindingNfc : DialogNfcBinding
+    private lateinit var binding: FragmentConfirmLockerBinding
+    private lateinit var bindingNfc: DialogNfcBinding
     private var nfcAdapter: NfcAdapter? = null
-    private lateinit var dialog:Dialog
+    private lateinit var dialog: Dialog
     private lateinit var nfcTag: NfcTag
     private lateinit var clientId: String
-    private lateinit var unityId : String
-    private lateinit var time : Number
+    private lateinit var unityId: String
+    private lateinit var time: Number
     private val db = Firebase.firestore
-    private lateinit var armarioId : String
-  
+    private lateinit var armarioId: String
+    private val imageUrls = mutableListOf<String>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,27 +55,26 @@ class ConfirmLockerFragment : Fragment() {
         binding = FragmentConfirmLockerBinding.inflate(inflater, container, false)
         val args = ConfirmLockerFragmentArgs.fromBundle(requireArguments())
         val argQr = args.qrInfo
-        if (argQr != "null"){
+        if (argQr != "null") {
             val json = argQr?.let { JSONObject(it) }
             clientId = json?.getString("clientId").toString()
             unityId = json?.getString("markerId").toString()
             val ti = json?.getString("payOption").toString()
             time = ti.toLong()
             fetchClientInfo(clientId)
-
         }
         bindingNfc = DialogNfcBinding.inflate(layoutInflater)
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
         nfcTag = NfcTag("write")
 
-        binding.btnEnd.setOnClickListener{
+        binding.btnEnd.setOnClickListener {
             showNfc()
         }
 
-
         return binding.root
     }
+
     private fun fetchClientInfo(clientId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             db.collection("pessoas").document(clientId).get()
@@ -84,7 +85,6 @@ class ConfirmLockerFragment : Fragment() {
                         binding.etName.text = name
                         binding.etEmail.text = email
                         getPrice()
-                    } else {
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -92,17 +92,22 @@ class ConfirmLockerFragment : Fragment() {
                 }
         }
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args = ConfirmLockerFragmentArgs.fromBundle(requireArguments())
         val argUri1 = args.photoUri
         val argUri2 = args.photoUri1
+        imageUrls.add(argUri1)
+        imageUrls.add(argUri1)
         if (argUri1 != "noImg") {
-            val igm1 = Uri.parse(argUri1)
-            binding.img1.setImageURI(igm1)
+            Glide.with(this)
+                .load(argUri1)
+                .into(binding.img1)
             if (argUri2 != "noImg") {
-                val igm2 = Uri.parse(argUri2)
-                binding.img2.setImageURI(igm2)
+                Glide.with(this)
+                    .load(argUri2)
+                    .into(binding.img2)
                 binding.img2.visibility = View.VISIBLE
             }
         }
@@ -148,7 +153,7 @@ class ConfirmLockerFragment : Fragment() {
         dialog.show()
     }
 
-        fun newIntent(intent: Intent) {
+    fun newIntent(intent: Intent) {
         if (!isAdded) return
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action ||
             NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action ||
@@ -186,7 +191,6 @@ class ConfirmLockerFragment : Fragment() {
                     bindingNfc.tvNfc.text = "NFC ENCONTRADO. Escrevendo..."
                     navigateToSuccess()
                     dialog.dismiss()
-
                 }
             } catch (e: Exception) {
                 Log.d("WriteNFC", "Erro ao tentar escrever no nfc!")
@@ -206,14 +210,16 @@ class ConfirmLockerFragment : Fragment() {
             }
         }
     }
-private fun navigateToSuccess(){
-    val name = binding.etName.text
-    val email = binding.etEmail.text
-    val action = ConfirmLockerFragmentDirections.actionConfirmLockerFragmentToLocationSuccessFragment(
-        name.toString(), email.toString()
-    )
-    findNavController().navigate(action)
-}
+
+    private fun navigateToSuccess() {
+        val name = binding.etName.text
+        val email = binding.etEmail.text
+        val action = ConfirmLockerFragmentDirections.actionConfirmLockerFragmentToLocationSuccessFragment(
+            name.toString(), email.toString()
+        )
+        findNavController().navigate(action)
+    }
+
     private fun getPrice() {
         CoroutineScope(Dispatchers.IO).launch {
             db.collection("unidades")
@@ -258,6 +264,7 @@ private fun navigateToSuccess(){
                         armarioId = docId
                         Toast.makeText(requireContext(), "armario $armarioId", Toast.LENGTH_SHORT).show()
 
+
                         // Atualizar o documento adicionando o campo "caucao" e alterando o "status"
                         db.collection("armarios").document(docId)
                             .update(
@@ -265,7 +272,8 @@ private fun navigateToSuccess(){
                                     "caucao" to preco,
                                     "status" to "ocupado",
                                     "horaFinal" to horaFinalString,
-                                    "cliente" to clientId
+                                    "cliente" to clientId,
+                                    "images" to imageUrls
                                 )
                             )
                             .addOnSuccessListener {
@@ -274,6 +282,7 @@ private fun navigateToSuccess(){
                             .addOnFailureListener { e ->
                                 Log.w("Firestore", "Erro ao atualizar documento", e)
                             }
+                        break
                     }
                 }
                 .addOnFailureListener { exception ->

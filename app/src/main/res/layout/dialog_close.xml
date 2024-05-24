@@ -25,13 +25,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <ImageView
-            android:id="@+id/ivPhoto"
-            android:layout_width="200dp"
-            android:layout_height="142dp"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/camera_button" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/ivPhoto"
+                android:layout_width="100dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/camera_button" />
+            <ImageView
+                android:id="@+id/ivPhoto2"
+                android:layout_width="100dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/camera_button" />
+        </LinearLayout>
 
         <TextView
             android:layout_gravity="center"
