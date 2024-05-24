@@ -62,5 +62,9 @@
     <string name="manager_name">Gerente @manager!</string>
     <string name="release_locker">Liberar locação</string>
     <string name="abrir_arm_rio">Abrir armário</string>
+    <string name="fotografia_realizada_com_sucesso">Fotografia realizada com sucesso!</string>
+    <string name="nameuser">nameUser</string>
+    <string name="emailuser">emailUser</string>
+    <string name="finalizar">Finalizar</string>
 
 </resources>
