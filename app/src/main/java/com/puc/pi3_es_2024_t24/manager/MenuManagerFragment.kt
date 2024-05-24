@@ -75,9 +75,9 @@ class MenuManagerFragment : Fragment() {
         }
 
         binding.btnLogOutManager.setOnClickListener {
+            auth.signOut()
             val intent = Intent(requireContext(),MainActivity::class.java)
             startActivity(intent)
-            auth.signOut()
             requireActivity().finish()
         }
         return binding.root
@@ -174,7 +174,7 @@ class MenuManagerFragment : Fragment() {
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
                         loadClientInfo(clientId)
                         bindingNfc.btnCloseNfc.isActivated = false
-                        findNavController().navigate(R.id.action_menuManagerFragment_to_releaseLockerFragment)
+
                     }
                 }
             }

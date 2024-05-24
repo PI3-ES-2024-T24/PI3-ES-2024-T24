@@ -85,26 +85,5 @@
         <action
             android:id="@+id/action_menuManagerFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
-        <action
-            android:id="@+id/action_menuManagerFragment_to_releaseLockerFragment"
-            app:destination="@id/releaseLockerFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/closeLocationFragment"
-        android:name="com.puc.pi3_es_2024_t24.manager.CloseLocationFragment"
-        android:label="fragment_close_location"
-        tools:layout="@layout/fragment_close_location" >
-        <action
-            android:id="@+id/action_closeLocationFragment_to_releaseLockerFragment"
-            app:destination="@id/releaseLockerFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/releaseLockerFragment"
-        android:name="com.puc.pi3_es_2024_t24.manager.ReleaseLockerFragment"
-        android:label="fragment_release_locker"
-        tools:layout="@layout/fragment_release_locker" >
-        <action
-            android:id="@+id/action_releaseLockerFragment_to_closeLocationFragment"
-            app:destination="@id/closeLocationFragment" />
     </fragment>
 </navigation>
