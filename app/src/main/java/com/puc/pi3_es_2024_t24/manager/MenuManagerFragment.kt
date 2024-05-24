@@ -160,7 +160,7 @@ class MenuManagerFragment : Fragment() {
                 } else {
                     ndef.connect()
                     val mimeType = "text/plain"
-                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": "${123123}"}""".toByteArray(Charsets.UTF_8))
+                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": ""}""".toByteArray(Charsets.UTF_8))
                     val ndefMessage = NdefMessage(arrayOf(ndefRecord))
                     ndef.writeNdefMessage(ndefMessage)
                     ndef.close()
@@ -183,8 +183,12 @@ class MenuManagerFragment : Fragment() {
                         clientId = JSONObject(payload).getString("clientId")
                         armarioId = JSONObject(payload).getString("locationId")
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
-                        loadClientInfo(clientId)
-                        dialog.dismiss()
+                        if (clientId != "") {
+                            loadClientInfo(clientId)
+                            dialog.dismiss()
+                        } else {
+                            Toast.makeText(requireContext(), "NFC vazia!", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
@@ -293,6 +297,8 @@ class MenuManagerFragment : Fragment() {
                                 )
                             )
                             .addOnSuccessListener {
+                                nfcTag.method = "write"
+                                dialog.show()
                                 Toast.makeText(requireContext(), "VALOR A SER PAGO : $novoCaucao. Se o valor for menor que a caução é necessário devolver tal" +
                                         "senão é necessário receber tal valor de diferença.", Toast.LENGTH_SHORT).show()
                                 Log.d("Firestore", "Documento atualizado com sucesso!")
