@@ -45,7 +45,6 @@ class ConfirmLockerFragment : Fragment() {
     private lateinit var dialog:Dialog
     private lateinit var nfcTag: NfcTag
     private lateinit var clientId: String
-    private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var unityId : String
     private lateinit var time : Number
     private val db = Firebase.firestore
@@ -56,16 +55,17 @@ class ConfirmLockerFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentConfirmLockerBinding.inflate(inflater, container, false)
+        val args = ConfirmLockerFragmentArgs.fromBundle(requireArguments())
+        val argQr = args.qrInfo
+        if (argQr != "null"){
+            val json = argQr?.let { JSONObject(it) }
+            clientId = json?.getString("clientId").toString()
+            unityId = json?.getString("markerId").toString()
+            val ti = json?.getString("payOption").toString()
+            time = ti.toLong()
 
+        }
         bindingNfc = DialogNfcBinding.inflate(layoutInflater)
-
-        sharedViewModel.unityId.observe(viewLifecycleOwner) { id ->
-            unityId = id
-        }
-
-        sharedViewModel.time.observe(viewLifecycleOwner) { t ->
-            time = t
-        }
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
         nfcTag = NfcTag("write")
@@ -164,7 +164,7 @@ class ConfirmLockerFragment : Fragment() {
                 } else {
                     ndef.connect()
                     val mimeType = "text/plain"
-                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": "${123123}"}""".toByteArray(Charsets.UTF_8))
+                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": "$clientId"}""".toByteArray(Charsets.UTF_8))
                     val ndefMessage = NdefMessage(arrayOf(ndefRecord))
                     ndef.writeNdefMessage(ndefMessage)
                     ndef.close()

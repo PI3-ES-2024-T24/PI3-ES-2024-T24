@@ -36,14 +36,17 @@ class ManagerActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.let {
-            if (NfcAdapter.ACTION_NDEF_DISCOVERED == it.action ||
-                NfcAdapter.ACTION_TECH_DISCOVERED == it.action ||
+            if (NfcAdapter.ACTION_NDEF_DISCOVERED == it.action||
+                NfcAdapter.ACTION_TECH_DISCOVERED == it.action||
                 NfcAdapter.ACTION_TAG_DISCOVERED == it.action) {
-                val fragment = supportFragmentManager.findFragmentById(androidx.navigation.fragment.R.id.nav_host_fragment_container)
-                fragment?.let {
-                    when (it) {
-                        is ConfirmLockerFragment -> it.newIntent(intent)
-                        is MenuManagerFragment -> it.newIntent(intent)
+
+                val navHostFragment = supportFragmentManager.findFragmentById(R.id.navManagerFragmentContainerView) as NavHostFragment
+                val currentFragment = navHostFragment.childFragmentManager.primaryNavigationFragment
+
+                currentFragment?.let { fragment ->
+                    when (fragment) {
+                        is ConfirmLockerFragment -> fragment.newIntent(intent)
+                        is MenuManagerFragment -> fragment.newIntent(intent)
                         else -> Log.d("NFC", "Fragmento desconhecido")
                     }
                 }
