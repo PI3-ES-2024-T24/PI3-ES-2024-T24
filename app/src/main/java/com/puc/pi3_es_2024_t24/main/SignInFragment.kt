@@ -17,6 +17,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignInBinding
+import com.puc.pi3_es_2024_t24.manager.ManagerActivity
 
 class SignInFragment : Fragment() {
 
@@ -80,10 +81,15 @@ class SignInFragment : Fragment() {
                 val user = auth.currentUser
                 if (user?.isEmailVerified == true) {
                     checkIfAdmin { isAdmin ->
-                        findNavController().navigate(
-                            if (isAdmin) R.id.action_signInFragment_to_nav_manager
-                            else R.id.action_signInFragment_to_nav_client
-                        )
+                        if (isAdmin) {
+                            val intent = Intent(requireContext(), ManagerActivity::class.java)
+                            startActivity(intent)
+                            requireActivity().finish()
+                        } else {
+                            findNavController().navigate(
+                                R.id.action_signInFragment_to_nav_client
+                            )
+                        }
                     }
                 } else {
                     Toast.makeText(requireContext(), "Conta não verificada, verifique no seu email", Toast.LENGTH_SHORT).show()
