@@ -30,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogCloseBinding
+import com.puc.pi3_es_2024_t24.databinding.DialogCloseLockerBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogReleaseBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentMenuManagerBinding
@@ -45,7 +46,6 @@ import java.time.temporal.ChronoUnit
 
 class MenuManagerFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
-
     private lateinit var binding: FragmentMenuManagerBinding
     private lateinit var nfcTag: NfcTag
     private lateinit var dialog: Dialog
@@ -54,12 +54,15 @@ class MenuManagerFragment : Fragment() {
     private lateinit var bindingNfc : DialogNfcBinding
     private lateinit var bindingRelease : DialogReleaseBinding
     private lateinit var bindingClose : DialogCloseBinding
+    private lateinit var bindingConfirm: DialogCloseLockerBinding
     private lateinit var armarioId : String
     private var nfcAdapter: NfcAdapter? = null
     private lateinit var novoCaucao : Number
     private lateinit var dialogRelease:Dialog
     private lateinit var dialogClose:Dialog
+  
     private val imageUrls = mutableListOf<String>()
+    private lateinit var confirmCloseDialog:Dialog
     private val db = Firebase.firestore
 
 
@@ -67,11 +70,11 @@ class MenuManagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         auth = Firebase.auth
+        val managerName = auth.currentUser?.email
         binding = FragmentMenuManagerBinding.inflate(inflater, container, false)
-
         nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
+        binding.txtManager.text = managerName
         nfcTag = NfcTag("")
 
         binding.btnReleaseLocker.setOnClickListener {
@@ -236,6 +239,7 @@ class MenuManagerFragment : Fragment() {
 
         bindingRelease.btnOpen.setOnClickListener {
             Toast.makeText(requireContext(), "Armário aberto!", Toast.LENGTH_SHORT).show()
+            confirmCloseDialog()
             // ABRIR MOMENTANEAMENTE
         }
 
@@ -281,6 +285,26 @@ class MenuManagerFragment : Fragment() {
 
         dialogClose.show()
     }
+    private fun confirmCloseDialog() {
+        if (!isAdded) return
+        confirmCloseDialog = Dialog(requireContext())
+        confirmCloseDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        confirmCloseDialog.setCancelable(false)
+        confirmCloseDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        bindingConfirm = DialogCloseLockerBinding.inflate(layoutInflater)
+        confirmCloseDialog.setContentView(bindingConfirm.root)
+
+        bindingConfirm.btnClose.setOnClickListener {
+            // ENCERRAR LOCAÇÃO
+            Toast.makeText(requireContext(), "Armário fechado!", Toast.LENGTH_SHORT).show()
+            confirmCloseDialog.dismiss()
+        }
+
+
+        confirmCloseDialog.show()
+    }
+    
 
     private fun closeLocker(armarioId: String) {
         CoroutineScope(Dispatchers.IO).launch {

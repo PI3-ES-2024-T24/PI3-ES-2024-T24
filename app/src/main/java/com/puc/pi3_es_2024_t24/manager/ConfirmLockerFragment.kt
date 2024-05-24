@@ -204,7 +204,6 @@ class ConfirmLockerFragment : Fragment() {
                         Log.d("TAG", "NDEF RECORD : $payload")
                         clientId = JSONObject(payload).getString("clientId")
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
-                        Toast.makeText(requireContext(), "ID DO CLIENTE: $clientId", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -262,7 +261,6 @@ class ConfirmLockerFragment : Fragment() {
                         val horaFinalString = horaFinal.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
                         armarioId = docId
-                        Toast.makeText(requireContext(), "armario $armarioId", Toast.LENGTH_SHORT).show()
 
 
                         // Atualizar o documento adicionando o campo "caucao" e alterando o "status"
