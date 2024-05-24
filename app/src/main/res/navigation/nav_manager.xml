@@ -36,6 +36,11 @@
             android:name="photoUri1"
             app:argType="string"
             android:defaultValue="noImg" />
+        <argument
+            android:name="qrInfo"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
         <action
             android:id="@+id/action_confirmLockerFragment_to_locationSuccessFragment"
             app:destination="@id/locationSuccessFragment" />

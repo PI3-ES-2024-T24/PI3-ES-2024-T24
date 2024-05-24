@@ -1,6 +1,7 @@
 package com.puc.pi3_es_2024_t24.utils
 
 import android.Manifest
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -58,10 +59,13 @@ class CameraFragment : Fragment() {
         }
 
         binding.btnTakePhoto.setOnClickListener {
+            val qrId = loadQRCodeContent()
+            Toast.makeText(requireContext(), "$qrId", Toast.LENGTH_SHORT).show()
+
             if (argAccess == 1) {
                 takePhoto { uri ->
                     savedUri = uri
-                    val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString()    )
+                    val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString(), qrInfo = qrId)
                     findNavController().navigate(action)
                     Toast.makeText(requireContext(), "Photo taken", Toast.LENGTH_SHORT).show()
                 }
@@ -75,7 +79,7 @@ class CameraFragment : Fragment() {
                 } else {
                     takePhoto { uri ->
                         clicked = false
-                        val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString(), savedUri1.toString())
+                        val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString(), savedUri1.toString(), qrInfo = qrId)
                         findNavController().navigate(action)
                     }
                 }
@@ -162,7 +166,10 @@ class CameraFragment : Fragment() {
                             val qrCodeValue = barcode.rawValue
                             Log.d(TAG, "Barcode value: $qrCodeValue")
                             navigationQrCode(qrCodeValue)
-                            qrCodeProcessed = true 
+                            qrCodeProcessed = true
+                            if (qrCodeValue != null) {
+                                saveQRCodeContent(qrCodeValue)
+                            }
                             break
                         }
                         imageProxy.close()
@@ -179,6 +186,17 @@ class CameraFragment : Fragment() {
         }
     }
 
+    private fun saveQRCodeContent(content: String) {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("qr_code_content", content)
+            apply()
+        }
+    }
+    private fun loadQRCodeContent(): String? {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        return sharedPref.getString("qr_code_content", null)
+    }
 
     private fun navigationQrCode(qr: String?) {
         val action = CameraFragmentDirections.actionCameraFragmentToClientAccessFragment(qrCodeInfo = qr)
