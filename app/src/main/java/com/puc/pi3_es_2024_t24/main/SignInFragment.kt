@@ -17,7 +17,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentSignInBinding
-import com.puc.pi3_es_2024_t24.manager.ManagerActivity
 
 class SignInFragment : Fragment() {
 
