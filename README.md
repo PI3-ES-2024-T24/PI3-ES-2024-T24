@@ -27,6 +27,11 @@
 * E-mail - henricostarios@gmail.com
 * senha - henri123
   
+#### Manager login
+
+* E-mail - jorgeggez109@gmail.com
+* senha - henri123
+  
 # ENDPOINTS
 
 **Contents**
