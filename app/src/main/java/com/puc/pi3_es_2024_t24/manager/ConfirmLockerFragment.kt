@@ -14,23 +14,18 @@ import android.nfc.tech.Ndef
 import android.os.Bundle
 import android.util.Log
 import android.net.Uri
-import android.os.Build
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentConfirmLockerBinding
 import com.puc.pi3_es_2024_t24.models.NfcTag
-import com.puc.pi3_es_2024_t24.models.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -261,6 +256,8 @@ private fun navigateToSuccess(){
                         val horaFinalString = horaFinal.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
                         armarioId = docId
+                        Toast.makeText(requireContext(), "armario $armarioId", Toast.LENGTH_SHORT).show()
+
                         // Atualizar o documento adicionando o campo "caucao" e alterando o "status"
                         db.collection("armarios").document(docId)
                             .update(

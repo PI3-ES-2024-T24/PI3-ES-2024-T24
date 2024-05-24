@@ -60,14 +60,13 @@ class CameraFragment : Fragment() {
 
         binding.btnTakePhoto.setOnClickListener {
             val qrId = loadQRCodeContent()
-            Toast.makeText(requireContext(), "$qrId", Toast.LENGTH_SHORT).show()
 
             if (argAccess == 1) {
                 takePhoto { uri ->
                     savedUri = uri
                     val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString(), qrInfo = qrId)
                     findNavController().navigate(action)
-                    Toast.makeText(requireContext(), "Photo taken", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "Photo taken", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 if (!clicked) {
@@ -92,7 +91,6 @@ class CameraFragment : Fragment() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted ->
             if (isGranted) {
-                Toast.makeText(requireContext(), "Camera permission granted", Toast.LENGTH_SHORT).show()
                 startCamera()
             } else {
                 Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show()
@@ -144,7 +142,7 @@ class CameraFragment : Fragment() {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val uri = Uri.fromFile(photoFile)
                     onImageSaved(uri)
-                    Toast.makeText(requireContext(), "Photo saved: $uri", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "Photo saved: $uri", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onError(exception: ImageCaptureException) {
