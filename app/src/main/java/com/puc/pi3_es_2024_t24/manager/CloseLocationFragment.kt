@@ -29,6 +29,7 @@ class CloseLocationFragment : Fragment() {
 
         binding.btnClose.setOnClickListener{
             // ENCERRAR LOCAÇÃO
+            encerrarLocacao()
         }
 
         binding.btnBack.setOnClickListener{
@@ -39,4 +40,7 @@ class CloseLocationFragment : Fragment() {
     }
 
     // TODO - ENCERRAR LOCAÇÃO E CALCULAR PREÇO
+    private fun encerrarLocacao() {
+
+    }
 }

@@ -14,18 +14,29 @@ import android.nfc.tech.Ndef
 import android.os.Bundle
 import android.util.Log
 import android.net.Uri
+import android.os.Build
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentConfirmLockerBinding
 import com.puc.pi3_es_2024_t24.models.NfcTag
+import com.puc.pi3_es_2024_t24.models.SharedViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ConfirmLockerFragment : Fragment() {
     private lateinit var binding:FragmentConfirmLockerBinding
@@ -34,6 +45,10 @@ class ConfirmLockerFragment : Fragment() {
     private lateinit var dialog:Dialog
     private lateinit var nfcTag: NfcTag
     private lateinit var clientId: String
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+    private lateinit var unityId : String
+    private lateinit var time : Number
+    private val db = Firebase.firestore
   
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +58,14 @@ class ConfirmLockerFragment : Fragment() {
         binding = FragmentConfirmLockerBinding.inflate(inflater, container, false)
 
         bindingNfc = DialogNfcBinding.inflate(layoutInflater)
+
+        sharedViewModel.unityId.observe(viewLifecycleOwner) { id ->
+            unityId = id
+        }
+
+        sharedViewModel.time.observe(viewLifecycleOwner) { t ->
+            time = t
+        }
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
         nfcTag = NfcTag("write")
@@ -131,7 +154,7 @@ class ConfirmLockerFragment : Fragment() {
                     ndef.writeNdefMessage(ndefMessage)
                     ndef.close()
                     bindingNfc.tvNfc.text = "NFC ENCONTRADO. Escrevendo..."
-                    Toast.makeText(requireContext(), "NFC registrado com sucesso!", Toast.LENGTH_SHORT).show()
+                    getPrice()
                     findNavController().navigate(R.id.action_confirmLockerFragment_to_locationSuccessFragment)
                     dialog.dismiss()
 
@@ -155,5 +178,70 @@ class ConfirmLockerFragment : Fragment() {
         }
     }
 
-    // TODO - REGISTRAR CAUÇÃO
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getPrice() {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.collection("unidades")
+                .whereEqualTo("unityId", unityId)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        // Obter o campo 'precos' que é esperado ser um Map ou um Document
+                        val precos = document.get("precos") as? Map<String, Any>
+
+                        val preco = precos?.get("$time")
+
+                        // Verifique se o valor não é nulo e faça algo com ele
+                        if (preco != null) {
+                            // Faça algo com o preço
+                            registerCaucao(preco as Number, time as Long)
+                        } else {
+                            Log.d("Firestore", "Campo '$time' não encontrado em 'precos'")
+                        }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("Firestore", "Erro ao obter documentos: ", exception)
+                }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun registerCaucao(preco: Number, time: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.collection("armarios")
+                .whereEqualTo("status", "disponivel")
+                .whereEqualTo("unityId", unityId)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val docId = document.id
+
+                        // Obter a hora atual e adicionar o tempo em minutos
+                        val horaFinal = LocalDateTime.now().plusMinutes(time)
+                        val horaFinalString = horaFinal.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+                        // Atualizar o documento adicionando o campo "caucao" e alterando o "status"
+                        db.collection("armarios").document(docId)
+                            .update(
+                                mapOf(
+                                    "caucao" to preco,
+                                    "status" to "ocupado",
+                                    "horaFinal" to horaFinalString,
+                                    "cliente" to clientId
+                                )
+                            )
+                            .addOnSuccessListener {
+                                Log.d("Firestore", "Documento atualizado com sucesso!")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w("Firestore", "Erro ao atualizar documento", e)
+                            }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("Firestore", "Erro ao obter documentos: ", exception)
+                }
+        }
+    }
 }
