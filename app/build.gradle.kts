@@ -75,6 +75,8 @@ dependencies {
     implementation ("androidx.camera:camera-view:${cameraxVersion}")
     implementation ("androidx.camera:camera-extensions:${cameraxVersion}")
     implementation ("com.google.mlkit:barcode-scanning:17.2.0")
+    implementation ("com.google.firebase:firebase-storage-ktx:20.0.0")
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
 
 
 

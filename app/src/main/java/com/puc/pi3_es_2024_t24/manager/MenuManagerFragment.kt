@@ -22,6 +22,7 @@ import android.view.Window
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -59,8 +60,9 @@ class MenuManagerFragment : Fragment() {
     private lateinit var novoCaucao : Number
     private lateinit var dialogRelease:Dialog
     private lateinit var dialogClose:Dialog
+  
+    private val imageUrls = mutableListOf<String>()
     private lateinit var confirmCloseDialog:Dialog
-
     private val db = Firebase.firestore
 
 
@@ -162,7 +164,7 @@ class MenuManagerFragment : Fragment() {
                 } else {
                     ndef.connect()
                     val mimeType = "text/plain"
-                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": "${123123}"}""".toByteArray(Charsets.UTF_8))
+                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": "vazio"}""".toByteArray(Charsets.UTF_8))
                     val ndefMessage = NdefMessage(arrayOf(ndefRecord))
                     ndef.writeNdefMessage(ndefMessage)
                     ndef.close()
@@ -183,10 +185,21 @@ class MenuManagerFragment : Fragment() {
                         val payload = String(record.payload)
                         Log.d("TAG", "NDEF RECORD : $payload")
                         clientId = JSONObject(payload).getString("clientId")
+                        if (clientId == "vazio") {
+                            Toast.makeText(requireContext(), "NFC vazia!", Toast.LENGTH_SHORT).show()
+                            return
+                        }
                         armarioId = JSONObject(payload).getString("locationId")
-                        bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
+                        loadLocker()
                         loadClientInfo(clientId)
                         dialog.dismiss()
+                        bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
+                        if (clientId != "vazio") {
+                            loadClientInfo(clientId)
+                            dialog.dismiss()
+                        } else {
+                            Toast.makeText(requireContext(), "NFC vazia!", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
@@ -218,6 +231,11 @@ class MenuManagerFragment : Fragment() {
 
         bindingRelease = DialogReleaseBinding.inflate(layoutInflater)
         dialogRelease.setContentView(bindingRelease.root)
+        bindingRelease.tvUserName.text = clientName
+        Glide.with(requireContext()).load(imageUrls.get(0)).into(bindingRelease.ivPhoto)
+        if (imageUrls.get(1) != "") {
+        Glide.with(requireContext()).load(imageUrls.get(1)).into(bindingRelease.ivPhoto2)
+        }
 
         bindingRelease.btnOpen.setOnClickListener {
             Toast.makeText(requireContext(), "Armário aberto!", Toast.LENGTH_SHORT).show()
@@ -248,6 +266,12 @@ class MenuManagerFragment : Fragment() {
 
         bindingClose = DialogCloseBinding.inflate(layoutInflater)
         dialogClose.setContentView(bindingClose.root)
+        bindingClose.tvUserName.text = clientName
+
+        Glide.with(requireContext()).load(imageUrls.get(0)).into(bindingClose.ivPhoto)
+        if (imageUrls.get(1) != "") {
+            Glide.with(requireContext()).load(imageUrls.get(1)).into(bindingClose.ivPhoto2)
+        }
 
         bindingClose.btnClose.setOnClickListener {
             // ENCERRAR LOCAÇÃO
@@ -316,6 +340,10 @@ class MenuManagerFragment : Fragment() {
                                 )
                             )
                             .addOnSuccessListener {
+                                nfcTag.method = "write"
+                                dialog.show()
+                                dialogClose.dismiss()
+                                dialogRelease.dismiss()
                                 Toast.makeText(requireContext(), "VALOR A SER PAGO : $novoCaucao. Se o valor for menor que a caução é necessário devolver tal" +
                                         "senão é necessário receber tal valor de diferença.", Toast.LENGTH_SHORT).show()
                                 Log.d("Firestore", "Documento atualizado com sucesso!")
@@ -326,6 +354,29 @@ class MenuManagerFragment : Fragment() {
                     } else {
                         Log.w("Firestore", "Documento não contém os campos necessários")
                     }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("Firestore", "Erro ao obter documento: ", exception)
+                }
+        }
+    }
+
+    private fun loadLocker() {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.collection("armarios").document(armarioId).get()
+                .addOnSuccessListener { document ->
+                    // Obter o campo 'images' como uma lista de strings
+                    val images = document.get("images") as? List<String>
+
+                    if (images != null) {
+                        if (images[0] != null) {
+                            imageUrls.add(images[0])
+                        }
+                        if (images[1] != null) {
+                            imageUrls.add(images[1])
+                        }
+                    }
+
                 }
                 .addOnFailureListener { exception ->
                     Log.d("Firestore", "Erro ao obter documento: ", exception)
