@@ -56,6 +56,8 @@ class MenuManagerFragment : Fragment() {
     private lateinit var armarioId : String
     private var nfcAdapter: NfcAdapter? = null
     private lateinit var novoCaucao : Number
+    private lateinit var dialogRelease:Dialog
+    private lateinit var dialogClose:Dialog
 
     private val db = Firebase.firestore
 
@@ -129,7 +131,6 @@ class MenuManagerFragment : Fragment() {
         dialog.show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun newIntent(intent: Intent) {
         if (!isAdded) return
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action ||
@@ -148,7 +149,6 @@ class MenuManagerFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun verificarTag(intent: Intent, tag: Tag) {
         if (!isAdded) return
 
@@ -184,15 +184,13 @@ class MenuManagerFragment : Fragment() {
                         armarioId = JSONObject(payload).getString("locationId")
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
                         loadClientInfo(clientId)
-                        bindingNfc.btnCloseNfc.isActivated = false
-
+                        dialog.dismiss()
                     }
                 }
             }
         }
 
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun loadClientInfo(clientId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -209,16 +207,15 @@ class MenuManagerFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun releaseLockerDialog() {
         if (!isAdded) return
-        dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialogRelease = Dialog(requireContext())
+        dialogRelease.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogRelease.setCancelable(false)
+        dialogRelease.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         bindingRelease = DialogReleaseBinding.inflate(layoutInflater)
-        dialog.setContentView(bindingRelease.root)
+        dialogRelease.setContentView(bindingRelease.root)
 
         bindingRelease.btnOpen.setOnClickListener {
             Toast.makeText(requireContext(), "Armário aberto!", Toast.LENGTH_SHORT).show()
@@ -226,42 +223,42 @@ class MenuManagerFragment : Fragment() {
         }
 
         bindingRelease.btnClose.setOnClickListener {
-            dialog.dismiss()
-            // ABRIR NOVO DIALOG DE ENCERRAR LOCAÇÃO
             closeLockerDialog()
+            dialogRelease.dismiss()
+            // ABRIR NOVO DIALOG DE ENCERRAR LOCAÇÃO
+
         }
 
         bindingRelease.btnBack.setOnClickListener {
-            dialog.dismiss()
+            dialogRelease.dismiss()
         }
 
-        dialog.show()
+        dialogRelease.show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun closeLockerDialog() {
         if (!isAdded) return
-        dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialogClose = Dialog(requireContext())
+        dialogClose.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogClose.setCancelable(false)
+        dialogClose.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         bindingClose = DialogCloseBinding.inflate(layoutInflater)
-        dialog.setContentView(bindingClose.root)
+        dialogClose.setContentView(bindingClose.root)
 
         bindingClose.btnClose.setOnClickListener {
             // ENCERRAR LOCAÇÃO
             closeLocker(armarioId)
         }
 
-        bindingRelease.btnBack.setOnClickListener {
-            dialog.dismiss()
+        bindingClose.btnBack.setOnClickListener {
+            dialogClose.dismiss()
+            dialogRelease.show()
         }
 
-        dialog.show()
+        dialogClose.show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun closeLocker(armarioId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             db.collection("armarios").document(armarioId).get()
