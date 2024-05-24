@@ -48,6 +48,7 @@ class ConfirmLockerFragment : Fragment() {
     private lateinit var unityId : String
     private lateinit var time : Number
     private val db = Firebase.firestore
+    private lateinit var armarioId : String
   
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,19 +80,22 @@ class ConfirmLockerFragment : Fragment() {
         return binding.root
     }
     private fun fetchClientInfo(clientId: String) {
-        db.collection("pessoas").document(clientId).get()
-            .addOnSuccessListener { document ->
-                if (document != null && document.exists()) {
-                    val name = document.getString("nome_completo")
-                    val email = document.getString("email")
-                    binding.etName.text = name
-                    binding.etEmail.text = email
-                } else {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.collection("pessoas").document(clientId).get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val name = document.getString("nome_completo")
+                        val email = document.getString("email")
+                        binding.etName.text = name
+                        binding.etEmail.text = email
+                        getPrice()
+                    } else {
+                    }
                 }
-            }
-            .addOnFailureListener { exception ->
-                // Handle any errors
-            }
+                .addOnFailureListener { exception ->
+                    // Handle any errors
+                }
+        }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -180,12 +184,11 @@ class ConfirmLockerFragment : Fragment() {
                 } else {
                     ndef.connect()
                     val mimeType = "text/plain"
-                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": "$clientId"}""".toByteArray(Charsets.UTF_8))
+                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": "$clientId", "locationId": "$armarioId"}""".toByteArray(Charsets.UTF_8))
                     val ndefMessage = NdefMessage(arrayOf(ndefRecord))
                     ndef.writeNdefMessage(ndefMessage)
                     ndef.close()
                     bindingNfc.tvNfc.text = "NFC ENCONTRADO. Escrevendo..."
-                    getPrice()
                     navigateToSuccess()
                     dialog.dismiss()
 
@@ -257,6 +260,7 @@ private fun navigateToSuccess(){
                         val horaFinal = LocalDateTime.now().plusMinutes(time)
                         val horaFinalString = horaFinal.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
+                        armarioId = docId
                         // Atualizar o documento adicionando o campo "caucao" e alterando o "status"
                         db.collection("armarios").document(docId)
                             .update(

@@ -85,5 +85,12 @@
         <action
             android:id="@+id/action_menuManagerFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_menuManagerFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.puc.pi3_es_2024_t24.main.SignInFragment"
+        android:label="SignInFragment" />
 </navigation>

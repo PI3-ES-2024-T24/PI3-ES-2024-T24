@@ -11,6 +11,7 @@ import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.Ndef
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -19,6 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -37,6 +39,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class MenuManagerFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
@@ -49,7 +54,9 @@ class MenuManagerFragment : Fragment() {
     private lateinit var bindingNfc : DialogNfcBinding
     private lateinit var bindingRelease : DialogReleaseBinding
     private lateinit var bindingClose : DialogCloseBinding
+    private lateinit var armarioId : String
     private var nfcAdapter: NfcAdapter? = null
+    private lateinit var novoCaucao : Number
 
     private val db = Firebase.firestore
 
@@ -76,9 +83,11 @@ class MenuManagerFragment : Fragment() {
 
         binding.btnLogOutManager.setOnClickListener {
             auth.signOut()
-            val intent = Intent(requireContext(),MainActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()
+            CoroutineScope(Dispatchers.IO).launch {
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            }
         }
         return binding.root
     }
@@ -121,6 +130,7 @@ class MenuManagerFragment : Fragment() {
         dialog.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun newIntent(intent: Intent) {
         if (!isAdded) return
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action ||
@@ -139,6 +149,7 @@ class MenuManagerFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun verificarTag(intent: Intent, tag: Tag) {
         if (!isAdded) return
 
@@ -171,6 +182,7 @@ class MenuManagerFragment : Fragment() {
                         val payload = String(record.payload)
                         Log.d("TAG", "NDEF RECORD : $payload")
                         clientId = JSONObject(payload).getString("clientId")
+                        armarioId = JSONObject(payload).getString("locationId")
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
                         loadClientInfo(clientId)
                         bindingNfc.btnCloseNfc.isActivated = false
@@ -181,6 +193,7 @@ class MenuManagerFragment : Fragment() {
         }
 
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun loadClientInfo(clientId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -197,6 +210,7 @@ class MenuManagerFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun releaseLockerDialog() {
         if (!isAdded) return
         dialog = Dialog(requireContext())
@@ -225,6 +239,7 @@ class MenuManagerFragment : Fragment() {
         dialog.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun closeLockerDialog() {
         if (!isAdded) return
         dialog = Dialog(requireContext())
@@ -237,13 +252,65 @@ class MenuManagerFragment : Fragment() {
 
         bindingClose.btnClose.setOnClickListener {
             // ENCERRAR LOCAÇÃO
+            closeLocker(armarioId)
         }
 
         bindingRelease.btnBack.setOnClickListener {
             dialog.dismiss()
-            releaseLockerDialog()
         }
 
         dialog.show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun closeLocker(armarioId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.collection("armarios").document(armarioId).get()
+                .addOnSuccessListener { document ->
+                    val horaFinalString = document.getString("horaFinal")
+                    val caucao = document.getDouble("caucao")
+                    if (horaFinalString != null && caucao != null) {
+                        val horaFinal = LocalDateTime.parse(horaFinalString, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                        val agora = LocalDateTime.now()
+
+                        val minutosDiferenca = ChronoUnit.MINUTES.between(agora, horaFinal)
+
+                        novoCaucao = if (minutosDiferenca < 0) {
+                            // Se o horaFinal for menor que agora, calcule a penalidade
+                            caucao + minutosDiferenca // minutosDiferenca será negativo
+                        } else {
+                            if (minutosDiferenca > 0) {
+                                caucao - minutosDiferenca
+                            } else {
+                                caucao
+                            }
+                        }
+
+                        // Atualizar os campos do documento
+                        db.collection("armarios").document(armarioId)
+                            .update(
+                                mapOf(
+                                    "caucao" to 0,
+                                    "cliente" to "",
+                                    "horaFinal" to "",
+                                    "status" to "disponivel"
+                                )
+                            )
+                            .addOnSuccessListener {
+                                Toast.makeText(requireContext(), "VALOR A SER PAGO : $novoCaucao. Se o valor for menor que a caução é necessário devolver tal" +
+                                        "senão é necessário receber tal valor de diferença.", Toast.LENGTH_SHORT).show()
+                                Log.d("Firestore", "Documento atualizado com sucesso!")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w("Firestore", "Erro ao atualizar documento", e)
+                            }
+                    } else {
+                        Log.w("Firestore", "Documento não contém os campos necessários")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("Firestore", "Erro ao obter documento: ", exception)
+                }
+        }
     }
 }
