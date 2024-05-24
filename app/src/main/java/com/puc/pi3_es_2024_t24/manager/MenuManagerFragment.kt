@@ -229,6 +229,11 @@ class MenuManagerFragment : Fragment() {
         bindingRelease = DialogReleaseBinding.inflate(layoutInflater)
         dialogRelease.setContentView(bindingRelease.root)
 
+        Glide.with(requireContext()).load(imageUrls.get(0)).into(bindingRelease.ivPhoto)
+        if (imageUrls.get(1) != "") {
+        Glide.with(requireContext()).load(imageUrls.get(1)).into(bindingRelease.ivPhoto2)
+        }
+
         bindingRelease.btnOpen.setOnClickListener {
             Toast.makeText(requireContext(), "Armário aberto!", Toast.LENGTH_SHORT).show()
             // ABRIR MOMENTANEAMENTE
@@ -257,6 +262,11 @@ class MenuManagerFragment : Fragment() {
 
         bindingClose = DialogCloseBinding.inflate(layoutInflater)
         dialogClose.setContentView(bindingClose.root)
+
+        Glide.with(requireContext()).load(imageUrls.get(0)).into(bindingClose.ivPhoto)
+        if (imageUrls.get(1) != "") {
+            Glide.with(requireContext()).load(imageUrls.get(1)).into(bindingClose.ivPhoto2)
+        }
 
         bindingClose.btnClose.setOnClickListener {
             // ENCERRAR LOCAÇÃO
@@ -333,24 +343,15 @@ class MenuManagerFragment : Fragment() {
                     // Obter o campo 'images' como uma lista de strings
                     val images = document.get("images") as? List<String>
 
-                    images?.let {
-                        if (it.isNotEmpty()) {
-                            Glide.with(requireContext())
-                                .load(it[0])
-                                .into(bindingRelease.ivPhoto)
-                            Glide.with(requireContext())
-                                .load(it[0])
-                                .into(bindingClose.ivPhoto)
+                    if (images != null) {
+                        if (images[0] != null) {
+                            imageUrls.add(images[0])
                         }
-                        if (it.size > 1) {
-                            Glide.with(requireContext())
-                                .load(it[1])
-                                .into(bindingRelease.ivPhoto2)
-                            Glide.with(requireContext())
-                                .load(it[1])
-                                .into(bindingClose.ivPhoto2)
+                        if (images[1] != null) {
+                            imageUrls.add(images[1])
                         }
                     }
+
                 }
                 .addOnFailureListener { exception ->
                     Log.d("Firestore", "Erro ao obter documento: ", exception)
