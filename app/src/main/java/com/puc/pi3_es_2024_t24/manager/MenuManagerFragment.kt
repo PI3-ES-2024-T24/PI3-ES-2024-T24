@@ -260,6 +260,7 @@ class MenuManagerFragment : Fragment() {
 
         dialog.show()
     }
+    
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun closeLocker(armarioId: String) {
