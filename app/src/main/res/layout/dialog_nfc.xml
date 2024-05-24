@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="20dp"
+    app:cardBackgroundColor="@color/white"
+    android:layout_marginHorizontal="20dp">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <TextView
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:layout_marginTop="10dp"
+            android:text="Aproxime a pulseira do cliente"
+            android:textColor="@color/blue_gray"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="142dp"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:src="@drawable/nfc_image" />
+
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/tvNfc"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buscando nfc..."/>
+
+        <Button
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:id="@+id/btnCloseNfc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fechar"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

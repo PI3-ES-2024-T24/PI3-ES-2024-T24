@@ -1,10 +1,17 @@
 package com.puc.pi3_es_2024_t24.main
 
+import android.content.Intent
+import android.nfc.NfcAdapter
+import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.puc.pi3_es_2024_t24.R
+import com.puc.pi3_es_2024_t24.manager.ConfirmLockerFragment
 
 class MainActivity : AppCompatActivity() {
 

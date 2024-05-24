@@ -3,30 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_manager"
-    app:startDestination="@id/qrCodeReadFragment">
-
-    <fragment
-        android:id="@+id/qrCodeReadFragment"
-        android:name="com.puc.pi3_es_2024_t24.manager.QrCodeReadFragment"
-        android:label="fragment_qr_code_read"
-        tools:layout="@layout/fragment_qr_code_read">
-        <argument
-            android:name="photoUri"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="null" />
-        <argument
-            android:name="qrCodeInfo"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="null" />
-        <action
-            android:id="@+id/action_qrCodeReadFragment_to_cameraFragment"
-            app:destination="@id/cameraFragment" />
-        <action
-            android:id="@+id/action_qrCodeReadFragment_to_clientPhotoFragment"
-            app:destination="@id/clientPhotoFragment" />
-    </fragment>
+    app:startDestination="@id/menuManagerFragment">
 
     <fragment
         android:id="@+id/cameraFragment"
@@ -38,25 +15,12 @@
             app:argType="integer"
             android:defaultValue="0"/>
         <action
-            android:id="@+id/action_cameraFragment_to_qrCodeReadFragment"
-            app:destination="@id/qrCodeReadFragment"
-            app:popUpTo="@id/qrCodeReadFragment"
-            app:popUpToInclusive="true">
-        </action>
-        <action
             android:id="@+id/action_cameraFragment_to_confirmLockerFragment"
             app:destination="@id/confirmLockerFragment" />
-
-
-    </fragment>
-    <fragment
-        android:id="@+id/clientPhotoFragment"
-        android:name="com.puc.pi3_es_2024_t24.manager.ClientPhotoFragment"
-        android:label="fragment_client_photo"
-        tools:layout="@layout/fragment_client_photo" >
         <action
-            android:id="@+id/action_clientPhotoFragment_to_cameraFragment"
-            app:destination="@id/cameraFragment" />
+            android:id="@+id/action_cameraFragment_to_clientAccessFragment"
+            app:destination="@id/clientAccessFragment" />
+
 
     </fragment>
     <fragment
@@ -72,6 +36,61 @@
             android:name="photoUri1"
             app:argType="string"
             android:defaultValue="noImg" />
+        <argument
+            android:name="qrInfo"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+        <action
+            android:id="@+id/action_confirmLockerFragment_to_locationSuccessFragment"
+            app:destination="@id/locationSuccessFragment" />
 
     </fragment>
+    <fragment
+        android:id="@+id/locationSuccessFragment"
+        android:name="com.puc.pi3_es_2024_t24.manager.LocationSuccessFragment"
+        android:label="fragment_location_success"
+        tools:layout="@layout/fragment_location_success" >
+        <action
+            android:id="@+id/action_locationSuccessFragment_to_menuManagerFragment"
+            app:destination="@id/menuManagerFragment" />
+        <argument
+            android:name="name"
+            app:argType="string"
+            android:defaultValue="etName" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue="etEmail" />
+    </fragment>
+    <fragment
+        android:id="@+id/clientAccessFragment"
+        android:name="com.puc.pi3_es_2024_t24.manager.ClientAccessFragment"
+        android:label="fragment_client_access"
+        tools:layout="@layout/fragment_client_access" >
+        <action
+            android:id="@+id/action_clientAccessFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+        <argument
+            android:name="qrCodeInfo"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+    </fragment>
+    <fragment
+        android:id="@+id/menuManagerFragment"
+        android:name="com.puc.pi3_es_2024_t24.manager.MenuManagerFragment"
+        android:label="fragment_menu_manager"
+        tools:layout="@layout/fragment_menu_manager" >
+        <action
+            android:id="@+id/action_menuManagerFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_menuManagerFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.puc.pi3_es_2024_t24.main.SignInFragment"
+        android:label="SignInFragment" />
 </navigation>

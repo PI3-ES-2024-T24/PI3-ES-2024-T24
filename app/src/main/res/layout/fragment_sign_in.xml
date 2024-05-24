@@ -148,16 +148,17 @@
             app:layout_constraintVertical_bias="0.696" />
 
         <Button
-            android:id="@+id/testCamera"
+            android:id="@+id/testNfc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
-            android:text="Test Camera"
+            android:text="Test nfc"
             app:layout_constraintBottom_toTopOf="@+id/btnRegister"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.797"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnMaps" />
+            app:layout_constraintTop_toBottomOf="@+id/btnMaps"
+            app:layout_constraintVertical_bias="0.578" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

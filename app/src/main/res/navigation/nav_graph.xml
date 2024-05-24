@@ -20,6 +20,9 @@
             app:destination="@id/nav_client"
             app:popUpTo="@id/welcomeFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_welcomeFragment_to_managerActivity"
+            app:destination="@id/managerActivity" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -54,6 +57,9 @@
             app:popUpTo="@id/welcomeFragment"
             app:popUpToInclusive="true"/>
         <action
+            android:id="@+id/action_signInFragment_to_managerActivity"
+            app:destination="@id/managerActivity" />
+        <action
             android:id="@+id/action_signInFragment_to_nav_manager"
             app:destination="@id/nav_manager" />
     </fragment>
@@ -71,6 +77,11 @@
             app:destination="@id/signInFragment" />
     </fragment>
     <include app:graph="@navigation/nav_client" />
+    <activity
+        android:id="@+id/managerActivity"
+        android:name="com.puc.pi3_es_2024_t24.manager.ManagerActivity"
+        android:label="activity_manager"
+        tools:layout="@layout/activity_manager" />
     <include app:graph="@navigation/nav_manager" />
 
 </navigation>
