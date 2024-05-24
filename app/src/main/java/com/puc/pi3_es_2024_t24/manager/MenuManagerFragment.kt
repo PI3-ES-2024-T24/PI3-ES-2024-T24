@@ -258,6 +258,7 @@ class MenuManagerFragment : Fragment() {
 
         dialogClose.show()
     }
+    
 
     private fun closeLocker(armarioId: String) {
         CoroutineScope(Dispatchers.IO).launch {

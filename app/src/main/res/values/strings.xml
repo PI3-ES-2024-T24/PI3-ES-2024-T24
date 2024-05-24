@@ -66,5 +66,7 @@
     <string name="nameuser">nameUser</string>
     <string name="emailuser">emailUser</string>
     <string name="finalizar">Finalizar</string>
+    <string name="fechar">Fechar</string>
+    <string name="fechar_arm_rio_novamente">Fechar armário novamente?</string>
 
 </resources>
