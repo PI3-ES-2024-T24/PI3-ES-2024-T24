@@ -2,7 +2,7 @@
     <string name="app_name">PI3-ES-2024-T24</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome">Bem-vindo ao</string>
-    <string name="appName">LockN\'Live</string>
+    <string name="appName">LockN\'Live...</string>
     <string name="name">Nome Completo</string>
     <string name="email">E-mail</string>
     <string name="cpf">CPF</string>
@@ -58,5 +58,13 @@
     <string name="_2_pessoas">2 pessoas</string>
     <string name="_1_pessoa">1 pessoa</string>
     <string name="rotas">Rotas</string>
+    <string name="welcome_manager">Bem vindo de volta,</string>
+    <string name="manager_name">Gerente @manager!</string>
+    <string name="release_locker">Liberar locação</string>
+    <string name="abrir_arm_rio">Abrir armário</string>
+    <string name="fotografia_realizada_com_sucesso">Fotografia realizada com sucesso!</string>
+    <string name="nameuser">nameUser</string>
+    <string name="emailuser">emailUser</string>
+    <string name="finalizar">Finalizar</string>
 
 </resources>
