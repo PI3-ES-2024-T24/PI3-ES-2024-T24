@@ -61,7 +61,7 @@ class CameraFragment : Fragment() {
             if (argAccess == 1) {
                 takePhoto { uri ->
                     savedUri = uri
-                    val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString())
+                    val action = CameraFragmentDirections.actionCameraFragmentToConfirmLockerFragment(uri.toString()    )
                     findNavController().navigate(action)
                     Toast.makeText(requireContext(), "Photo taken", Toast.LENGTH_SHORT).show()
                 }

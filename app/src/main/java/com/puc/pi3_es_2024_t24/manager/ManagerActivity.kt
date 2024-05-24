@@ -2,9 +2,11 @@ package com.puc.pi3_es_2024_t24.manager
 
 import android.content.Intent
 import android.nfc.NfcAdapter
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment

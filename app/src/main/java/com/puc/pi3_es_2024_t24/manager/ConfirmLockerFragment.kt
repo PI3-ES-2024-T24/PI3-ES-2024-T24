@@ -77,6 +77,21 @@ class ConfirmLockerFragment : Fragment() {
 
         return binding.root
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val args = ConfirmLockerFragmentArgs.fromBundle(requireArguments())
+        val argUri1 = args.photoUri
+        val argUri2 = args.photoUri1
+        if (argUri1 != "noImg") {
+            val igm1 = Uri.parse(argUri1)
+            binding.img1.setImageURI(igm1)
+            if (argUri2 != "noImg") {
+                val igm2 = Uri.parse(argUri2)
+                binding.img2.setImageURI(igm2)
+                binding.img2.visibility = View.VISIBLE
+            }
+        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -118,7 +133,7 @@ class ConfirmLockerFragment : Fragment() {
         dialog.show()
     }
 
-    fun newIntent(intent: Intent) {
+        fun newIntent(intent: Intent) {
         if (!isAdded) return
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action ||
             NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action ||
@@ -178,7 +193,6 @@ class ConfirmLockerFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun getPrice() {
         CoroutineScope(Dispatchers.IO).launch {
             db.collection("unidades")
@@ -206,7 +220,6 @@ class ConfirmLockerFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun registerCaucao(preco: Number, time: Long) {
         CoroutineScope(Dispatchers.IO).launch {
             db.collection("armarios")

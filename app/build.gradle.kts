@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.puc.pi3_es_2024_t24"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
