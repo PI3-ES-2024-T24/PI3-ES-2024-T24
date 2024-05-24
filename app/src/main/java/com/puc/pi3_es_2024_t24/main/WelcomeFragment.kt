@@ -1,5 +1,6 @@
 package com.puc.pi3_es_2024_t24.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,6 +16,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.ktx.firestore
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.FragmentWelcomeBinding
+import com.puc.pi3_es_2024_t24.manager.ManagerActivity
 
 class WelcomeFragment : Fragment() {
 
@@ -37,7 +39,9 @@ class WelcomeFragment : Fragment() {
             if (user != null) {
                 checkIfAdmin { isAdmin ->
                     if (isAdmin) {
-                        navController.navigate(R.id.action_welcomeFragment_to_managerActivity)
+                        val intent = Intent(requireContext(), ManagerActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()      
                     } else {
                         navController.navigate(R.id.action_welcomeFragment_to_nav_client)
                     }
