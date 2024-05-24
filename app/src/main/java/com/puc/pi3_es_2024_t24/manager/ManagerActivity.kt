@@ -5,6 +5,7 @@ import android.nfc.NfcAdapter
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
@@ -38,14 +39,13 @@ class ManagerActivity : AppCompatActivity() {
             if (NfcAdapter.ACTION_NDEF_DISCOVERED == it.action ||
                 NfcAdapter.ACTION_TECH_DISCOVERED == it.action ||
                 NfcAdapter.ACTION_TAG_DISCOVERED == it.action) {
-                val navHostFragment =
-                    supportFragmentManager.findFragmentById(R.id.navManagerFragmentContainerView) as NavHostFragment
-                if (nfcTag.method == "write") {
-                    val confirmLockerFragment = navHostFragment.childFragmentManager.fragments[0] as ConfirmLockerFragment
-                    confirmLockerFragment.newIntent(it)
-                } else {
-                    val menuManagerFragment = navHostFragment.childFragmentManager.fragments[0] as MenuManagerFragment
-                    menuManagerFragment.newIntent(it)
+                val fragment = supportFragmentManager.findFragmentById(androidx.navigation.fragment.R.id.nav_host_fragment_container)
+                fragment?.let {
+                    when (it) {
+                        is ConfirmLockerFragment -> it.newIntent(intent)
+                        is MenuManagerFragment -> it.newIntent(intent)
+                        else -> Log.d("NFC", "Fragmento desconhecido")
+                    }
                 }
             }
         }
