@@ -31,7 +31,6 @@ import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogCloseBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogReleaseBinding
-import com.puc.pi3_es_2024_t24.databinding.FragmentLocationSuccessBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentMenuManagerBinding
 import com.puc.pi3_es_2024_t24.main.MainActivity
 import com.puc.pi3_es_2024_t24.models.NfcTag
