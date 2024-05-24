@@ -31,6 +31,9 @@ import com.puc.pi3_es_2024_t24.databinding.FragmentLocationSuccessBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentMenuManagerBinding
 import com.puc.pi3_es_2024_t24.main.MainActivity
 import com.puc.pi3_es_2024_t24.models.NfcTag
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class MenuManagerFragment : Fragment() {
@@ -40,7 +43,9 @@ class MenuManagerFragment : Fragment() {
     private lateinit var nfcTag: NfcTag
     private lateinit var dialog: Dialog
     private lateinit var clientId: String
+    private lateinit var clientName: String
     private lateinit var bindingNfc : DialogNfcBinding
+    private lateinit var bindingRelease : DialogReleaseBinding
     private var nfcAdapter: NfcAdapter? = null
 
     private val db = Firebase.firestore
@@ -164,12 +169,55 @@ class MenuManagerFragment : Fragment() {
                         Log.d("TAG", "NDEF RECORD : $payload")
                         clientId = JSONObject(payload).getString("clientId")
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
-                        ReleaseLockerFragment().loadClientInfo(clientId)
+                        loadClientInfo(clientId)
+                        bindingNfc.btnCloseNfc.isActivated = false
                         findNavController().navigate(R.id.action_menuManagerFragment_to_releaseLockerFragment)
                     }
                 }
             }
         }
 
+    }
+    private fun loadClientInfo(clientId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                db.collection("pessoas")
+                    .document(clientId)
+                    .get()
+                    .addOnSuccessListener { document ->
+                        clientName = document.getString("nome_completo").toString()
+                        releaseLockerDialog()
+                    }
+            } catch (e: Exception) {
+                Log.d("LoadClient", "${e.message}")
+            }
+        }
+    }
+
+    private fun releaseLockerDialog() {
+        if (!isAdded) return
+        dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        bindingRelease = DialogNfcBinding.inflate(layoutInflater)
+        dialog.setContentView(bindingRelease.root)
+
+        bindingRelease.btnRelease.setOnClickListener {
+            Toast.makeText(requireContext(), "Armário aberto!", Toast.LENGTH_SHORT).show()
+            // ABRIR MOMENTANEAMENTE
+        }
+
+        bindingRelease.btnClose.setOnClickListener {
+            dialog.dismiss()
+            // ABRIR NOVO DIALOG DE ENCERRAR LOCAÇÃO
+        }
+
+        bindingRelease.btnBack.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 }
