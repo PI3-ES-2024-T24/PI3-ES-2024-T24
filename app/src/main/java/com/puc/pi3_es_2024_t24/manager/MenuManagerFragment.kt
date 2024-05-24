@@ -23,6 +23,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentLocationSuccessBinding
@@ -40,6 +42,8 @@ class MenuManagerFragment : Fragment() {
     private lateinit var clientId: String
     private lateinit var bindingNfc : DialogNfcBinding
     private var nfcAdapter: NfcAdapter? = null
+
+    private val db = Firebase.firestore
 
 
     override fun onCreateView(
@@ -106,8 +110,6 @@ class MenuManagerFragment : Fragment() {
             dialog.dismiss()
         }
 
-        bindingNfc.tvNfc.text = nfcTag.method
-
         dialog.show()
     }
 
@@ -124,9 +126,7 @@ class MenuManagerFragment : Fragment() {
             }
 
             if (tag != null) {
-                Log.d("TAG LIDA", "nfc tag detected")
                 verificarTag(intent, tag)
-                Log.d("TAG", "NFC Tag Detected")
             }
         }
     }
@@ -164,12 +164,12 @@ class MenuManagerFragment : Fragment() {
                         Log.d("TAG", "NDEF RECORD : $payload")
                         clientId = JSONObject(payload).getString("clientId")
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
-                        Toast.makeText(requireContext(), "ID DO CLIENTE: $clientId", Toast.LENGTH_SHORT).show()
+                        ReleaseLockerFragment().loadClientInfo(clientId)
+                        findNavController().navigate(R.id.action_menuManagerFragment_to_releaseLockerFragment)
                     }
                 }
             }
         }
 
     }
-
 }

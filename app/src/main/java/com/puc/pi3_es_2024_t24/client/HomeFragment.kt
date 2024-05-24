@@ -301,7 +301,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             Toast.makeText(requireContext(), "Saiu da Conta", Toast.LENGTH_SHORT).show()
             auth.signOut()
             dialog.dismiss()
-            findNavController().navigate(R.id.action_homeFragment_to_mainActivity)
+            findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
         }
         btnCancel.setOnClickListener {
             dialog.dismiss()
