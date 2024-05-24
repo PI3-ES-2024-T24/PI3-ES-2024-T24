@@ -181,7 +181,13 @@ class MenuManagerFragment : Fragment() {
                         val payload = String(record.payload)
                         Log.d("TAG", "NDEF RECORD : $payload")
                         clientId = JSONObject(payload).getString("clientId")
+                        if (clientId == "") {
+                            Toast.makeText(requireContext(), "NFC vazia!", Toast.LENGTH_SHORT).show()
+                            return
+                        }
                         armarioId = JSONObject(payload).getString("locationId")
+                        loadClientInfo(clientId)
+                        dialog.dismiss()
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
                         if (clientId != "") {
                             loadClientInfo(clientId)
@@ -299,6 +305,8 @@ class MenuManagerFragment : Fragment() {
                             .addOnSuccessListener {
                                 nfcTag.method = "write"
                                 dialog.show()
+                                dialogClose.dismiss()
+                                dialogRelease.dismiss()
                                 Toast.makeText(requireContext(), "VALOR A SER PAGO : $novoCaucao. Se o valor for menor que a caução é necessário devolver tal" +
                                         "senão é necessário receber tal valor de diferença.", Toast.LENGTH_SHORT).show()
                                 Log.d("Firestore", "Documento atualizado com sucesso!")
