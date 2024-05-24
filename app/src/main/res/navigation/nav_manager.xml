@@ -54,6 +54,14 @@
         <action
             android:id="@+id/action_locationSuccessFragment_to_menuManagerFragment"
             app:destination="@id/menuManagerFragment" />
+        <argument
+            android:name="name"
+            app:argType="string"
+            android:defaultValue="etName" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue="etEmail" />
     </fragment>
     <fragment
         android:id="@+id/clientAccessFragment"

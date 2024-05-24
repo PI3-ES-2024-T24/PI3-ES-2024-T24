@@ -63,6 +63,7 @@ class ConfirmLockerFragment : Fragment() {
             unityId = json?.getString("markerId").toString()
             val ti = json?.getString("payOption").toString()
             time = ti.toLong()
+            fetchClientInfo(clientId)
 
         }
         bindingNfc = DialogNfcBinding.inflate(layoutInflater)
@@ -76,6 +77,21 @@ class ConfirmLockerFragment : Fragment() {
 
 
         return binding.root
+    }
+    private fun fetchClientInfo(clientId: String) {
+        db.collection("pessoas").document(clientId).get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val name = document.getString("nome_completo")
+                    val email = document.getString("email")
+                    binding.etName.text = name
+                    binding.etEmail.text = email
+                } else {
+                }
+            }
+            .addOnFailureListener { exception ->
+                // Handle any errors
+            }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -170,7 +186,7 @@ class ConfirmLockerFragment : Fragment() {
                     ndef.close()
                     bindingNfc.tvNfc.text = "NFC ENCONTRADO. Escrevendo..."
                     getPrice()
-                    findNavController().navigate(R.id.action_confirmLockerFragment_to_locationSuccessFragment)
+                    navigateToSuccess()
                     dialog.dismiss()
 
                 }
@@ -192,7 +208,14 @@ class ConfirmLockerFragment : Fragment() {
             }
         }
     }
-
+private fun navigateToSuccess(){
+    val name = binding.etName.text
+    val email = binding.etEmail.text
+    val action = ConfirmLockerFragmentDirections.actionConfirmLockerFragmentToLocationSuccessFragment(
+        name.toString(), email.toString()
+    )
+    findNavController().navigate(action)
+}
     private fun getPrice() {
         CoroutineScope(Dispatchers.IO).launch {
             db.collection("unidades")

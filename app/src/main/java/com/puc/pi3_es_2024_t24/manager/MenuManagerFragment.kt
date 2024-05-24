@@ -45,7 +45,7 @@ class MenuManagerFragment : Fragment() {
     private lateinit var clientId: String
     private lateinit var clientName: String
     private lateinit var bindingNfc : DialogNfcBinding
-    private lateinit var bindingRelease : DialogReleaseBinding
+//    private lateinit var bindingRelease : DialogReleaseBinding
     private var nfcAdapter: NfcAdapter? = null
 
     private val db = Firebase.firestore
@@ -186,7 +186,7 @@ class MenuManagerFragment : Fragment() {
                     .get()
                     .addOnSuccessListener { document ->
                         clientName = document.getString("nome_completo").toString()
-                        releaseLockerDialog()
+//                        releaseLockerDialog()
                     }
             } catch (e: Exception) {
                 Log.d("LoadClient", "${e.message}")
@@ -194,30 +194,30 @@ class MenuManagerFragment : Fragment() {
         }
     }
 
-    private fun releaseLockerDialog() {
-        if (!isAdded) return
-        dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        bindingRelease = DialogNfcBinding.inflate(layoutInflater)
-        dialog.setContentView(bindingRelease.root)
-
-        bindingRelease.btnRelease.setOnClickListener {
-            Toast.makeText(requireContext(), "Armário aberto!", Toast.LENGTH_SHORT).show()
-            // ABRIR MOMENTANEAMENTE
-        }
-
-        bindingRelease.btnClose.setOnClickListener {
-            dialog.dismiss()
-            // ABRIR NOVO DIALOG DE ENCERRAR LOCAÇÃO
-        }
-
-        bindingRelease.btnBack.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
+//    private fun releaseLockerDialog() {
+//        if (!isAdded) return
+//        dialog = Dialog(requireContext())
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+//        dialog.setCancelable(false)
+//        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//
+//        bindingRelease = DialogNfcBinding.inflate(layoutInflater)
+//        dialog.setContentView(bindingRelease.root)
+//
+//        bindingRelease.btnRelease.setOnClickListener {
+//            Toast.makeText(requireContext(), "Armário aberto!", Toast.LENGTH_SHORT).show()
+//            // ABRIR MOMENTANEAMENTE
+//        }
+//
+//        bindingRelease.btnClose.setOnClickListener {
+//            dialog.dismiss()
+//            // ABRIR NOVO DIALOG DE ENCERRAR LOCAÇÃO
+//        }
+//
+//        bindingRelease.btnBack.setOnClickListener {
+//            dialog.dismiss()
+//        }
+//
+//        dialog.show()
+//    }
 }

@@ -26,6 +26,11 @@ class LocationSuccessFragment : Fragment() {
         binding.btnBack.setOnClickListener{
             findNavController().navigate(R.id.action_locationSuccessFragment_to_menuManagerFragment)
         }
+        val args = LocationSuccessFragmentArgs.fromBundle(requireArguments())
+        val argName = args.name
+        val argEmail= args.email
+        binding.etName.text = argName
+        binding.etEmail.text = argEmail
 
         return binding.root
     }
