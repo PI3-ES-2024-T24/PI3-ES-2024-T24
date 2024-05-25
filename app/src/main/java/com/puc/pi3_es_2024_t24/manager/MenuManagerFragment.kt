@@ -161,7 +161,7 @@ class MenuManagerFragment : Fragment() {
                 } else {
                     ndef.connect()
                     val mimeType = "text/plain"
-                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": ""}""".toByteArray(Charsets.UTF_8))
+                    val ndefRecord = NdefRecord.createMime(mimeType, """{"clientId": "vazio"}""".toByteArray(Charsets.UTF_8))
                     val ndefMessage = NdefMessage(arrayOf(ndefRecord))
                     ndef.writeNdefMessage(ndefMessage)
                     ndef.close()
@@ -182,7 +182,7 @@ class MenuManagerFragment : Fragment() {
                         val payload = String(record.payload)
                         Log.d("TAG", "NDEF RECORD : $payload")
                         clientId = JSONObject(payload).getString("clientId")
-                        if (clientId == "") {
+                        if (clientId == "vazio") {
                             Toast.makeText(requireContext(), "NFC vazia!", Toast.LENGTH_SHORT).show()
                             return
                         }
@@ -191,7 +191,7 @@ class MenuManagerFragment : Fragment() {
                         loadClientInfo(clientId)
                         dialog.dismiss()
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
-                        if (clientId != "") {
+                        if (clientId != "vazio") {
                             loadClientInfo(clientId)
                             dialog.dismiss()
                         } else {
@@ -228,7 +228,7 @@ class MenuManagerFragment : Fragment() {
 
         bindingRelease = DialogReleaseBinding.inflate(layoutInflater)
         dialogRelease.setContentView(bindingRelease.root)
-
+        bindingRelease.tvUserName.text = clientName
         Glide.with(requireContext()).load(imageUrls.get(0)).into(bindingRelease.ivPhoto)
         if (imageUrls.get(1) != "") {
         Glide.with(requireContext()).load(imageUrls.get(1)).into(bindingRelease.ivPhoto2)
@@ -262,6 +262,7 @@ class MenuManagerFragment : Fragment() {
 
         bindingClose = DialogCloseBinding.inflate(layoutInflater)
         dialogClose.setContentView(bindingClose.root)
+        bindingClose.tvUserName.text = clientName
 
         Glide.with(requireContext()).load(imageUrls.get(0)).into(bindingClose.ivPhoto)
         if (imageUrls.get(1) != "") {
