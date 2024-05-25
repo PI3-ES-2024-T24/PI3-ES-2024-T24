@@ -18,19 +18,32 @@
             android:textStyle="bold"
             android:textSize="25sp"
             android:layout_marginTop="10dp"
-            android:text="Operações"
+            android:text="Locação encerrada com sucesso!"
             android:textColor="@color/blue_gray"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+            <ImageView
+                android:id="@+id/ivPhoto1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/camera_button" />
+            <ImageView
+                android:id="@+id/ivPhoto2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:src="@drawable/camera_button" />
 
-        <ImageView
-            android:id="@+id/ivPhoto"
-            android:layout_width="200dp"
-            android:layout_height="142dp"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/camera_button" />
+        </LinearLayout>
 
         <TextView
             android:layout_gravity="center"
@@ -47,32 +60,25 @@
             android:layout_gravity="center_vertical">
 
             <Button
-                android:id="@+id/btnOpen"
+                android:width="200dp"
+                android:layout_margin="20dp"
+                android:layout_gravity="center"
+                android:id="@+id/btnReturn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="50dp"
-                android:width="200dp"
-                android:text="Abrir momentaneamente" />
+                android:text="Voltar ao menu principal."/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="“Não se esqueça de pedir ao cliente a devolutiva da tag nfc!”"/>
+            <TextView
+                android:id="@+id/txtPay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Cobre $$$ do cliente"/>
 
-            <Button
-                android:width="200dp"
-                android:layout_marginTop="50dp"
-                android:layout_gravity="center"
-                android:id="@+id/btnClose"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Encerrar"/>
-
-            <Button
-                android:width="200dp"
-                android:layout_marginTop="50dp"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="center"
-                android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Voltar"/>
 
         </LinearLayout>
 
