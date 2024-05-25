@@ -99,7 +99,7 @@ class ConfirmLockerFragment : Fragment() {
         val argUri1 = args.photoUri
         val argUri2 = args.photoUri1
         imageUrls.add(argUri1)
-        imageUrls.add(argUri1)
+        imageUrls.add(argUri2)
         if (argUri1 != "noImg") {
             Glide.with(this)
                 .load(argUri1)
