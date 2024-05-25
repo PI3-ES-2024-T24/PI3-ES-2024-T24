@@ -45,7 +45,6 @@ import java.time.temporal.ChronoUnit
 
 class MenuManagerFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
-
     private lateinit var binding: FragmentMenuManagerBinding
     private lateinit var nfcTag: NfcTag
     private lateinit var dialog: Dialog
@@ -69,11 +68,11 @@ class MenuManagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         auth = Firebase.auth
+        val managerName = auth.currentUser?.email
         binding = FragmentMenuManagerBinding.inflate(inflater, container, false)
-
         nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
+        binding.txtManager.text = managerName
         nfcTag = NfcTag("")
 
         binding.btnReleaseLocker.setOnClickListener {
@@ -274,6 +273,7 @@ class MenuManagerFragment : Fragment() {
 
         bindingConfirm.btnClose.setOnClickListener {
             // ENCERRAR LOCAÇÃO
+            Toast.makeText(requireContext(), "Armário fechado!", Toast.LENGTH_SHORT).show()
             confirmCloseDialog.dismiss()
         }
 
