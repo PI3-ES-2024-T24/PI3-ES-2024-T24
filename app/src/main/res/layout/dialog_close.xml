@@ -76,7 +76,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="10dp"
                 android:layout_gravity="center"
-                android:id="@+id/btnBack"
+                android:id="@+id/btnBacks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Voltar"/>

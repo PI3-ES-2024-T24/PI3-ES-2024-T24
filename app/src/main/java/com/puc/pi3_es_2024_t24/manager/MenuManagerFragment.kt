@@ -195,7 +195,6 @@ class MenuManagerFragment : Fragment() {
                         dialog.dismiss()
                         bindingNfc.tvNfc.text = "NFC ENCONTRADO : $clientId"
                         if (clientId != "vazio") {
-                            loadClientInfo(clientId)
                             dialog.dismiss()
                         } else {
                             Toast.makeText(requireContext(), "NFC vazia!", Toast.LENGTH_SHORT).show()
@@ -278,7 +277,7 @@ class MenuManagerFragment : Fragment() {
             closeLocker(armarioId)
         }
 
-        bindingClose.btnBack.setOnClickListener {
+        bindingClose.btnBacks.setOnClickListener {
             dialogClose.dismiss()
             dialogRelease.show()
         }
