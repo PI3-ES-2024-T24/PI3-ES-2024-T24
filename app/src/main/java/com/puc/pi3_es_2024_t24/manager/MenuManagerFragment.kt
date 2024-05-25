@@ -29,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.puc.pi3_es_2024_t24.R
 import com.puc.pi3_es_2024_t24.databinding.DialogCloseBinding
+import com.puc.pi3_es_2024_t24.databinding.DialogCloseLockerBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogNfcBinding
 import com.puc.pi3_es_2024_t24.databinding.DialogReleaseBinding
 import com.puc.pi3_es_2024_t24.databinding.FragmentMenuManagerBinding
@@ -53,11 +54,13 @@ class MenuManagerFragment : Fragment() {
     private lateinit var bindingNfc : DialogNfcBinding
     private lateinit var bindingRelease : DialogReleaseBinding
     private lateinit var bindingClose : DialogCloseBinding
+    private lateinit var bindingConfirm: DialogCloseLockerBinding
     private lateinit var armarioId : String
     private var nfcAdapter: NfcAdapter? = null
     private lateinit var novoCaucao : Number
     private lateinit var dialogRelease:Dialog
     private lateinit var dialogClose:Dialog
+    private lateinit var confirmCloseDialog:Dialog
 
     private val db = Firebase.firestore
 
@@ -219,6 +222,7 @@ class MenuManagerFragment : Fragment() {
 
         bindingRelease.btnOpen.setOnClickListener {
             Toast.makeText(requireContext(), "Armário aberto!", Toast.LENGTH_SHORT).show()
+            confirmCloseDialog()
             // ABRIR MOMENTANEAMENTE
         }
 
@@ -257,6 +261,24 @@ class MenuManagerFragment : Fragment() {
         }
 
         dialogClose.show()
+    }
+    private fun confirmCloseDialog() {
+        if (!isAdded) return
+        confirmCloseDialog = Dialog(requireContext())
+        confirmCloseDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        confirmCloseDialog.setCancelable(false)
+        confirmCloseDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        bindingConfirm = DialogCloseLockerBinding.inflate(layoutInflater)
+        confirmCloseDialog.setContentView(bindingConfirm.root)
+
+        bindingConfirm.btnClose.setOnClickListener {
+            // ENCERRAR LOCAÇÃO
+            confirmCloseDialog.dismiss()
+        }
+
+
+        confirmCloseDialog.show()
     }
     
 
