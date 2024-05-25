@@ -60,7 +60,6 @@ class MenuManagerFragment : Fragment() {
     private lateinit var dialogRelease:Dialog
     private lateinit var dialogClose:Dialog
     private val imageUrls = mutableListOf<String>()
-
     private val db = Firebase.firestore
 
 
@@ -331,26 +330,30 @@ class MenuManagerFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             db.collection("armarios").document(armarioId).get()
                 .addOnSuccessListener { document ->
-                    val images = document.getString("images")
-                    images?.get(0)?.let {
-                        imageUrls.add(it.toString())
-                        Glide.with(requireContext())
-                            .load(imageUrls.get(0))
-                            .into(bindingRelease.ivPhoto)
-                        Glide.with(requireContext())
-                            .load(imageUrls.get(0))
-                            .into(bindingClose.ivPhoto)
-                    }
-                    images?.get(1)?.let {
-                        imageUrls.add(it.toString())
-                        Glide.with(requireContext())
-                            .load(imageUrls.get(1))
-                            .into(bindingRelease.ivPhoto2)
-                        Glide.with(requireContext())
-                            .load(imageUrls.get(1))
-                            .into(bindingClose.ivPhoto2)
+                    // Obter o campo 'images' como uma lista de strings
+                    val images = document.get("images") as? List<String>
 
+                    images?.let {
+                        if (it.isNotEmpty()) {
+                            Glide.with(requireContext())
+                                .load(it[0])
+                                .into(bindingRelease.ivPhoto)
+                            Glide.with(requireContext())
+                                .load(it[0])
+                                .into(bindingClose.ivPhoto)
+                        }
+                        if (it.size > 1) {
+                            Glide.with(requireContext())
+                                .load(it[1])
+                                .into(bindingRelease.ivPhoto2)
+                            Glide.with(requireContext())
+                                .load(it[1])
+                                .into(bindingClose.ivPhoto2)
+                        }
                     }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("Firestore", "Erro ao obter documento: ", exception)
                 }
         }
     }

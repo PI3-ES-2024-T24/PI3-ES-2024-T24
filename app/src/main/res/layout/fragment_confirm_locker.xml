@@ -87,11 +87,11 @@
         android:id="@+id/btnEnd"
         android:layout_width="214dp"
         android:layout_height="63dp"
-        android:layout_marginTop="156dp"
+        android:layout_marginBottom="30dp"
         android:text="@string/finalizar"
         android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img2" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
